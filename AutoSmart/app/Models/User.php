@@ -76,6 +76,36 @@ class User extends Authenticatable
         return $this->hasMany(PartRequest::class);
     }
 
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(Address::class);
+    }
+
+    public function conversations(): HasMany
+    {
+        return $this->hasMany(Conversation::class);
+    }
+
+    public function wallet(): HasOne
+    {
+        return $this->hasOne(Wallet::class);
+    }
+
+    public function warrantyClaims(): HasMany
+    {
+        return $this->hasMany(WarrantyClaim::class);
+    }
+
+    public function notificationSettings(): HasOne
+    {
+        return $this->hasOne(NotificationSetting::class);
+    }
+
+    public function getWalletBalance(): float
+    {
+        return $this->wallet?->balance ?? 0;
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';

@@ -23,6 +23,12 @@ Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::get('/terms', [HomeController::class, 'terms'])->name('terms');
 Route::get('/privacy', [HomeController::class, 'privacy'])->name('privacy');
 
+// Sitemap
+Route::get('/sitemap.xml', [App\Http\Controllers\SitemapController::class, 'index']);
+Route::get('/sitemap-main.xml', [App\Http\Controllers\SitemapController::class, 'main']);
+Route::get('/sitemap-products.xml', [App\Http\Controllers\SitemapController::class, 'products']);
+Route::get('/sitemap-stores.xml', [App\Http\Controllers\SitemapController::class, 'stores']);
+
 // المنتجات
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
@@ -84,6 +90,74 @@ Route::prefix('seller')->name('seller.')->middleware(['auth', 'role:seller,admin
         Route::post('/orders/{order}/deliver', [SellerOrderController::class, 'deliver'])->name('orders.deliver');
         Route::post('/orders/{order}/cancel', [SellerOrderController::class, 'cancel'])->name('orders.cancel');
         Route::put('/orders/{order}/notes', [SellerOrderController::class, 'updateNotes'])->name('orders.notes');
+    });
+});
+
+// صفحات المستخدم الإضافية
+Route::middleware('auth')->group(function () {
+    // العناوين
+    Route::get('/addresses', [App\Http\Controllers\AddressController::class, 'index'])->name('addresses.index');
+    Route::post('/addresses', [App\Http\Controllers\AddressController::class, 'store'])->name('addresses.store');
+    Route::put('/addresses/{address}', [App\Http\Controllers\AddressController::class, 'update'])->name('addresses.update');
+    Route::delete('/addresses/{address}', [App\Http\Controllers\AddressController::class, 'destroy'])->name('addresses.destroy');
+    Route::post('/addresses/{address}/default', [App\Http\Controllers\AddressController::class, 'setDefault'])->name('addresses.default');
+    
+    // المحادثات
+    Route::get('/conversations', [App\Http\Controllers\ConversationController::class, 'index'])->name('conversations.index');
+    Route::get('/conversations/{conversation}', [App\Http\Controllers\ConversationController::class, 'show'])->name('conversations.show');
+    Route::get('/stores/{store}/contact', [App\Http\Controllers\ConversationController::class, 'startWithStore'])->name('conversations.start');
+    Route::post('/conversations/{conversation}/messages', [App\Http\Controllers\ConversationController::class, 'sendMessage'])->name('conversations.send');
+    
+    // المحفظة
+    Route::get('/wallet', [App\Http\Controllers\WalletController::class, 'index'])->name('wallet.index');
+    Route::post('/wallet/withdraw', [App\Http\Controllers\WalletController::class, 'withdraw'])->name('wallet.withdraw');
+    
+    // الضمان
+    Route::get('/warranty', [App\Http\Controllers\WarrantyController::class, 'index'])->name('warranty.index');
+    Route::get('/warranty/create/{orderItem}', [App\Http\Controllers\WarrantyController::class, 'create'])->name('warranty.create');
+    Route::post('/warranty', [App\Http\Controllers\WarrantyController::class, 'store'])->name('warranty.store');
+    Route::get('/warranty/{warrantyClaim}', [App\Http\Controllers\WarrantyController::class, 'show'])->name('warranty.show');
+    
+    // طلبات قطع الغيار
+    Route::get('/part-requests', [App\Http\Controllers\PartRequestController::class, 'index'])->name('part-requests.index');
+    Route::get('/part-requests/create', [App\Http\Controllers\PartRequestController::class, 'create'])->name('part-requests.create');
+    Route::post('/part-requests', [App\Http\Controllers\PartRequestController::class, 'store'])->name('part-requests.store');
+    Route::get('/part-requests/{partRequest}', [App\Http\Controllers\PartRequestController::class, 'show'])->name('part-requests.show');
+    Route::post('/part-requests/{partRequest}/close', [App\Http\Controllers\PartRequestController::class, 'close'])->name('part-requests.close');
+    Route::post('/quotes/{quote}/accept', [App\Http\Controllers\PartRequestController::class, 'acceptQuote'])->name('quotes.accept');
+    Route::post('/quotes/{quote}/reject', [App\Http\Controllers\PartRequestController::class, 'rejectQuote'])->name('quotes.reject');
+});
+
+// المقارنة (عام)
+Route::get('/compare', [App\Http\Controllers\ComparisonController::class, 'index'])->name('compare.index');
+Route::post('/compare/add/{productId}', [App\Http\Controllers\ComparisonController::class, 'add'])->name('compare.add');
+Route::delete('/compare/remove/{productId}', [App\Http\Controllers\ComparisonController::class, 'remove'])->name('compare.remove');
+Route::delete('/compare/clear', [App\Http\Controllers\ComparisonController::class, 'clear'])->name('compare.clear');
+
+// لوحة تحكم البائع - إضافات
+Route::prefix('seller')->name('seller.')->middleware(['auth', 'role:seller,admin'])->group(function () {
+    Route::middleware('seller')->group(function () {
+        // الكوبونات
+        Route::resource('coupons', App\Http\Controllers\Seller\CouponController::class);
+        
+        // طلبات قطع الغيار
+        Route::get('/part-requests', [App\Http\Controllers\Seller\PartRequestController::class, 'index'])->name('part-requests.index');
+        Route::get('/part-requests/{partRequest}', [App\Http\Controllers\Seller\PartRequestController::class, 'show'])->name('part-requests.show');
+        Route::post('/part-requests/{partRequest}/quote', [App\Http\Controllers\Seller\PartRequestController::class, 'submitQuote'])->name('part-requests.quote');
+        
+        // المحادثات
+        Route::get('/conversations', [App\Http\Controllers\Seller\ConversationController::class, 'index'])->name('conversations.index');
+        Route::get('/conversations/{conversation}', [App\Http\Controllers\Seller\ConversationController::class, 'show'])->name('conversations.show');
+        Route::post('/conversations/{conversation}/messages', [App\Http\Controllers\Seller\ConversationController::class, 'sendMessage'])->name('conversations.send');
+        
+        // الضمان
+        Route::get('/warranty', [App\Http\Controllers\Seller\WarrantyController::class, 'index'])->name('warranty.index');
+        Route::get('/warranty/{warrantyClaim}', [App\Http\Controllers\Seller\WarrantyController::class, 'show'])->name('warranty.show');
+        Route::post('/warranty/{warrantyClaim}/respond', [App\Http\Controllers\Seller\WarrantyController::class, 'respond'])->name('warranty.respond');
+        
+        // التقارير
+        Route::get('/reports', [App\Http\Controllers\Seller\ReportsController::class, 'index'])->name('reports.index');
+        Route::get('/reports/export', [App\Http\Controllers\Seller\ReportsController::class, 'export'])->name('reports.export');
     });
 });
 

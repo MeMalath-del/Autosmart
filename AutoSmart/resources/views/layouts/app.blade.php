@@ -265,6 +265,11 @@
                 
                 <ul class="navbar-nav">
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ route('compare.index') }}" title="المقارنة">
+                            <i class="bi bi-columns-gap fs-5"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link position-relative" href="{{ route('cart') }}">
                             <i class="bi bi-cart3 fs-5"></i>
                             @livewire('shop.cart-icon')
@@ -305,6 +310,21 @@
                                 <li><a class="dropdown-item" href="{{ route('wishlist') }}">
                                     <i class="bi bi-heart me-2"></i>المفضلة
                                 </a></li>
+                                <li><a class="dropdown-item" href="{{ route('part-requests.index') }}">
+                                    <i class="bi bi-search me-2"></i>طلبات قطع الغيار
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ route('conversations.index') }}">
+                                    <i class="bi bi-chat-dots me-2"></i>المحادثات
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ route('wallet.index') }}">
+                                    <i class="bi bi-wallet2 me-2"></i>المحفظة
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ route('warranty.index') }}">
+                                    <i class="bi bi-shield-check me-2"></i>الضمان
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ route('addresses.index') }}">
+                                    <i class="bi bi-geo-alt me-2"></i>العناوين
+                                </a></li>
                                 <li><a class="dropdown-item" href="{{ route('profile') }}">
                                     <i class="bi bi-person me-2"></i>حسابي
                                 </a></li>
@@ -344,6 +364,9 @@
     <main>
         @yield('content')
     </main>
+    
+    <!-- Comparison Bar -->
+    @livewire('shop.comparison-bar')
     
     <!-- Footer -->
     <footer class="footer mt-5">

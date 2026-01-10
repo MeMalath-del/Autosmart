@@ -45,6 +45,21 @@
             <a href="{{ route('seller.orders.index') }}" class="{{ request()->routeIs('seller.orders.*') ? 'active' : '' }}">
                 <i class="bi bi-bag"></i>الطلبات
             </a>
+            <a href="{{ route('seller.coupons.index') }}" class="{{ request()->routeIs('seller.coupons.*') ? 'active' : '' }}">
+                <i class="bi bi-percent"></i>الكوبونات
+            </a>
+            <a href="{{ route('seller.part-requests.index') }}" class="{{ request()->routeIs('seller.part-requests.*') ? 'active' : '' }}">
+                <i class="bi bi-search"></i>طلبات القطع
+            </a>
+            <a href="{{ route('seller.conversations.index') }}" class="{{ request()->routeIs('seller.conversations.*') ? 'active' : '' }}">
+                <i class="bi bi-chat-dots"></i>المحادثات
+            </a>
+            <a href="{{ route('seller.warranty.index') }}" class="{{ request()->routeIs('seller.warranty.*') ? 'active' : '' }}">
+                <i class="bi bi-shield-check"></i>الضمان
+            </a>
+            <a href="{{ route('seller.reports.index') }}" class="{{ request()->routeIs('seller.reports.*') ? 'active' : '' }}">
+                <i class="bi bi-graph-up"></i>التقارير
+            </a>
             <a href="{{ route('seller.store.edit') }}" class="{{ request()->routeIs('seller.store.edit') ? 'active' : '' }}">
                 <i class="bi bi-gear"></i>إعدادات المتجر
             </a>
