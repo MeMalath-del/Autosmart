@@ -91,6 +91,26 @@ class Product extends Model
         return $this->hasMany(Wishlist::class);
     }
 
+    public function questions(): HasMany
+    {
+        return $this->hasMany(ProductQuestion::class);
+    }
+
+    public function videoReviews(): HasMany
+    {
+        return $this->hasMany(VideoReview::class);
+    }
+
+    public function wholesalePrices(): HasMany
+    {
+        return $this->hasMany(WholesalePrice::class);
+    }
+
+    public function auctions(): HasMany
+    {
+        return $this->hasMany(Auction::class);
+    }
+
     public function scopeActive($query)
     {
         return $query->where('is_active', true);

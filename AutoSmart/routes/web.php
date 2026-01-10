@@ -189,3 +189,8 @@ require __DIR__ . '/web_phase3.php';
 
 // Include Admin Phase 3 routes
 require __DIR__ . '/admin_phase3.php';
+
+// Include Phase 4 routes
+require __DIR__ . '/web_phase4.php';
+
+require __DIR__ . '/admin_phase4.php';

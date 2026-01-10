@@ -69,6 +69,12 @@
             <a href="{{ route('seller.suppliers.index') }}" class="{{ request()->routeIs('seller.suppliers.*') ? 'active' : '' }}">
                 <i class="bi bi-truck"></i>الموردين
             </a>
+            <a href="{{ route('seller.staff.index') }}" class="{{ request()->routeIs('seller.staff.*') ? 'active' : '' }}">
+                <i class="bi bi-people"></i>الموظفين
+            </a>
+            <a href="{{ route('seller.auctions.index') }}" class="{{ request()->routeIs('seller.auctions.*') ? 'active' : '' }}">
+                <i class="bi bi-hammer"></i>المزادات
+            </a>
             <a href="{{ route('seller.store.edit') }}" class="{{ request()->routeIs('seller.store.edit') ? 'active' : '' }}">
                 <i class="bi bi-gear"></i>إعدادات المتجر
             </a>

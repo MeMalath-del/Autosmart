@@ -261,6 +261,19 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('workshops.index') }}">ورش الصيانة</a>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">المزيد</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ route('auctions.index') }}"><i class="bi bi-hammer me-2"></i>المزادات</a></li>
+                            <li><a class="dropdown-item" href="{{ route('community.index') }}"><i class="bi bi-people me-2"></i>المجتمع</a></li>
+                            <li><a class="dropdown-item" href="{{ route('vin.search') }}"><i class="bi bi-upc-scan me-2"></i>البحث بالشاسيه</a></li>
+                            <li><a class="dropdown-item" href="{{ route('gift-cards.index') }}"><i class="bi bi-gift me-2"></i>بطاقات الهدايا</a></li>
+                            <li><a class="dropdown-item" href="{{ route('subscriptions.index') }}"><i class="bi bi-arrow-repeat me-2"></i>الاشتراكات</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ route('support.faq') }}"><i class="bi bi-question-circle me-2"></i>الأسئلة الشائعة</a></li>
+                            <li><a class="dropdown-item" href="{{ route('b2b.index') }}"><i class="bi bi-building me-2"></i>حسابات الشركات</a></li>
+                        </ul>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('contact') }}">اتصل بنا</a>
                     </li>

@@ -73,6 +73,23 @@
                 <i class="bi bi-cash-stack"></i>السحوبات
             </a>
 
+            <div class="nav-section mt-3">المرحلة الرابعة</div>
+            <a href="{{ route('admin.support.index') }}" class="{{ request()->routeIs('admin.support.*') ? 'active' : '' }}">
+                <i class="bi bi-headset"></i>تذاكر الدعم
+            </a>
+            <a href="{{ route('admin.b2b.index') }}" class="{{ request()->routeIs('admin.b2b.*') ? 'active' : '' }}">
+                <i class="bi bi-building"></i>حسابات الشركات
+            </a>
+            <a href="{{ route('admin.auctions.index') }}" class="{{ request()->routeIs('admin.auctions.*') ? 'active' : '' }}">
+                <i class="bi bi-hammer"></i>المزادات
+            </a>
+            <a href="{{ route('admin.influencers.index') }}" class="{{ request()->routeIs('admin.influencers.*') ? 'active' : '' }}">
+                <i class="bi bi-stars"></i>المؤثرين
+            </a>
+            <a href="{{ route('admin.gift-cards.index') }}" class="{{ request()->routeIs('admin.gift-cards.*') ? 'active' : '' }}">
+                <i class="bi bi-gift"></i>بطاقات الهدايا
+            </a>
+
             <div class="nav-section mt-3">التسويق</div>
             <a href="{{ route('admin.campaigns.index') }}" class="{{ request()->routeIs('admin.campaigns.*') ? 'active' : '' }}">
                 <i class="bi bi-envelope"></i>حملات البريد
