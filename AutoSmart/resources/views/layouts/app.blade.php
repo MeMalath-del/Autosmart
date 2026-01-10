@@ -259,6 +259,9 @@
                         <a class="nav-link" href="{{ route('about') }}">من نحن</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ route('workshops.index') }}">ورش الصيانة</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('contact') }}">اتصل بنا</a>
                     </li>
                 </ul>
@@ -324,6 +327,18 @@
                                 </a></li>
                                 <li><a class="dropdown-item" href="{{ route('addresses.index') }}">
                                     <i class="bi bi-geo-alt me-2"></i>العناوين
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ route('garage.index') }}">
+                                    <i class="bi bi-car-front me-2"></i>سياراتي
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ route('lists.index') }}">
+                                    <i class="bi bi-list-ul me-2"></i>قوائمي
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ route('loyalty.index') }}">
+                                    <i class="bi bi-stars me-2"></i>نقاط الولاء
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ route('referral.index') }}">
+                                    <i class="bi bi-people me-2"></i>الإحالات
                                 </a></li>
                                 <li><a class="dropdown-item" href="{{ route('profile') }}">
                                     <i class="bi bi-person me-2"></i>حسابي

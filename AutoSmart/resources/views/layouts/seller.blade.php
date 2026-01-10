@@ -60,6 +60,15 @@
             <a href="{{ route('seller.reports.index') }}" class="{{ request()->routeIs('seller.reports.*') ? 'active' : '' }}">
                 <i class="bi bi-graph-up"></i>التقارير
             </a>
+            <a href="{{ route('seller.analytics.index') }}" class="{{ request()->routeIs('seller.analytics.*') ? 'active' : '' }}">
+                <i class="bi bi-bar-chart"></i>التحليلات
+            </a>
+            <a href="{{ route('seller.inventory.index') }}" class="{{ request()->routeIs('seller.inventory.*') ? 'active' : '' }}">
+                <i class="bi bi-boxes"></i>المخزون
+            </a>
+            <a href="{{ route('seller.suppliers.index') }}" class="{{ request()->routeIs('seller.suppliers.*') ? 'active' : '' }}">
+                <i class="bi bi-truck"></i>الموردين
+            </a>
             <a href="{{ route('seller.store.edit') }}" class="{{ request()->routeIs('seller.store.edit') ? 'active' : '' }}">
                 <i class="bi bi-gear"></i>إعدادات المتجر
             </a>

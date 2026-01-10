@@ -62,6 +62,36 @@
                 <i class="bi bi-car-front"></i>ماركات السيارات
             </a>
             
+            <div class="nav-section mt-3">العمليات</div>
+            <a href="{{ route('admin.workshops.index') }}" class="{{ request()->routeIs('admin.workshops.*') ? 'active' : '' }}">
+                <i class="bi bi-wrench"></i>ورش الصيانة
+            </a>
+            <a href="{{ route('admin.refunds.index') }}" class="{{ request()->routeIs('admin.refunds.*') ? 'active' : '' }}">
+                <i class="bi bi-arrow-counterclockwise"></i>الاستردادات
+            </a>
+            <a href="{{ route('admin.withdrawals.index') }}" class="{{ request()->routeIs('admin.withdrawals.*') ? 'active' : '' }}">
+                <i class="bi bi-cash-stack"></i>السحوبات
+            </a>
+
+            <div class="nav-section mt-3">التسويق</div>
+            <a href="{{ route('admin.campaigns.index') }}" class="{{ request()->routeIs('admin.campaigns.*') ? 'active' : '' }}">
+                <i class="bi bi-envelope"></i>حملات البريد
+            </a>
+            <a href="{{ route('admin.coupons.index') }}" class="{{ request()->routeIs('admin.coupons.*') ? 'active' : '' }}">
+                <i class="bi bi-ticket"></i>الكوبونات
+            </a>
+            <a href="{{ route('admin.banners.index') }}" class="{{ request()->routeIs('admin.banners.*') ? 'active' : '' }}">
+                <i class="bi bi-image"></i>البانرات
+            </a>
+            <a href="{{ route('admin.flash-sales.index') }}" class="{{ request()->routeIs('admin.flash-sales.*') ? 'active' : '' }}">
+                <i class="bi bi-lightning"></i>العروض السريعة
+            </a>
+
+            <div class="nav-section mt-3">التقارير</div>
+            <a href="{{ route('admin.analytics.index') }}" class="{{ request()->routeIs('admin.analytics.*') ? 'active' : '' }}">
+                <i class="bi bi-graph-up"></i>التحليلات
+            </a>
+            
             <div class="nav-section mt-3">النظام</div>
             <a href="{{ route('home') }}">
                 <i class="bi bi-globe"></i>الموقع الرئيسي

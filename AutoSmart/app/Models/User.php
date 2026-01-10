@@ -17,12 +17,17 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'referral_code',
+        'referred_by',
         'phone',
         'avatar',
         'address',
         'city',
         'country',
         'is_active',
+        'two_factor_enabled',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
         'last_login_at',
     ];
 
@@ -37,6 +42,8 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
+            'two_factor_enabled' => 'boolean',
+            'two_factor_recovery_codes' => 'array',
             'last_login_at' => 'datetime',
         ];
     }
@@ -147,5 +154,69 @@ class User extends Authenticatable
     public function updateLastLogin(): void
     {
         $this->update(['last_login_at' => now()]);
+    }
+
+    // ===============================
+    // Phase 3 Relationships
+    // ===============================
+
+    public function cars(): HasMany
+    {
+        return $this->hasMany(UserCar::class);
+    }
+
+    public function productLists(): HasMany
+    {
+        return $this->hasMany(ProductList::class);
+    }
+
+    public function loyaltyPoints(): HasOne
+    {
+        return $this->hasOne(LoyaltyPoints::class);
+    }
+
+    public function referrals(): HasMany
+    {
+        return $this->hasMany(Referral::class, 'referrer_id');
+    }
+
+    public function workshop(): HasOne
+    {
+        return $this->hasOne(Workshop::class);
+    }
+
+    public function maintenanceRequests(): HasMany
+    {
+        return $this->hasMany(MaintenanceRequest::class);
+    }
+
+    public function maintenanceBookings(): HasMany
+    {
+        return $this->hasMany(MaintenanceBooking::class);
+    }
+
+    public function refundRequests(): HasMany
+    {
+        return $this->hasMany(RefundRequest::class);
+    }
+
+    public function getLoyaltyPointsAttribute(): int
+    {
+        return $this->loyaltyPoints?->points ?? 0;
+    }
+
+    public function getPrimaryCar(): ?UserCar
+    {
+        return $this->cars()->where('is_primary', true)->first() ?? $this->cars()->first();
+    }
+
+    public function hasWorkshop(): bool
+    {
+        return $this->workshop()->exists();
+    }
+
+    public function hasApprovedWorkshop(): bool
+    {
+        return $this->workshop && $this->workshop->isApproved();
     }
 }

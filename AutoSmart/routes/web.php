@@ -183,3 +183,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::post('/car-brands/{carBrand}/models', [AdminCarBrandController::class, 'storeModel'])->name('car-brands.models.store');
     Route::delete('/car-models/{carModel}', [AdminCarBrandController::class, 'destroyModel'])->name('car-models.destroy');
 });
+
+// Include Phase 3 routes
+require __DIR__ . '/web_phase3.php';
+
+// Include Admin Phase 3 routes
+require __DIR__ . '/admin_phase3.php';
