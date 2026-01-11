@@ -1,189 +1,253 @@
-# AutoSmart - سوق قطع غيار السيارات الذكي 🚗
+# 🚗 AutoSmart - سوق قطع غيار السيارات
 
-<div dir="rtl">
+<div align="center">
 
-## نبذة عن المشروع
+![AutoSmart Logo](https://via.placeholder.com/200x60?text=AutoSmart)
 
-AutoSmart هو سوق إلكتروني ذكي متخصص في بيع ووساطة وتوصيل قطع غيار السيارات، يربط بين أصحاب السيارات والبائعين وورش الصيانة عبر منصة رقمية موثوقة وسهلة الاستخدام.
+**منصة التجارة الإلكترونية المتخصصة في قطع غيار السيارات**
 
-## التقنيات المستخدمة
+[![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.3+-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
+[![Livewire](https://img.shields.io/badge/Livewire-3.x-FB70A9?style=for-the-badge&logo=livewire&logoColor=white)](https://livewire.laravel.com)
+[![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3_RTL-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)](https://getbootstrap.com)
 
-- **Laravel 11** - إطار عمل PHP
-- **Livewire 3** - للواجهات التفاعلية
-- **SQLite** - قاعدة البيانات
-- **Bootstrap 5 RTL** - للتصميم
-- **Bootstrap Icons** - الأيقونات
+</div>
 
-## الميزات الرئيسية
+---
 
-### للعملاء 👥
-- ✅ تصفح وبحث متقدم في المنتجات
-- ✅ تصفية حسب الماركة والموديل والسنة
-- ✅ سلة تسوق ديناميكية
-- ✅ نظام المفضلة
-- ✅ **نظام المقارنة** - مقارنة حتى 4 منتجات
-- ✅ **نظام طلبات قطع الغيار** - طلب قطع غير متوفرة
-- ✅ **نظام الكوبونات** - خصومات ورموز ترويجية
-- ✅ **نظام العناوين المتعددة** - حفظ عناوين متعددة
-- ✅ **نظام المحفظة** - رصيد واسترداد
-- ✅ **نظام الضمان** - تقديم مطالبات الضمان
-- ✅ **نظام المحادثات** - التواصل مع البائعين
-- ✅ **تتبع الشحن** - متابعة حالة الشحنات
-- ✅ **التقييمات المتقدمة** - تقييم متعدد المعايير
+## 📋 نظرة عامة
 
-### للبائعين 🏪
-- ✅ لوحة تحكم شاملة
+**AutoSmart** هو سوق إلكتروني متكامل يربط بين:
+- 🛒 **أصحاب السيارات** - للبحث والشراء بسهولة
+- 🏪 **تجار قطع الغيار** - لعرض وبيع منتجاتهم
+- 🔧 **ورش الصيانة** - لتقديم خدماتهم وإدارة أعمالهم
+
+---
+
+## ✨ المميزات الرئيسية
+
+### 🛍️ للمشترين
+- ✅ بحث ذكي عن القطع بالاسم أو رقم القطعة أو VIN
+- ✅ مقارنة الأسعار بين المتاجر
+- ✅ ضمان الجودة وحماية المشتري
+- ✅ تتبع الطلبات والشحنات
+- ✅ برنامج ولاء ونقاط مكافآت
+- ✅ تقسيط المشتريات
+
+### 🏬 للبائعين
+- ✅ لوحة تحكم متكاملة
 - ✅ إدارة المنتجات والمخزون
-- ✅ إدارة الطلبات والشحن
-- ✅ **إنشاء الكوبونات** - عروض خاصة للمتجر
-- ✅ **الرد على طلبات القطع** - تقديم عروض الأسعار
-- ✅ **نظام المحادثات** - التواصل مع العملاء
-- ✅ **إدارة الضمان** - الرد على مطالبات الضمان
-- ✅ **التقارير والإحصائيات** - تحليل المبيعات
-- ✅ **سحب الأرباح** - طلبات السحب للمحفظة
+- ✅ نظام نقاط بيع (POS)
+- ✅ تحليلات وتقارير مفصلة
+- ✅ أدوات تسويق متقدمة
+- ✅ إدارة فروع متعددة
 
-### للمدير 👨‍💼
-- ✅ لوحة إدارة كاملة
-- ✅ إدارة المتاجر والموافقات
-- ✅ إدارة التصنيفات
-- ✅ إدارة ماركات وموديلات السيارات
-- ✅ **الكوبونات العامة** - خصومات على كل المتاجر
-- ✅ **البانرات والإعلانات** - العروض الترويجية
-- ✅ **التخفيضات الخاطفة** - Flash Sales
-- ✅ **إدارة طلبات السحب** - الموافقة على السحب
+### 🔧 لورش الصيانة
+- ✅ نظام حجز مواعيد
+- ✅ إدارة الخدمات والأسعار
+- ✅ ربط مع موردي القطع
+- ✅ فواتير إلكترونية
+- ✅ تقييمات العملاء
 
-### API للتطبيقات 📱
-- ✅ REST API كامل
-- ✅ مصادقة Sanctum
-- ✅ endpoints للمنتجات والسلة والطلبات
+---
 
-### تحسينات SEO 🔍
-- ✅ Meta tags ديناميكية
-- ✅ Open Graph للمشاركة
-- ✅ Schema.org structured data
-- ✅ Sitemap XML
-- ✅ robots.txt
-- ✅ PWA manifest
+## 🚀 التقنيات المستخدمة
 
-## التثبيت
+| التقنية | الاستخدام |
+|---------|----------|
+| **Laravel 12** | إطار العمل الأساسي |
+| **Livewire 3** | الواجهات التفاعلية |
+| **Bootstrap 5 RTL** | تصميم الواجهات |
+| **SQLite/MySQL** | قاعدة البيانات |
+| **Sanctum** | مصادقة API |
+
+---
+
+## 📦 التثبيت
+
+### المتطلبات
+
+```
+PHP >= 8.2
+Composer >= 2.0
+SQLite أو MySQL 8.0+
+```
+
+### الخطوات
 
 ```bash
-# استنساخ المشروع
-git clone [repo-url]
+# 1. استنساخ المشروع
+git clone https://github.com/autosmart/autosmart.git
 cd AutoSmart
 
-# تثبيت المتطلبات
+# 2. تثبيت التبعيات
 composer install
 
-# نسخ ملف البيئة
+# 3. إعداد البيئة
 cp .env.example .env
-
-# إنشاء مفتاح التطبيق
 php artisan key:generate
 
-# تشغيل الـ migrations مع البيانات التجريبية
+# 4. إعداد قاعدة البيانات
+touch database/database.sqlite
 php artisan migrate --seed
 
-# ربط التخزين
+# 5. ربط التخزين
 php artisan storage:link
 
-# تشغيل السيرفر
+# 6. تشغيل الخادم
 php artisan serve
 ```
 
-## بيانات الدخول التجريبية
+### الوصول للتطبيق
 
-| الدور | البريد الإلكتروني | كلمة المرور |
-|-------|-------------------|-------------|
-| مدير | admin@autosmart.sa | password |
-| بائع | seller@autosmart.sa | password |
-| عميل | customer@autosmart.sa | password |
+```
+🌐 الموقع: http://localhost:8000
+👤 Admin: admin@autosmart.com / password
+🏪 Seller: seller@autosmart.com / password
+🔧 Workshop: workshop@autosmart.com / password
+```
 
-## هيكل المشروع
+---
+
+## 📂 هيكل المشروع
 
 ```
 AutoSmart/
 ├── app/
-│   ├── Http/
-│   │   ├── Controllers/
-│   │   │   ├── Admin/           # متحكمات الإدارة
-│   │   │   ├── Api/             # متحكمات API
-│   │   │   ├── Seller/          # متحكمات البائع
-│   │   │   └── Auth/            # متحكمات المصادقة
-│   │   └── Middleware/          # الوسطاء
-│   ├── Livewire/
-│   │   └── Shop/                # مكونات Livewire
-│   ├── Models/                  # النماذج
-│   ├── Notifications/           # الإشعارات
-│   └── Helpers/                 # المساعدات
+│   ├── Http/Controllers/     # 60+ متحكم
+│   ├── Models/               # 80+ نموذج
+│   ├── Services/             # خدمات الأعمال
+│   └── Livewire/             # مكونات تفاعلية
 ├── database/
-│   ├── migrations/              # ملفات الهجرة
-│   └── seeders/                 # ملفات البذر
-├── resources/
-│   └── views/
-│       ├── admin/               # قوالب الإدارة
-│       ├── seller/              # قوالب البائع
-│       ├── livewire/            # قوالب Livewire
-│       └── layouts/             # القوالب الرئيسية
-├── routes/
-│   ├── web.php                  # روابط الويب
-│   └── api.php                  # روابط API
-└── public/
-    ├── manifest.json            # PWA manifest
-    └── robots.txt               # SEO robots
+│   ├── migrations/           # 50+ ملف ترحيل
+│   └── seeders/              # بيانات تجريبية
+├── resources/views/          # 200+ قالب
+├── routes/                   # 394 route
+└── docs/                     # التوثيق
+    ├── FEASIBILITY_STUDY.md  # دراسة الجدوى
+    └── PROJECT_DOCUMENTATION.md # توثيق المشروع
 ```
-
-## API Endpoints
-
-### المصادقة
-```
-POST /api/register     - تسجيل مستخدم جديد
-POST /api/login        - تسجيل الدخول
-POST /api/logout       - تسجيل الخروج (مصادق)
-GET  /api/user         - بيانات المستخدم (مصادق)
-```
-
-### المنتجات
-```
-GET  /api/products            - قائمة المنتجات
-GET  /api/products/featured   - المنتجات المميزة
-GET  /api/products/{id}       - تفاصيل منتج
-GET  /api/categories          - التصنيفات
-GET  /api/car-brands          - ماركات السيارات
-```
-
-### السلة (مصادق)
-```
-GET    /api/cart              - عرض السلة
-POST   /api/cart/add          - إضافة منتج
-PUT    /api/cart/items/{id}   - تحديث الكمية
-DELETE /api/cart/items/{id}   - حذف منتج
-DELETE /api/cart              - تفريغ السلة
-```
-
-### الطلبات (مصادق)
-```
-GET  /api/orders              - قائمة الطلبات
-POST /api/orders              - إنشاء طلب
-GET  /api/orders/{id}         - تفاصيل طلب
-POST /api/orders/{id}/cancel  - إلغاء طلب
-```
-
-## الميزات التقنية
-
-- **نظام الإشعارات** - إشعارات فورية وبريدية
-- **نظام التخزين المؤقت** - Cache للأداء
-- **تحسين الصور** - تخزين وعرض محسن
-- **PWA Ready** - قابل للتثبيت كتطبيق
-- **RTL Support** - دعم كامل للعربية
-- **Responsive Design** - تصميم متجاوب
-
-## الترخيص
-
-هذا المشروع مرخص تحت رخصة MIT.
 
 ---
 
-صنع بـ ❤️ لـ AutoSmart
+## 📊 إحصائيات المشروع
+
+| المكون | العدد |
+|--------|-------|
+| Controllers | 60+ |
+| Models | 80+ |
+| Views | 200+ |
+| Migrations | 50+ |
+| Routes | 394 |
+| Features | 117 |
+
+---
+
+## 🎯 الميزات حسب المراحل
+
+### المرحلة 1: الأساسيات
+- المستخدمين والمصادقة
+- المتاجر والمنتجات
+- الطلبات والسلة
+- التصنيفات والبحث
+
+### المرحلة 2: الإضافات
+- الكوبونات والعروض
+- المحادثات الفورية
+- العناوين والشحن
+- الضمان والمراجعات
+
+### المرحلة 3: المتقدمة
+- نظام سياراتي
+- المدفوعات المتكاملة
+- إدارة المخزون
+- برنامج الولاء
+- ورش الصيانة
+
+### المرحلة 4: الذكية
+- الأسئلة والأجوبة Q&A
+- البحث بـ VIN
+- نظام المزادات
+- التتبع المباشر
+- حسابات B2B
+- بطاقات الهدايا
+- الاشتراكات
+
+### المرحلة 5: الاحترافية
+- التسعير الديناميكي (AI)
+- توقع نفاد المخزون
+- تحليل المشاعر
+- المنتجات المجمعة
+- التسويق بالعمولة
+- نظام الفروع
+- نقاط البيع POS
+- تكامل المحاسبة
+- الواقع المعزز AR
+
+---
+
+## 📚 التوثيق
+
+| الوثيقة | الوصف |
+|---------|-------|
+| [دراسة الجدوى](docs/FEASIBILITY_STUDY.md) | تحليل السوق والمالية |
+| [توثيق المشروع](docs/PROJECT_DOCUMENTATION.md) | الخصائص التقنية والوظيفية |
+
+---
+
+## 🔐 الأمان
+
+- ✅ HTTPS/TLS Encryption
+- ✅ CSRF Protection
+- ✅ Two-Factor Authentication
+- ✅ SQL Injection Prevention
+- ✅ XSS Protection
+- ✅ Rate Limiting
+- ✅ Audit Logging
+
+---
+
+## 🌐 API
+
+```bash
+# مثال: جلب المنتجات
+curl -X GET "http://localhost:8000/api/products" \
+     -H "Authorization: Bearer {token}" \
+     -H "Accept: application/json"
+```
+
+للمزيد راجع [توثيق API](docs/PROJECT_DOCUMENTATION.md#واجهات-البرمجة-api)
+
+---
+
+## 🤝 المساهمة
+
+1. Fork المشروع
+2. إنشاء فرع للميزة (`git checkout -b feature/amazing`)
+3. Commit التغييرات (`git commit -m 'Add amazing feature'`)
+4. Push للفرع (`git push origin feature/amazing`)
+5. فتح Pull Request
+
+---
+
+## 📞 التواصل
+
+- 📧 Email: info@autosmart.com
+- 🌐 Website: www.autosmart.com
+- 📱 Phone: 920XXXXXX
+
+---
+
+## 📄 الترخيص
+
+هذا المشروع مُرخص بموجب [MIT License](LICENSE).
+
+---
+
+<div align="center">
+
+**صُنع بـ ❤️ في المملكة العربية السعودية**
+
+© 2026 AutoSmart. جميع الحقوق محفوظة.
 
 </div>
