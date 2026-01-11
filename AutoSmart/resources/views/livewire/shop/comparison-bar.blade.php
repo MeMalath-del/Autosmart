@@ -1,3 +1,4 @@
+<div>
 @if($count > 0)
 <div class="comparison-bar fixed-bottom bg-white shadow-lg border-top py-3" style="z-index: 1050;">
     <div class="container">
@@ -23,7 +24,7 @@
             </div>
             <div class="d-flex gap-2">
                 @if($count >= 2)
-                    <a href="{{ route('compare.index') }}" class="btn btn-primary">
+                    <a href="{{ route('compare') }}" class="btn btn-primary">
                         <i class="bi bi-columns-gap me-1"></i>
                         مقارنة الآن
                     </a>
@@ -37,3 +38,4 @@
 </div>
 <div style="height: 80px;"></div>
 @endif
+</div>

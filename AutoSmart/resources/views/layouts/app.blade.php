@@ -284,7 +284,7 @@
                 
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('compare.index') }}" title="المقارنة">
+                        <a class="nav-link" href="{{ route('compare') }}" title="المقارنة">
                             <i class="bi bi-columns-gap fs-5"></i>
                         </a>
                     </li>
