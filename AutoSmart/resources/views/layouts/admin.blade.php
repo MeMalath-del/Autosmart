@@ -104,6 +104,29 @@
                 <i class="bi bi-lightning"></i>العروض السريعة
             </a>
 
+            <div class="nav-section mt-3">المرحلة الخامسة</div>
+            <a href="{{ route('admin.pricing.index') }}" class="{{ request()->routeIs('admin.pricing.*') ? 'active' : '' }}">
+                <i class="bi bi-graph-up-arrow"></i>التسعير الديناميكي
+            </a>
+            <a href="{{ route('admin.inventory.alerts') }}" class="{{ request()->routeIs('admin.inventory.*') ? 'active' : '' }}">
+                <i class="bi bi-exclamation-triangle"></i>تنبيهات المخزون
+            </a>
+            <a href="{{ route('admin.returns.index') }}" class="{{ request()->routeIs('admin.returns.*') ? 'active' : '' }}">
+                <i class="bi bi-arrow-return-left"></i>المرتجعات
+            </a>
+            <a href="{{ route('admin.affiliates.index') }}" class="{{ request()->routeIs('admin.affiliates.*') ? 'active' : '' }}">
+                <i class="bi bi-share"></i>الشركاء
+            </a>
+            <a href="{{ route('admin.notifications.index') }}" class="{{ request()->routeIs('admin.notifications.*') ? 'active' : '' }}">
+                <i class="bi bi-bell"></i>حملات الإشعارات
+            </a>
+            <a href="{{ route('admin.audit.index') }}" class="{{ request()->routeIs('admin.audit.*') ? 'active' : '' }}">
+                <i class="bi bi-journal-text"></i>سجل التدقيق
+            </a>
+            <a href="{{ route('admin.accounting.index') }}" class="{{ request()->routeIs('admin.accounting.*') ? 'active' : '' }}">
+                <i class="bi bi-calculator"></i>المحاسبة
+            </a>
+
             <div class="nav-section mt-3">التقارير</div>
             <a href="{{ route('admin.analytics.index') }}" class="{{ request()->routeIs('admin.analytics.*') ? 'active' : '' }}">
                 <i class="bi bi-graph-up"></i>التحليلات

@@ -269,6 +269,9 @@
                             <li><a class="dropdown-item" href="{{ route('vin.search') }}"><i class="bi bi-upc-scan me-2"></i>البحث بالشاسيه</a></li>
                             <li><a class="dropdown-item" href="{{ route('gift-cards.index') }}"><i class="bi bi-gift me-2"></i>بطاقات الهدايا</a></li>
                             <li><a class="dropdown-item" href="{{ route('subscriptions.index') }}"><i class="bi bi-arrow-repeat me-2"></i>الاشتراكات</a></li>
+                            <li><a class="dropdown-item" href="{{ route('bundles.index') }}"><i class="bi bi-box2-heart me-2"></i>الباقات</a></li>
+                            <li><a class="dropdown-item" href="{{ route('compare') }}"><i class="bi bi-columns-gap me-2"></i>مقارنة المنتجات</a></li>
+                            <li><a class="dropdown-item" href="{{ route('affiliate.index') }}"><i class="bi bi-share me-2"></i>برنامج الشركاء</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{{ route('support.faq') }}"><i class="bi bi-question-circle me-2"></i>الأسئلة الشائعة</a></li>
                             <li><a class="dropdown-item" href="{{ route('b2b.index') }}"><i class="bi bi-building me-2"></i>حسابات الشركات</a></li>
@@ -352,6 +355,24 @@
                                 </a></li>
                                 <li><a class="dropdown-item" href="{{ route('referral.index') }}">
                                     <i class="bi bi-people me-2"></i>الإحالات
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ route('preorders.index') }}">
+                                    <i class="bi bi-clock-history me-2"></i>الطلبات المسبقة
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ route('returns.index') }}">
+                                    <i class="bi bi-arrow-counterclockwise me-2"></i>المرتجعات
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ route('parts.index') }}">
+                                    <i class="bi bi-wrench me-2"></i>تتبع القطع
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ route('digital.downloads') }}">
+                                    <i class="bi bi-cloud-download me-2"></i>التحميلات الرقمية
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ route('installation.bookings') }}">
+                                    <i class="bi bi-tools me-2"></i>حجوزات التركيب
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ route('consultations.index') }}">
+                                    <i class="bi bi-headset me-2"></i>الاستشارات الفنية
                                 </a></li>
                                 <li><a class="dropdown-item" href="{{ route('profile') }}">
                                     <i class="bi bi-person me-2"></i>حسابي

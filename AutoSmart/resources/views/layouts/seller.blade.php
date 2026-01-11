@@ -75,6 +75,15 @@
             <a href="{{ route('seller.auctions.index') }}" class="{{ request()->routeIs('seller.auctions.*') ? 'active' : '' }}">
                 <i class="bi bi-hammer"></i>المزادات
             </a>
+            <a href="{{ route('seller.branches.index') }}" class="{{ request()->routeIs('seller.branches.*') ? 'active' : '' }}">
+                <i class="bi bi-geo-alt"></i>الفروع
+            </a>
+            <a href="{{ route('seller.pos.index') }}" class="{{ request()->routeIs('seller.pos.*') ? 'active' : '' }}">
+                <i class="bi bi-upc-scan"></i>نقاط البيع
+            </a>
+            <a href="{{ route('seller.bundles.index') }}" class="{{ request()->routeIs('seller.bundles.*') ? 'active' : '' }}">
+                <i class="bi bi-box2-heart"></i>الباقات
+            </a>
             <a href="{{ route('seller.store.edit') }}" class="{{ request()->routeIs('seller.store.edit') ? 'active' : '' }}">
                 <i class="bi bi-gear"></i>إعدادات المتجر
             </a>

@@ -1,71 +1,114 @@
 @extends('layouts.app')
-@section('title', 'نقاط الولاء')
+@section('title', 'برنامج الولاء')
 @section('content')
 <div class="container py-4">
-    <h1 class="h3 mb-4"><i class="bi bi-stars me-2"></i>نقاط الولاء</h1>
-    
+    <h1 class="h3 mb-4 text-center"><i class="bi bi-award me-2"></i>برنامج الولاء - النقاط والمكافآت</h1>
+
+    <!-- Current Status -->
+    <div class="card mb-4 bg-gradient" style="background: linear-gradient(135deg, {{ $tier['name'] === 'platinum' ? '#1e3a5f' : ($tier['name'] === 'gold' ? '#f59e0b' : ($tier['name'] === 'silver' ? '#6b7280' : '#cd7f32')) }}, {{ $tier['name'] === 'platinum' ? '#0f172a' : ($tier['name'] === 'gold' ? '#d97706' : ($tier['name'] === 'silver' ? '#4b5563' : '#a0522d')) }});">
+        <div class="card-body text-white text-center py-4">
+            <div class="mb-3">
+                @if($tier['name'] === 'platinum')<i class="bi bi-gem display-3"></i>
+                @elseif($tier['name'] === 'gold')<i class="bi bi-trophy display-3"></i>
+                @elseif($tier['name'] === 'silver')<i class="bi bi-star-fill display-3"></i>
+                @else<i class="bi bi-award display-3"></i>@endif
+            </div>
+            <h2 class="mb-1">المستوى {{ $tier['name'] === 'platinum' ? 'البلاتيني' : ($tier['name'] === 'gold' ? 'الذهبي' : ($tier['name'] === 'silver' ? 'الفضي' : 'البرونزي')) }}</h2>
+            <p class="opacity-75 mb-3">مضاعف النقاط: {{ $tier['multiplier'] }}x</p>
+            <div class="row justify-content-center g-4">
+                <div class="col-auto"><div class="text-center"><h3 class="mb-0">{{ number_format($loyaltyPoints?->total_points ?? 0) }}</h3><small>إجمالي النقاط</small></div></div>
+                <div class="col-auto"><div class="text-center"><h3 class="mb-0">{{ number_format($loyaltyPoints?->available_points ?? 0) }}</h3><small>نقاط متاحة</small></div></div>
+                <div class="col-auto"><div class="text-center"><h3 class="mb-0">{{ number_format($loyaltyPoints?->redeemed_points ?? 0) }}</h3><small>نقاط مستبدلة</small></div></div>
+            </div>
+        </div>
+    </div>
+
     <div class="row g-4">
-        <div class="col-lg-4">
-            <div class="card bg-gradient text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                <div class="card-body text-center py-4">
-                    <h6 class="mb-1">رصيد النقاط</h6>
-                    <h1 class="display-4 fw-bold mb-0">{{ number_format($loyalty->points) }}</h1>
-                    <p class="mb-3">≈ {{ number_format($loyalty->points * 0.01, 2) }} ر.س</p>
-                    <span class="badge bg-white text-dark fs-6">{{ $loyalty->tier_label }}</span>
-                </div>
-            </div>
-
-            <div class="card mt-4">
-                <div class="card-header"><h6 class="mb-0">مستويات العضوية</h6></div>
+        <!-- Redeem Points -->
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header"><h5 class="mb-0"><i class="bi bi-gift me-2"></i>استبدال النقاط</h5></div>
                 <div class="card-body">
-                    @foreach($tiers as $key => $tier)
-                        <div class="d-flex justify-content-between align-items-center mb-2 {{ $loyalty->tier === $key ? 'fw-bold text-primary' : '' }}">
-                            <span>{{ $tier['name'] }}</span>
-                            <span>{{ number_format($tier['min']) }}+ نقطة (x{{ $tier['multiplier'] }})</span>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-
-            <div class="card mt-4">
-                <div class="card-header"><h6 class="mb-0">استبدال النقاط</h6></div>
-                <div class="card-body">
-                    <form action="{{ route('loyalty.redeem') }}" method="POST">@csrf
-                        <div class="mb-3">
-                            <label class="form-label">عدد النقاط</label>
-                            <input type="number" name="points" class="form-control" min="100" max="{{ $loyalty->points }}" step="100" value="100">
-                            <div class="form-text">كل 100 نقطة = 1 ر.س</div>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100" {{ $loyalty->points < 100 ? 'disabled' : '' }}>استبدال برصيد المحفظة</button>
-                    </form>
+                    <div class="row g-3">
+                        @foreach($redemptions as $option)
+                            <div class="col-6">
+                                <div class="card {{ $option['available'] ? 'border-primary' : 'border-secondary opacity-50' }}">
+                                    <div class="card-body text-center py-3">
+                                        <h5 class="text-primary mb-0">{{ number_format($option['value']) }} ر.س</h5>
+                                        <small class="text-muted">{{ number_format($option['points']) }} نقطة</small>
+                                        @if($option['available'])
+                                            <form action="{{ route('loyalty.redeem') }}" method="POST" class="mt-2">@csrf
+                                                <input type="hidden" name="points" value="{{ $option['points'] }}">
+                                                <button class="btn btn-sm btn-primary">استبدال</button>
+                                            </form>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-8">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between"><h5 class="mb-0">سجل النقاط</h5><span class="text-muted">مجموع النقاط المكتسبة: {{ number_format($loyalty->lifetime_points) }}</span></div>
+        <!-- Earning Actions -->
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header"><h5 class="mb-0"><i class="bi bi-plus-circle me-2"></i>كيف تكسب النقاط</h5></div>
                 <div class="card-body p-0">
-                    @if($transactions->isEmpty())
-                        <div class="text-center py-5"><i class="bi bi-clock-history display-4 text-muted"></i><p class="text-muted mt-2">لا توجد معاملات</p></div>
-                    @else
-                        <div class="table-responsive"><table class="table table-hover mb-0">
-                            <thead><tr><th>التاريخ</th><th>النوع</th><th>الوصف</th><th>النقاط</th></tr></thead>
-                            <tbody>
-                                @foreach($transactions as $t)
-                                    <tr>
-                                        <td>{{ $t->created_at->format('Y/m/d') }}</td>
-                                        <td><span class="badge bg-{{ $t->type === 'earned' ? 'success' : ($t->type === 'redeemed' ? 'warning' : 'secondary') }}">{{ $t->type_label }}</span></td>
-                                        <td>{{ $t->description }}</td>
-                                        <td class="text-{{ $t->points > 0 ? 'success' : 'danger' }}">{{ $t->points > 0 ? '+' : '' }}{{ $t->points }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table></div>
-                    @endif
+                    <ul class="list-group list-group-flush">
+                        @foreach($earningActions as $action => $config)
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ $config['description'] }}
+                                <span class="badge bg-primary">+{{ $config['points'] ?? ($config['points_per_sar'] . '/ر.س') }}</span>
+                            </li>
+                        @endforeach
+                    </ul>
                 </div>
             </div>
-            <div class="mt-4">{{ $transactions->links() }}</div>
+        </div>
+
+        <!-- Tiers -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header"><h5 class="mb-0"><i class="bi bi-layers me-2"></i>مستويات العضوية</h5></div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        @foreach($tiers as $name => $t)
+                            <div class="col-md-3">
+                                <div class="card {{ $tier['name'] === $name ? 'border-primary' : '' }}">
+                                    <div class="card-body text-center">
+                                        <h6>{{ $name === 'platinum' ? 'البلاتيني' : ($name === 'gold' ? 'الذهبي' : ($name === 'silver' ? 'الفضي' : 'البرونزي')) }}</h6>
+                                        <small class="text-muted">{{ number_format($t['min']) }}+ نقطة</small>
+                                        <p class="text-primary mb-0">{{ $t['multiplier'] }}x مضاعف</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header"><h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>آخر العمليات</h5></div>
+                <div class="card-body p-0">
+                    <table class="table mb-0">
+                        <thead><tr><th>الوصف</th><th>النقاط</th><th>التاريخ</th></tr></thead>
+                        <tbody>
+                            @forelse($transactions as $t)
+                                <tr>
+                                    <td>{{ $t->description }}</td>
+                                    <td><span class="{{ $t->points > 0 ? 'text-success' : 'text-danger' }}">{{ $t->points > 0 ? '+' : '' }}{{ $t->points }}</span></td>
+                                    <td>{{ $t->created_at->diffForHumans() }}</td>
+                                </tr>
+                            @empty<tr><td colspan="3" class="text-center py-4">لا توجد عمليات</td></tr>@endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>

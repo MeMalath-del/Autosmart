@@ -2,49 +2,63 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LoyaltyPoints;
 use App\Models\LoyaltyTransaction;
+use App\Services\AdvancedLoyaltyService;
 use Illuminate\Http\Request;
 
 class LoyaltyController extends Controller
 {
-    public function __construct() { $this->middleware('auth'); }
+    protected $loyalty;
+
+    public function __construct(AdvancedLoyaltyService $loyalty)
+    {
+        $this->middleware('auth');
+        $this->loyalty = $loyalty;
+    }
 
     public function index()
     {
-        $loyalty = LoyaltyPoints::getOrCreate(auth()->id());
-        $transactions = LoyaltyTransaction::where('user_id', auth()->id())
-            ->latest()->paginate(20);
-        
-        $tiers = [
-            'bronze' => ['name' => 'برونزي', 'min' => 0, 'multiplier' => 1],
-            'silver' => ['name' => 'فضي', 'min' => 1000, 'multiplier' => 1.5],
-            'gold' => ['name' => 'ذهبي', 'min' => 5000, 'multiplier' => 2],
-            'platinum' => ['name' => 'بلاتيني', 'min' => 10000, 'multiplier' => 3],
-        ];
+        $user = auth()->user();
+        $tier = $this->loyalty->getUserTier($user);
+        $loyaltyPoints = $user->loyaltyPoints;
+        $transactions = LoyaltyTransaction::where('user_id', $user->id)->latest()->take(20)->get();
+        $redemptions = $this->loyalty->getAvailableRedemptions($user);
+        $earningActions = $this->loyalty->getEarningActions();
+        $tiers = $this->loyalty->getTiers();
 
-        return view('loyalty.index', compact('loyalty', 'transactions', 'tiers'));
+        return view('loyalty.index', compact('tier', 'loyaltyPoints', 'transactions', 'redemptions', 'earningActions', 'tiers'));
     }
 
     public function redeem(Request $request)
     {
-        $request->validate(['points' => 'required|integer|min:100']);
-        
-        $loyalty = LoyaltyPoints::getOrCreate(auth()->id());
-        
-        if ($loyalty->points < $request->points) {
-            return back()->with('error', 'رصيد النقاط غير كافي');
+        $validated = $request->validate([
+            'points' => 'required|integer|min:100',
+        ]);
+
+        $user = auth()->user();
+        $success = $this->loyalty->redeemPoints($user, $validated['points']);
+
+        if (!$success) {
+            return back()->with('error', 'رصيدك غير كافٍ');
         }
 
-        $sarValue = $request->points * 0.01; // كل 100 نقطة = 1 ر.س
+        $value = $this->loyalty->getPointsValue($validated['points']);
         
-        if ($loyalty->redeemPoints($request->points, 'استبدال نقاط برصيد المحفظة')) {
-            $wallet = \App\Models\Wallet::getOrCreateForUser(auth()->id());
-            $wallet->credit($sarValue, 'استبدال ' . $request->points . ' نقطة', 'loyalty', $loyalty->id);
-            
-            return back()->with('success', "تم استبدال {$request->points} نقطة بـ {$sarValue} ر.س");
-        }
+        // Add discount to session or wallet
+        session(['loyalty_discount' => $value]);
 
-        return back()->with('error', 'حدث خطأ في استبدال النقاط');
+        return back()->with('success', 'تم استبدال ' . $validated['points'] . ' نقطة بخصم ' . $value . ' ر.س');
+    }
+
+    public function earnFromAction(Request $request)
+    {
+        $validated = $request->validate([
+            'action' => 'required|string',
+            'reference_id' => 'nullable|integer',
+        ]);
+
+        $points = $this->loyalty->earnPointsFromAction(auth()->user(), $validated['action'], $validated['reference_id']);
+
+        return response()->json(['success' => true, 'points_earned' => $points]);
     }
 }
