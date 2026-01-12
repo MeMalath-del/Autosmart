@@ -273,6 +273,12 @@
                             <li><a class="dropdown-item" href="{{ route('compare') }}"><i class="bi bi-columns-gap me-2"></i>مقارنة المنتجات</a></li>
                             <li><a class="dropdown-item" href="{{ route('affiliate.index') }}"><i class="bi bi-share me-2"></i>برنامج الشركاء</a></li>
                             <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ route('scanner') }}"><i class="bi bi-upc-scan me-2"></i>مسح الباركود</a></li>
+                            <li><a class="dropdown-item" href="{{ route('search.image') }}"><i class="bi bi-image me-2"></i>البحث بالصور</a></li>
+                            <li><a class="dropdown-item" href="{{ route('forum.index') }}"><i class="bi bi-chat-dots me-2"></i>المنتدى</a></li>
+                            <li><a class="dropdown-item" href="{{ route('blog.index') }}"><i class="bi bi-newspaper me-2"></i>المدونة</a></li>
+                            <li><a class="dropdown-item" href="{{ route('installments.calculator') }}"><i class="bi bi-calculator me-2"></i>حاسبة التقسيط</a></li>
+                            <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{{ route('support.faq') }}"><i class="bi bi-question-circle me-2"></i>الأسئلة الشائعة</a></li>
                             <li><a class="dropdown-item" href="{{ route('b2b.index') }}"><i class="bi bi-building me-2"></i>حسابات الشركات</a></li>
                         </ul>
@@ -374,6 +380,9 @@
                                 <li><a class="dropdown-item" href="{{ route('consultations.index') }}">
                                     <i class="bi bi-headset me-2"></i>الاستشارات الفنية
                                 </a></li>
+                                <li><a class="dropdown-item" href="{{ route('installments.index') }}">
+                                    <i class="bi bi-credit-card-2-back me-2"></i>التقسيط
+                                </a></li>
                                 <li><a class="dropdown-item" href="{{ route('profile') }}">
                                     <i class="bi bi-person me-2"></i>حسابي
                                 </a></li>
@@ -416,6 +425,9 @@
     
     <!-- Comparison Bar -->
     @livewire('shop.comparison-bar')
+    
+    <!-- Chatbot -->
+    @livewire('shop.chatbot')
     
     <!-- Footer -->
     <footer class="footer mt-5">

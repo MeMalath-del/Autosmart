@@ -5,23 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PushSubscription extends Model
+class UserEarnedBadge extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'user_id',
-        'endpoint',
-        'public_key',
-        'auth_token',
-        'content_encoding',
-        'is_active',
-        'subscribed_at',
+        'badge_id',
+        'earned_at',
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
-        'subscribed_at' => 'datetime',
+        'earned_at' => 'datetime',
     ];
 
     public function user()
@@ -29,8 +24,8 @@ class PushSubscription extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function scopeActive($query)
+    public function badge()
     {
-        return $query->where('is_active', true);
+        return $this->belongsTo(UserBadge::class, 'badge_id');
     }
 }

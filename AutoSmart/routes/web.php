@@ -203,3 +203,8 @@ require __DIR__ . '/admin_phase5.php';
 require __DIR__ . '/admin_phase5_extended.php';
 require __DIR__ . '/web_phase5_extended.php';
 require __DIR__ . '/web_phase5_final.php';
+
+// Include Phase 6 routes
+require __DIR__ . '/web_phase6.php';
+require __DIR__ . '/seller_phase6.php';
+require __DIR__ . '/admin_phase6.php';

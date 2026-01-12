@@ -2,84 +2,117 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class Wallet extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'user_id',
         'balance',
+        'pending_balance',
+        'currency',
         'is_active',
+        'last_transaction_at',
     ];
 
     protected $casts = [
-        'balance' => 'decimal:2',
+        'balance' => 'float',
+        'pending_balance' => 'float',
         'is_active' => 'boolean',
+        'last_transaction_at' => 'datetime',
     ];
 
-    public function user(): BelongsTo
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function transactions(): HasMany
+    public function transactions()
     {
-        return $this->hasMany(WalletTransaction::class)->orderByDesc('created_at');
+        return $this->hasMany(WalletTransaction::class);
     }
 
-    public function withdrawalRequests(): HasMany
+    public function topups()
     {
-        return $this->hasMany(WithdrawalRequest::class);
+        return $this->hasMany(WalletTopup::class);
     }
 
-    public function credit(float $amount, string $description, ?string $referenceType = null, ?int $referenceId = null, ?array $meta = null): WalletTransaction
+    public function withdrawals()
     {
-        return DB::transaction(function () use ($amount, $description, $referenceType, $referenceId, $meta) {
-            $this->increment('balance', $amount);
-            
-            return $this->transactions()->create([
-                'type' => 'credit',
-                'amount' => $amount,
-                'balance_after' => $this->fresh()->balance,
-                'description' => $description,
-                'reference_type' => $referenceType,
-                'reference_id' => $referenceId,
-                'meta' => $meta,
-            ]);
-        });
+        return $this->hasMany(WalletWithdrawal::class);
     }
 
-    public function debit(float $amount, string $description, ?string $referenceType = null, ?int $referenceId = null, ?array $meta = null): WalletTransaction
+    public function credit($amount, $description, $reference = null, $referenceType = null)
     {
-        if ($amount > $this->balance) {
-            throw new \Exception('رصيد المحفظة غير كافي');
+        $balanceBefore = $this->balance;
+        $this->increment('balance', $amount);
+        
+        return $this->transactions()->create([
+            'transaction_id' => 'TXN-' . strtoupper(Str::random(12)),
+            'type' => 'credit',
+            'amount' => $amount,
+            'balance_before' => $balanceBefore,
+            'balance_after' => $this->balance,
+            'description' => $description,
+            'reference_type' => $referenceType,
+            'reference_id' => $reference,
+        ]);
+    }
+
+    public function debit($amount, $description, $reference = null, $referenceType = null)
+    {
+        if ($this->balance < $amount) {
+            throw new \Exception('Insufficient balance');
         }
-
-        return DB::transaction(function () use ($amount, $description, $referenceType, $referenceId, $meta) {
-            $this->decrement('balance', $amount);
-            
-            return $this->transactions()->create([
-                'type' => 'debit',
-                'amount' => $amount,
-                'balance_after' => $this->fresh()->balance,
-                'description' => $description,
-                'reference_type' => $referenceType,
-                'reference_id' => $referenceId,
-                'meta' => $meta,
-            ]);
-        });
+        
+        $balanceBefore = $this->balance;
+        $this->decrement('balance', $amount);
+        
+        return $this->transactions()->create([
+            'transaction_id' => 'TXN-' . strtoupper(Str::random(12)),
+            'type' => 'debit',
+            'amount' => $amount,
+            'balance_before' => $balanceBefore,
+            'balance_after' => $this->balance,
+            'description' => $description,
+            'reference_type' => $referenceType,
+            'reference_id' => $reference,
+        ]);
     }
 
-    public function canWithdraw(float $amount): bool
+    public function refund($amount, $orderId)
     {
-        return $this->is_active && $this->balance >= $amount;
+        return $this->credit($amount, "استرداد للطلب #{$orderId}", $orderId, Order::class);
     }
 
-    public static function getOrCreateForUser(int $userId): self
+    public function addCashback($amount, $orderId)
     {
-        return self::firstOrCreate(['user_id' => $userId]);
+        $balanceBefore = $this->balance;
+        $this->increment('balance', $amount);
+        
+        return $this->transactions()->create([
+            'transaction_id' => 'TXN-' . strtoupper(Str::random(12)),
+            'type' => 'cashback',
+            'amount' => $amount,
+            'balance_before' => $balanceBefore,
+            'balance_after' => $this->balance,
+            'description' => "كاش باك للطلب #{$orderId}",
+            'reference_type' => Order::class,
+            'reference_id' => $orderId,
+        ]);
+    }
+
+    public function canAfford($amount)
+    {
+        return $this->balance >= $amount;
+    }
+
+    public function getTotalBalanceAttribute()
+    {
+        return $this->balance + $this->pending_balance;
     }
 }

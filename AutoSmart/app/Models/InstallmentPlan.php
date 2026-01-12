@@ -2,33 +2,70 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class InstallmentPlan extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
-        'name', 'provider', 'months', 'min_amount', 'max_amount', 'interest_rate', 'is_active'
+        'name',
+        'name_ar',
+        'months',
+        'interest_rate',
+        'min_amount',
+        'max_amount',
+        'down_payment_percentage',
+        'is_active',
     ];
 
     protected $casts = [
-        'min_amount' => 'decimal:2',
-        'max_amount' => 'decimal:2',
-        'interest_rate' => 'decimal:2',
-        'is_active' => 'boolean'
+        'interest_rate' => 'float',
+        'min_amount' => 'float',
+        'max_amount' => 'float',
+        'down_payment_percentage' => 'float',
+        'is_active' => 'boolean',
     ];
 
-    public function scopeActive($query) { return $query->where('is_active', true); }
-
-    public function calculateMonthlyPayment(float $amount): float
+    public function requests()
     {
-        $totalWithInterest = $amount * (1 + $this->interest_rate / 100);
-        return round($totalWithInterest / $this->months, 2);
+        return $this->hasMany(InstallmentRequest::class, 'plan_id');
     }
 
-    public function isApplicable(float $amount): bool
+    public function scopeActive($query)
     {
-        if ($amount < $this->min_amount) return false;
-        if ($this->max_amount && $amount > $this->max_amount) return false;
-        return true;
+        return $query->where('is_active', true);
+    }
+
+    public function scopeForAmount($query, $amount)
+    {
+        return $query->where('min_amount', '<=', $amount)
+                     ->where('max_amount', '>=', $amount);
+    }
+
+    public function calculateMonthlyPayment($amount)
+    {
+        $downPayment = $amount * ($this->down_payment_percentage / 100);
+        $financedAmount = $amount - $downPayment;
+        
+        if ($this->interest_rate == 0) {
+            return $financedAmount / $this->months;
+        }
+        
+        $monthlyRate = $this->interest_rate / 100 / 12;
+        return ($financedAmount * $monthlyRate * pow(1 + $monthlyRate, $this->months)) / 
+               (pow(1 + $monthlyRate, $this->months) - 1);
+    }
+
+    public function calculateTotalWithInterest($amount)
+    {
+        $downPayment = $amount * ($this->down_payment_percentage / 100);
+        return $downPayment + ($this->calculateMonthlyPayment($amount) * $this->months);
+    }
+
+    public function getLocalizedNameAttribute()
+    {
+        return app()->getLocale() === 'ar' ? ($this->name_ar ?? $this->name) : $this->name;
     }
 }

@@ -2,55 +2,77 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Wallet;
-use App\Models\WithdrawalRequest;
+use App\Services\WalletService;
 use Illuminate\Http\Request;
 
 class WalletController extends Controller
 {
-    public function __construct()
+    protected WalletService $walletService;
+
+    public function __construct(WalletService $walletService)
     {
+        $this->walletService = $walletService;
         $this->middleware('auth');
     }
 
     public function index()
     {
-        $wallet = Wallet::getOrCreateForUser(auth()->id());
-        $transactions = $wallet->transactions()->paginate(20);
-        $pendingWithdrawals = $wallet->withdrawalRequests()->where('status', 'pending')->get();
+        $user = auth()->user();
+        $wallet = $this->walletService->getOrCreateWallet($user);
+        $transactions = $this->walletService->getTransactionHistory($user, 20);
+        
+        return view('wallet.index', compact('wallet', 'transactions'));
+    }
 
-        return view('wallet.index', compact('wallet', 'transactions', 'pendingWithdrawals'));
+    public function topup(Request $request)
+    {
+        $request->validate([
+            'amount' => 'required|numeric|min:10|max:50000',
+            'payment_method' => 'required|in:card,mada,stc_pay,apple_pay',
+        ]);
+        
+        $topup = $this->walletService->topup(
+            auth()->user(),
+            $request->amount,
+            $request->payment_method
+        );
+        
+        // In production, redirect to payment gateway
+        // For now, simulate successful payment
+        $this->walletService->completeTopup($topup, 'PAY-' . uniqid());
+        
+        return back()->with('success', 'تم شحن المحفظة بنجاح');
     }
 
     public function withdraw(Request $request)
     {
         $request->validate([
             'amount' => 'required|numeric|min:100',
-            'bank_name' => 'required|string|max:255',
-            'account_number' => 'required|string|max:50',
-            'account_holder' => 'required|string|max:255',
-            'iban' => 'nullable|string|max:50',
+            'bank_name' => 'required|string',
+            'account_number' => 'required|string',
+            'iban' => 'nullable|string|size:24',
+            'account_holder_name' => 'required|string',
         ]);
-
-        $wallet = Wallet::getOrCreateForUser(auth()->id());
-
-        if (!$wallet->canWithdraw($request->amount)) {
-            return back()->with('error', 'الرصيد غير كافي');
+        
+        try {
+            $withdrawal = $this->walletService->requestWithdrawal(
+                auth()->user(),
+                $request->amount,
+                $request->only(['bank_name', 'account_number', 'iban', 'account_holder_name'])
+            );
+            
+            return back()->with('success', 'تم إرسال طلب السحب بنجاح');
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
         }
+    }
 
-        // خصم المبلغ من المحفظة
-        $wallet->debit($request->amount, 'طلب سحب قيد المعالجة');
-
-        WithdrawalRequest::create([
-            'user_id' => auth()->id(),
-            'wallet_id' => $wallet->id,
-            'amount' => $request->amount,
-            'bank_name' => $request->bank_name,
-            'account_number' => $request->account_number,
-            'account_holder' => $request->account_holder,
-            'iban' => $request->iban,
-        ]);
-
-        return back()->with('success', 'تم إرسال طلب السحب');
+    public function transactions()
+    {
+        $user = auth()->user();
+        $wallet = $this->walletService->getOrCreateWallet($user);
+        $transactions = $wallet->transactions()->orderByDesc('created_at')->paginate(50);
+        
+        return view('wallet.transactions', compact('wallet', 'transactions'));
     }
 }
