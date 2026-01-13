@@ -8,22 +8,15 @@ use App\Models\AiChatSession;
 
 class Chatbot extends Component
 {
-    public $isOpen = false;
-    public $messages = [];
-    public $newMessage = '';
-    public $sessionToken = null;
-    public $isTyping = false;
-
-    protected ChatbotService $chatbotService;
-
-    public function boot(ChatbotService $chatbotService)
-    {
-        $this->chatbotService = $chatbotService;
-    }
+    public bool $isOpen = false;
+    public array $messages = [];
+    public string $newMessage = '';
+    public string $sessionToken = '';
+    public bool $isTyping = false;
 
     public function mount()
     {
-        $this->sessionToken = session('chatbot_session');
+        $this->sessionToken = session('chatbot_session', '');
         
         if ($this->sessionToken) {
             $session = AiChatSession::where('session_token', $this->sessionToken)
@@ -41,6 +34,11 @@ class Chatbot extends Component
             }
         }
     }
+    
+    protected function getChatbotService(): ChatbotService
+    {
+        return app(ChatbotService::class);
+    }
 
     public function toggleChat()
     {
@@ -53,7 +51,7 @@ class Chatbot extends Component
 
     public function startSession()
     {
-        $session = $this->chatbotService->createSession(auth()->id());
+        $session = $this->getChatbotService()->createSession(auth()->id());
         $this->sessionToken = $session->session_token;
         session(['chatbot_session' => $this->sessionToken]);
         
@@ -88,13 +86,13 @@ class Chatbot extends Component
             ->first();
         
         if (!$session) {
-            $session = $this->chatbotService->createSession(auth()->id());
+            $session = $this->getChatbotService()->createSession(auth()->id());
             $this->sessionToken = $session->session_token;
             session(['chatbot_session' => $this->sessionToken]);
         }
         
         // Process message
-        $response = $this->chatbotService->processMessage($session, $message);
+        $response = $this->getChatbotService()->processMessage($session, $message);
         
         $this->isTyping = false;
         
@@ -117,7 +115,7 @@ class Chatbot extends Component
         $session = AiChatSession::where('session_token', $this->sessionToken)->first();
         
         if ($session) {
-            $this->chatbotService->transferToHuman($session);
+            $this->getChatbotService()->transferToHuman($session);
             
             $this->messages[] = [
                 'role' => 'system',
