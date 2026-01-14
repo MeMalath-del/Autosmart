@@ -14,7 +14,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::post('/rules/{rule}/toggle', [\App\Http\Controllers\Admin\FraudController::class, 'toggleRule'])->name('toggle-rule');
         Route::delete('/rules/{rule}', [\App\Http\Controllers\Admin\FraudController::class, 'deleteRule'])->name('delete-rule');
     });
-    
+
     // KYC Verification
     Route::prefix('kyc')->name('kyc.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\KycController::class, 'index'])->name('index');
@@ -23,7 +23,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::post('/{verification}/approve', [\App\Http\Controllers\Admin\KycController::class, 'approve'])->name('approve');
         Route::post('/{verification}/reject', [\App\Http\Controllers\Admin\KycController::class, 'reject'])->name('reject');
     });
-    
+
     // Installment Management
     Route::prefix('installments')->name('installments.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\InstallmentAdminController::class, 'index'])->name('index');

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ImageSearchService;
 use App\Models\ImageSearch;
+use App\Services\ImageSearchService;
 use Illuminate\Http\Request;
 
 class ImageSearchController extends Controller
@@ -25,20 +25,20 @@ class ImageSearchController extends Controller
         $request->validate([
             'image' => 'required|image|max:5120', // 5MB max
         ]);
-        
+
         $result = $this->searchService->searchByImage(
             $request->file('image'),
             auth()->id()
         );
-        
+
         $products = $result->matchedProductsList;
-        
+
         if ($request->wantsJson()) {
             return response()->json([
                 'success' => true,
                 'results_count' => $result->results_count,
                 'confidence' => $result->confidence_score,
-                'products' => $products->map(function($product) {
+                'products' => $products->map(function ($product) {
                     return [
                         'id' => $product->id,
                         'name' => $product->name,
@@ -49,7 +49,7 @@ class ImageSearchController extends Controller
                 }),
             ]);
         }
-        
+
         return view('search.image-results', compact('result', 'products'));
     }
 
@@ -58,7 +58,7 @@ class ImageSearchController extends Controller
         $searches = ImageSearch::where('user_id', auth()->id())
             ->orderByDesc('created_at')
             ->paginate(20);
-        
+
         return view('search.image-history', compact('searches'));
     }
 }

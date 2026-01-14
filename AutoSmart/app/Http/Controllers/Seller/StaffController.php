@@ -9,13 +9,16 @@ use Illuminate\Http\Request;
 
 class StaffController extends Controller
 {
-    public function __construct() { $this->middleware(['auth', 'seller']); }
+    public function __construct()
+    {
+        $this->middleware(['auth', 'seller']);
+    }
 
     public function index()
     {
         $store = auth()->user()->store;
         $staff = StoreStaff::where('store_id', $store->id)->with('user')->get();
-        
+
         return view('seller.staff.index', compact('staff'));
     }
 
@@ -60,13 +63,18 @@ class StaffController extends Controller
 
     public function edit(StoreStaff $staff)
     {
-        if ($staff->store_id !== auth()->user()->store->id) abort(403);
+        if ($staff->store_id !== auth()->user()->store->id) {
+            abort(403);
+        }
+
         return view('seller.staff.edit', compact('staff'));
     }
 
     public function update(Request $request, StoreStaff $staff)
     {
-        if ($staff->store_id !== auth()->user()->store->id) abort(403);
+        if ($staff->store_id !== auth()->user()->store->id) {
+            abort(403);
+        }
 
         $staff->update([
             'position' => $request->position,
@@ -84,8 +92,11 @@ class StaffController extends Controller
 
     public function destroy(StoreStaff $staff)
     {
-        if ($staff->store_id !== auth()->user()->store->id) abort(403);
+        if ($staff->store_id !== auth()->user()->store->id) {
+            abort(403);
+        }
         $staff->delete();
+
         return back()->with('success', 'تم حذف الموظف');
     }
 }

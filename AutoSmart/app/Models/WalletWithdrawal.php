@@ -44,7 +44,7 @@ class WalletWithdrawal extends Model
     {
         // Return the amount to the wallet
         $this->wallet->credit($this->amount, 'إلغاء طلب سحب', $this->id, self::class);
-        
+
         $this->update([
             'status' => 'rejected',
             'rejection_reason' => $reason,
@@ -58,7 +58,7 @@ class WalletWithdrawal extends Model
 
     public function getStatusBadgeAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'pending' => '<span class="badge bg-warning">قيد الانتظار</span>',
             'processing' => '<span class="badge bg-info">جاري المعالجة</span>',
             'completed' => '<span class="badge bg-success">مكتمل</span>',

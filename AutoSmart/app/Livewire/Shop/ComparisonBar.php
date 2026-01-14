@@ -2,12 +2,13 @@
 
 namespace App\Livewire\Shop;
 
-use Livewire\Component;
 use App\Models\Comparison;
+use Livewire\Component;
 
 class ComparisonBar extends Component
 {
     public $products = [];
+
     public int $count = 0;
 
     protected $listeners = ['comparisonUpdated' => 'loadComparison'];

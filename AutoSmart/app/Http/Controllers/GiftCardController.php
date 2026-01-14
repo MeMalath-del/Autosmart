@@ -12,6 +12,7 @@ class GiftCardController extends Controller
     {
         $templates = GiftCardTemplate::where('is_active', true)->get();
         $amounts = [50, 100, 200, 500, 1000];
+
         return view('gift-cards.index', compact('templates', 'amounts'));
     }
 
@@ -54,17 +55,20 @@ class GiftCardController extends Controller
 
     public function success(GiftCard $giftCard)
     {
-        if ($giftCard->purchased_by !== auth()->id()) abort(403);
+        if ($giftCard->purchased_by !== auth()->id()) {
+            abort(403);
+        }
+
         return view('gift-cards.success', compact('giftCard'));
     }
 
     public function check(Request $request)
     {
         $request->validate(['code' => 'required|string']);
-        
+
         $giftCard = GiftCard::findByCode($request->code);
-        
-        if (!$giftCard) {
+
+        if (! $giftCard) {
             return back()->with('error', 'البطاقة غير موجودة');
         }
 
@@ -75,7 +79,7 @@ class GiftCardController extends Controller
     {
         $purchased = GiftCard::where('purchased_by', auth()->id())->latest()->get();
         $received = GiftCard::where('recipient_id', auth()->id())->orWhere('recipient_email', auth()->user()->email)->latest()->get();
-        
+
         return view('gift-cards.my-cards', compact('purchased', 'received'));
     }
 }

@@ -7,8 +7,11 @@ use Illuminate\Support\Facades\Cache;
 class CacheHelper
 {
     const TTL_SHORT = 300;      // 5 minutes
+
     const TTL_MEDIUM = 1800;    // 30 minutes
+
     const TTL_LONG = 3600;      // 1 hour
+
     const TTL_DAY = 86400;      // 24 hours
 
     public static function categories()
@@ -54,7 +57,7 @@ class CacheHelper
         });
     }
 
-    public static function clear(string $key = null)
+    public static function clear(?string $key = null)
     {
         if ($key) {
             Cache::forget($key);

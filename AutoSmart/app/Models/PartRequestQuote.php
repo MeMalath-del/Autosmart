@@ -57,12 +57,12 @@ class PartRequestQuote extends Model
     public function accept(): void
     {
         $this->update(['status' => 'accepted']);
-        
+
         // رفض باقي العروض
         $this->partRequest->quotes()
             ->where('id', '!=', $this->id)
             ->update(['status' => 'rejected']);
-        
+
         // إغلاق الطلب
         $this->partRequest->update(['status' => 'closed']);
     }

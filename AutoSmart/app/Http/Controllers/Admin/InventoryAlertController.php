@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\InventoryAlert;
 use App\Services\InventoryForecastService;
-use Illuminate\Http\Request;
 
 class InventoryAlertController extends Controller
 {
-    public function __construct() { $this->middleware(['auth', 'role:admin']); }
+    public function __construct()
+    {
+        $this->middleware(['auth', 'role:admin']);
+    }
 
     public function index(InventoryForecastService $service)
     {
@@ -30,12 +32,14 @@ class InventoryAlertController extends Controller
     public function resolve(InventoryAlert $alert)
     {
         $alert->update(['is_resolved' => true, 'resolved_at' => now()]);
+
         return back()->with('success', 'تم حل التنبيه');
     }
 
     public function generateForecasts(InventoryForecastService $service)
     {
         $service->generateForecasts();
+
         return back()->with('success', 'تم تحديث التوقعات');
     }
 }

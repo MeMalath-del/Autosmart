@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 // ===============================
 
 Route::prefix('seller')->name('seller.')->middleware(['auth', 'seller'])->group(function () {
-    
+
     // Branches
     Route::prefix('branches')->name('branches.')->group(function () {
         Route::get('/', [App\Http\Controllers\Seller\BranchController::class, 'index'])->name('index');

@@ -8,11 +8,15 @@ use Illuminate\Http\Request;
 
 class PreorderController extends Controller
 {
-    public function __construct() { $this->middleware('auth'); }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function index()
     {
         $preorders = Preorder::where('user_id', auth()->id())->with('product.images')->latest()->paginate(10);
+
         return view('preorders.index', compact('preorders'));
     }
 
@@ -23,7 +27,7 @@ class PreorderController extends Controller
         ]);
 
         $settings = $product->preorderSettings;
-        if (!$settings || !$settings->allow_preorder) {
+        if (! $settings || ! $settings->allow_preorder) {
             return back()->with('error', 'الطلب المسبق غير متاح لهذا المنتج');
         }
 
@@ -43,18 +47,24 @@ class PreorderController extends Controller
 
     public function show(Preorder $preorder)
     {
-        if ($preorder->user_id !== auth()->id()) abort(403);
+        if ($preorder->user_id !== auth()->id()) {
+            abort(403);
+        }
         $preorder->load('product.images');
+
         return view('preorders.show', compact('preorder'));
     }
 
     public function cancel(Preorder $preorder)
     {
-        if ($preorder->user_id !== auth()->id()) abort(403);
-        if (!in_array($preorder->status, ['pending', 'confirmed'])) {
+        if ($preorder->user_id !== auth()->id()) {
+            abort(403);
+        }
+        if (! in_array($preorder->status, ['pending', 'confirmed'])) {
             return back()->with('error', 'لا يمكن إلغاء هذا الطلب');
         }
         $preorder->cancel();
+
         return back()->with('success', 'تم إلغاء الطلب المسبق');
     }
 }

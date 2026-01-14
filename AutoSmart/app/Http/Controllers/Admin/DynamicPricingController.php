@@ -10,11 +10,15 @@ use Illuminate\Http\Request;
 
 class DynamicPricingController extends Controller
 {
-    public function __construct() { $this->middleware(['auth', 'role:admin']); }
+    public function __construct()
+    {
+        $this->middleware(['auth', 'role:admin']);
+    }
 
     public function index()
     {
         $rules = DynamicPricingRule::with(['product', 'category', 'store'])->latest()->paginate(20);
+
         return view('admin.pricing.index', compact('rules'));
     }
 
@@ -22,6 +26,7 @@ class DynamicPricingController extends Controller
     {
         $products = \App\Models\Product::active()->get();
         $categories = \App\Models\Category::all();
+
         return view('admin.pricing.create', compact('products', 'categories'));
     }
 
@@ -44,24 +49,28 @@ class DynamicPricingController extends Controller
         ]);
 
         DynamicPricingRule::create($validated);
+
         return redirect()->route('admin.pricing.index')->with('success', 'تم إنشاء قاعدة التسعير');
     }
 
     public function history()
     {
         $history = PriceHistory::with('product')->latest()->paginate(50);
+
         return view('admin.pricing.history', compact('history'));
     }
 
     public function apply(DynamicPricingService $service)
     {
         $updated = $service->updateProductPrices();
-        return back()->with('success', 'تم تحديث أسعار ' . count($updated) . ' منتج');
+
+        return back()->with('success', 'تم تحديث أسعار '.count($updated).' منتج');
     }
 
     public function destroy(DynamicPricingRule $rule)
     {
         $rule->delete();
+
         return back()->with('success', 'تم حذف القاعدة');
     }
 }

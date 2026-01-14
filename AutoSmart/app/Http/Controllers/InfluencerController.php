@@ -7,13 +7,16 @@ use Illuminate\Http\Request;
 
 class InfluencerController extends Controller
 {
-    public function __construct() { $this->middleware('auth'); }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function index()
     {
         $influencer = Influencer::where('user_id', auth()->id())->first();
-        
-        if (!$influencer) {
+
+        if (! $influencer) {
             return view('influencer.apply');
         }
 
@@ -22,7 +25,7 @@ class InfluencerController extends Controller
         }
 
         $sales = $influencer->sales()->with('order')->latest()->paginate(20);
-        
+
         return view('influencer.dashboard', compact('influencer', 'sales'));
     }
 
@@ -46,14 +49,14 @@ class InfluencerController extends Controller
     public function link(string $code)
     {
         $influencer = Influencer::where('code', strtoupper($code))->approved()->first();
-        
-        if (!$influencer) {
+
+        if (! $influencer) {
             abort(404);
         }
 
         session(['influencer_code' => $influencer->code]);
 
         return redirect()->route('home')
-            ->with('success', 'مرحباً! أنت تتصفح عبر رابط ' . $influencer->user->name);
+            ->with('success', 'مرحباً! أنت تتصفح عبر رابط '.$influencer->user->name);
     }
 }

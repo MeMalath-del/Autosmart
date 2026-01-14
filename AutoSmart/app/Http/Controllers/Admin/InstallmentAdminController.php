@@ -24,26 +24,26 @@ class InstallmentAdminController extends Controller
             ->with(['user', 'plan', 'order'])
             ->orderBy('created_at')
             ->get();
-        
+
         $activeInstallments = InstallmentRequest::where('status', 'active')
             ->with(['user', 'plan', 'payments'])
             ->orderByDesc('created_at')
             ->paginate(20);
-        
+
         $stats = [
             'pending' => InstallmentRequest::where('status', 'pending')->count(),
             'active' => InstallmentRequest::where('status', 'active')->count(),
             'total_financed' => InstallmentRequest::where('status', 'active')->sum('financed_amount'),
             'overdue_payments' => $this->installmentService->getOverduePayments()->count(),
         ];
-        
+
         return view('admin.installments.index', compact('pendingRequests', 'activeInstallments', 'stats'));
     }
 
     public function show(InstallmentRequest $installment)
     {
         $installment->load(['user', 'plan', 'payments', 'order']);
-        
+
         return view('admin.installments.show', compact('installment'));
     }
 
@@ -52,9 +52,9 @@ class InstallmentAdminController extends Controller
         if ($installment->status !== 'pending') {
             return back()->with('error', 'لا يمكن الموافقة على هذا الطلب');
         }
-        
+
         $this->installmentService->approveRequest($installment);
-        
+
         return back()->with('success', 'تمت الموافقة على طلب التقسيط');
     }
 
@@ -63,16 +63,16 @@ class InstallmentAdminController extends Controller
         $request->validate([
             'rejection_reason' => 'required|string|min:10',
         ]);
-        
+
         $this->installmentService->rejectRequest($installment, $request->rejection_reason);
-        
+
         return back()->with('success', 'تم رفض طلب التقسيط');
     }
 
     public function plans()
     {
         $plans = InstallmentPlan::withCount('requests')->get();
-        
+
         return view('admin.installments.plans', compact('plans'));
     }
 
@@ -92,24 +92,24 @@ class InstallmentAdminController extends Controller
             'max_amount' => 'required|numeric|gt:min_amount',
             'down_payment_percentage' => 'required|numeric|min:0|max:100',
         ]);
-        
+
         InstallmentPlan::create($request->all());
-        
+
         return redirect()->route('admin.installments.plans')
             ->with('success', 'تم إنشاء خطة التقسيط');
     }
 
     public function togglePlan(InstallmentPlan $plan)
     {
-        $plan->update(['is_active' => !$plan->is_active]);
-        
+        $plan->update(['is_active' => ! $plan->is_active]);
+
         return back()->with('success', 'تم تحديث حالة الخطة');
     }
 
     public function overduePayments()
     {
         $overduePayments = $this->installmentService->getOverduePayments();
-        
+
         return view('admin.installments.overdue', compact('overduePayments'));
     }
 }

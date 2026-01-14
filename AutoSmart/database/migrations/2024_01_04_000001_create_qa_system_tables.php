@@ -40,7 +40,7 @@ return new class extends Migration
             $table->morphs('voteable');
             $table->boolean('is_helpful')->default(true);
             $table->timestamps();
-            
+
             $table->unique(['user_id', 'voteable_type', 'voteable_id']);
         });
     }

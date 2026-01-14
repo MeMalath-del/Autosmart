@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
-use App\Models\Category;
 use App\Models\CarBrand;
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -14,7 +14,7 @@ class ProductController extends Controller
     {
         $query = Product::with(['store:id,name,slug', 'category:id,name,slug', 'images'])
             ->active()
-            ->whereHas('store', fn($q) => $q->approved());
+            ->whereHas('store', fn ($q) => $q->approved());
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -30,7 +30,7 @@ class ProductController extends Controller
         }
 
         if ($request->filled('brand')) {
-            $query->whereHas('carModels.brand', fn($q) => $q->where('id', $request->brand));
+            $query->whereHas('carModels.brand', fn ($q) => $q->where('id', $request->brand));
         }
 
         if ($request->filled('condition')) {
@@ -61,7 +61,7 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        if (!$product->is_active) {
+        if (! $product->is_active) {
             return response()->json(['message' => 'المنتج غير متوفر'], 404);
         }
 

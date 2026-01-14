@@ -21,7 +21,7 @@ class StoreController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhereHas('user', fn($q) => $q->where('name', 'like', "%{$search}%"));
+                    ->orWhereHas('user', fn ($q) => $q->where('name', 'like', "%{$search}%"));
             });
         }
 
@@ -33,6 +33,7 @@ class StoreController extends Controller
     public function show(Store $store)
     {
         $store->load(['user', 'products', 'orders']);
+
         return view('admin.stores.show', compact('store'));
     }
 
@@ -58,24 +59,28 @@ class StoreController extends Controller
     public function suspend(Store $store)
     {
         $store->update(['status' => 'suspended']);
+
         return back()->with('success', 'تم تعليق المتجر');
     }
 
     public function activate(Store $store)
     {
         $store->update(['status' => 'approved']);
+
         return back()->with('success', 'تم تفعيل المتجر');
     }
 
     public function toggleFeatured(Store $store)
     {
-        $store->update(['is_featured' => !$store->is_featured]);
+        $store->update(['is_featured' => ! $store->is_featured]);
+
         return back()->with('success', 'تم تحديث حالة التميز');
     }
 
     public function toggleVerified(Store $store)
     {
-        $store->update(['is_verified' => !$store->is_verified]);
+        $store->update(['is_verified' => ! $store->is_verified]);
+
         return back()->with('success', 'تم تحديث حالة التوثيق');
     }
 }

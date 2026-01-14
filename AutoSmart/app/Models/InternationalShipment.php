@@ -43,7 +43,7 @@ class InternationalShipment extends Model
 
     public function getStatusBadgeAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'pending' => '<span class="badge bg-warning">قيد الانتظار</span>',
             'customs_processing' => '<span class="badge bg-info">في الجمارك</span>',
             'in_transit' => '<span class="badge bg-primary">في الطريق</span>',

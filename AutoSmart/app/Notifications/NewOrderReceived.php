@@ -4,8 +4,8 @@ namespace App\Notifications;
 
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
 class NewOrderReceived extends Notification
 {
@@ -26,11 +26,11 @@ class NewOrderReceived extends Notification
     public function toMail($notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('طلب جديد #' . $this->order->order_number)
-            ->greeting('مرحباً ' . $notifiable->name)
-            ->line('تلقيت طلب جديد من ' . $this->order->user->name)
-            ->line('المبلغ الإجمالي: ' . number_format($this->order->total, 2) . ' ر.س')
-            ->action('عرض الطلب', url('/seller/orders/' . $this->order->id))
+            ->subject('طلب جديد #'.$this->order->order_number)
+            ->greeting('مرحباً '.$notifiable->name)
+            ->line('تلقيت طلب جديد من '.$this->order->user->name)
+            ->line('المبلغ الإجمالي: '.number_format($this->order->total, 2).' ر.س')
+            ->action('عرض الطلب', url('/seller/orders/'.$this->order->id))
             ->line('يرجى تجهيز الطلب في أقرب وقت!');
     }
 
@@ -41,7 +41,7 @@ class NewOrderReceived extends Notification
             'order_number' => $this->order->order_number,
             'customer_name' => $this->order->user->name,
             'total' => $this->order->total,
-            'message' => 'طلب جديد #' . $this->order->order_number . ' من ' . $this->order->user->name,
+            'message' => 'طلب جديد #'.$this->order->order_number.' من '.$this->order->user->name,
         ];
     }
 }

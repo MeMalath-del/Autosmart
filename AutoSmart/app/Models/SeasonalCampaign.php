@@ -56,14 +56,14 @@ class SeasonalCampaign extends Model
 
     public function isRunning()
     {
-        return $this->is_active && 
-               $this->starts_at <= now() && 
+        return $this->is_active &&
+               $this->starts_at <= now() &&
                $this->ends_at >= now();
     }
 
     public function getTypeNameAttribute()
     {
-        return match($this->type) {
+        return match ($this->type) {
             'ramadan' => 'رمضان',
             'eid' => 'العيد',
             'national_day' => 'اليوم الوطني',
@@ -78,7 +78,10 @@ class SeasonalCampaign extends Model
 
     public function getRemainingTimeAttribute()
     {
-        if (!$this->isRunning()) return null;
+        if (! $this->isRunning()) {
+            return null;
+        }
+
         return $this->ends_at->diffForHumans();
     }
 }

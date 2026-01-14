@@ -107,11 +107,11 @@ return new class extends Migration
         Schema::dropIfExists('abandoned_cart_reminders');
         Schema::dropIfExists('email_campaign_logs');
         Schema::dropIfExists('email_campaigns');
-        
+
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn(['referral_code', 'referred_by']);
         });
-        
+
         Schema::dropIfExists('referrals');
         Schema::dropIfExists('loyalty_settings');
         Schema::dropIfExists('loyalty_transactions');

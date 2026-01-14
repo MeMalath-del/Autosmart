@@ -2,26 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SupportTicket;
 use App\Models\Faq;
 use App\Models\KnowledgeBase;
+use App\Models\SupportTicket;
 use Illuminate\Http\Request;
 
 class SupportTicketController extends Controller
 {
-    public function __construct() { $this->middleware('auth'); }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function index()
     {
         $tickets = SupportTicket::where('user_id', auth()->id())
             ->latest()
             ->paginate(10);
+
         return view('support.index', compact('tickets'));
     }
 
     public function create()
     {
         $faqs = Faq::active()->get()->groupBy('category');
+
         return view('support.create', compact('faqs'));
     }
 
@@ -51,18 +56,21 @@ class SupportTicketController extends Controller
 
     public function show(SupportTicket $supportTicket)
     {
-        if ($supportTicket->user_id !== auth()->id() && !auth()->user()->isAdmin()) {
+        if ($supportTicket->user_id !== auth()->id() && ! auth()->user()->isAdmin()) {
             abort(403);
         }
-        
+
         $supportTicket->load('replies.user');
+
         return view('support.show', compact('supportTicket'));
     }
 
     public function reply(Request $request, SupportTicket $supportTicket)
     {
-        if ($supportTicket->user_id !== auth()->id()) abort(403);
-        
+        if ($supportTicket->user_id !== auth()->id()) {
+            abort(403);
+        }
+
         $request->validate(['message' => 'required|string|max:5000']);
         $supportTicket->addReply(auth()->user(), $request->message);
         $supportTicket->update(['status' => 'open']);
@@ -73,18 +81,21 @@ class SupportTicketController extends Controller
     public function faq()
     {
         $faqs = Faq::active()->get()->groupBy('category');
+
         return view('support.faq', compact('faqs'));
     }
 
     public function knowledgeBase()
     {
         $articles = KnowledgeBase::published()->orderBy('sort_order')->get()->groupBy('category');
+
         return view('support.knowledge-base', compact('articles'));
     }
 
     public function article(KnowledgeBase $article)
     {
         $article->incrementViews();
+
         return view('support.article', compact('article'));
     }
 }

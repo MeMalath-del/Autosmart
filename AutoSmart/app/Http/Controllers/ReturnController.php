@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ReturnRequest;
 use App\Models\Order;
+use App\Models\ReturnRequest;
 use Illuminate\Http\Request;
 
 class ReturnController extends Controller
 {
-    public function __construct() { $this->middleware('auth'); }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function index()
     {
@@ -16,24 +19,30 @@ class ReturnController extends Controller
             ->with('order')
             ->latest()
             ->paginate(10);
+
         return view('returns.index', compact('returns'));
     }
 
     public function create(Order $order)
     {
-        if ($order->user_id !== auth()->id()) abort(403);
-        if (!in_array($order->status, ['delivered'])) {
+        if ($order->user_id !== auth()->id()) {
+            abort(403);
+        }
+        if (! in_array($order->status, ['delivered'])) {
             return back()->with('error', 'لا يمكن إرجاع هذا الطلب');
         }
-        
+
         $order->load('items.product');
+
         return view('returns.create', compact('order'));
     }
 
     public function store(Request $request, Order $order)
     {
-        if ($order->user_id !== auth()->id()) abort(403);
-        
+        if ($order->user_id !== auth()->id()) {
+            abort(403);
+        }
+
         $validated = $request->validate([
             'type' => 'required|in:return,exchange',
             'reason' => 'required|in:defective,wrong_item,not_as_described,changed_mind,other',
@@ -70,8 +79,11 @@ class ReturnController extends Controller
 
     public function show(ReturnRequest $return)
     {
-        if ($return->user_id !== auth()->id()) abort(403);
+        if ($return->user_id !== auth()->id()) {
+            abort(403);
+        }
         $return->load(['order', 'items.orderItem.product']);
+
         return view('returns.show', compact('return'));
     }
 }

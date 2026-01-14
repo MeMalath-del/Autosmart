@@ -46,6 +46,6 @@ class CarModel extends Model
 
     public function getFullNameAttribute(): string
     {
-        return $this->brand->name . ' ' . $this->name;
+        return $this->brand->name.' '.$this->name;
     }
 }

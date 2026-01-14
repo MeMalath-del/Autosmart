@@ -2,13 +2,14 @@
 
 namespace App\Livewire\Shop;
 
-use Livewire\Component;
 use App\Models\Comparison;
 use App\Models\Product;
+use Livewire\Component;
 
 class CompareButton extends Component
 {
     public Product $product;
+
     public bool $isInComparison = false;
 
     protected $listeners = ['comparisonUpdated' => 'checkStatus'];

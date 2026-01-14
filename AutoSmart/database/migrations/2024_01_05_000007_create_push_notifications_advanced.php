@@ -75,7 +75,7 @@ return new class extends Migration
             $table->timestamp('used_at')->nullable();
             $table->timestamp('expires_at');
             $table->timestamps();
-            
+
             $table->unique(['user_id', 'offer_id']);
         });
 

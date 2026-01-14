@@ -31,20 +31,31 @@ class FlashSaleProduct extends Model
 
     public function isAvailable(): bool
     {
-        if (!$this->flashSale->isActive()) return false;
-        if ($this->quantity_limit && $this->sold_count >= $this->quantity_limit) return false;
+        if (! $this->flashSale->isActive()) {
+            return false;
+        }
+        if ($this->quantity_limit && $this->sold_count >= $this->quantity_limit) {
+            return false;
+        }
+
         return true;
     }
 
     public function getRemainingQuantityAttribute(): ?int
     {
-        if (!$this->quantity_limit) return null;
+        if (! $this->quantity_limit) {
+            return null;
+        }
+
         return max(0, $this->quantity_limit - $this->sold_count);
     }
 
     public function getDiscountPercentageAttribute(): int
     {
-        if (!$this->product || $this->product->price <= 0) return 0;
+        if (! $this->product || $this->product->price <= 0) {
+            return 0;
+        }
+
         return round((($this->product->price - $this->sale_price) / $this->product->price) * 100);
     }
 }

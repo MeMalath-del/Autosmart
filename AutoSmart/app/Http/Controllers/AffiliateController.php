@@ -8,16 +8,19 @@ use Illuminate\Http\Request;
 
 class AffiliateController extends Controller
 {
-    public function __construct() { $this->middleware('auth'); }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function index()
     {
         $affiliate = Affiliate::where('user_id', auth()->id())->first();
-        
-        if (!$affiliate) {
+
+        if (! $affiliate) {
             return view('affiliate.apply');
         }
-        
+
         if ($affiliate->status === 'pending') {
             return view('affiliate.pending', compact('affiliate'));
         }
@@ -31,7 +34,7 @@ class AffiliateController extends Controller
             'pending_earnings' => $affiliate->pending_earnings,
             'total_earnings' => $affiliate->total_earnings,
         ];
-        
+
         return view('affiliate.dashboard', compact('affiliate', 'links', 'sales', 'stats'));
     }
 
@@ -54,7 +57,7 @@ class AffiliateController extends Controller
     public function createLink(Request $request)
     {
         $affiliate = Affiliate::where('user_id', auth()->id())->approved()->firstOrFail();
-        
+
         $validated = $request->validate([
             'name' => 'nullable|string|max:100',
             'destination_url' => 'required|url',
@@ -62,28 +65,28 @@ class AffiliateController extends Controller
         ]);
 
         $link = $affiliate->links()->create($validated);
-        
+
         return back()->with('success', 'تم إنشاء الرابط');
     }
 
     public function track(string $code)
     {
         $link = AffiliateLink::where('code', $code)->where('is_active', true)->firstOrFail();
-        
+
         $click = $link->affiliate->recordClick(request()->ip());
         $link->increment('clicks');
-        
+
         session(['affiliate_click_id' => $click->id, 'affiliate_code' => $link->affiliate->code]);
-        
+
         return redirect($link->destination_url);
     }
 
     public function requestPayout(Request $request)
     {
         $affiliate = Affiliate::where('user_id', auth()->id())->approved()->firstOrFail();
-        
-        if (!$affiliate->canRequestPayout()) {
-            return back()->with('error', 'الحد الأدنى للسحب هو ' . $affiliate->minimum_payout . ' ر.س');
+
+        if (! $affiliate->canRequestPayout()) {
+            return back()->with('error', 'الحد الأدنى للسحب هو '.$affiliate->minimum_payout.' ر.س');
         }
 
         $affiliate->payouts()->create([

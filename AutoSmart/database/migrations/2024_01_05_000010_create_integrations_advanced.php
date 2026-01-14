@@ -107,7 +107,7 @@ return new class extends Migration
             $table->json('dashboard_widgets')->nullable();
             $table->json('quick_actions')->nullable();
             $table->timestamps();
-            
+
             $table->unique('user_id');
         });
     }

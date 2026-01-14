@@ -3,22 +3,24 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Http\Controllers\Controller;
-use App\Models\StoreBranch;
 use App\Models\PosSession;
-use App\Models\PosTransaction;
 use App\Models\Product;
+use App\Models\StoreBranch;
 use Illuminate\Http\Request;
 
 class PosController extends Controller
 {
-    public function __construct() { $this->middleware(['auth', 'seller']); }
+    public function __construct()
+    {
+        $this->middleware(['auth', 'seller']);
+    }
 
     public function index()
     {
         $store = auth()->user()->store;
         $branches = StoreBranch::where('store_id', $store->id)->active()->get();
         $activeSession = PosSession::where('user_id', auth()->id())->whereNull('closed_at')->first();
-        
+
         return view('seller.pos.index', compact('branches', 'activeSession'));
     }
 
@@ -30,7 +32,9 @@ class PosController extends Controller
         ]);
 
         $branch = StoreBranch::findOrFail($validated['branch_id']);
-        if ($branch->store_id !== auth()->user()->store->id) abort(403);
+        if ($branch->store_id !== auth()->user()->store->id) {
+            abort(403);
+        }
 
         $session = PosSession::create([
             'branch_id' => $validated['branch_id'],
@@ -44,18 +48,24 @@ class PosController extends Controller
 
     public function terminal(PosSession $session)
     {
-        if ($session->user_id !== auth()->id()) abort(403);
-        if (!$session->isOpen()) return redirect()->route('seller.pos.index')->with('error', 'الجلسة مغلقة');
-        
+        if ($session->user_id !== auth()->id()) {
+            abort(403);
+        }
+        if (! $session->isOpen()) {
+            return redirect()->route('seller.pos.index')->with('error', 'الجلسة مغلقة');
+        }
+
         $products = auth()->user()->store->products()->active()->with('images')->get();
         $transactions = $session->transactions()->latest()->limit(10)->get();
-        
+
         return view('seller.pos.terminal', compact('session', 'products', 'transactions'));
     }
 
     public function sale(Request $request, PosSession $session)
     {
-        if ($session->user_id !== auth()->id() || !$session->isOpen()) abort(403);
+        if ($session->user_id !== auth()->id() || ! $session->isOpen()) {
+            abort(403);
+        }
 
         $validated = $request->validate([
             'items' => 'required|array|min:1',
@@ -107,7 +117,9 @@ class PosController extends Controller
 
     public function closeSession(Request $request, PosSession $session)
     {
-        if ($session->user_id !== auth()->id()) abort(403);
+        if ($session->user_id !== auth()->id()) {
+            abort(403);
+        }
 
         $validated = $request->validate([
             'closing_balance' => 'required|numeric|min:0',
@@ -115,7 +127,9 @@ class PosController extends Controller
         ]);
 
         $session->close($validated['closing_balance']);
-        if ($validated['notes']) $session->update(['notes' => $validated['notes']]);
+        if ($validated['notes']) {
+            $session->update(['notes' => $validated['notes']]);
+        }
 
         return redirect()->route('seller.pos.index')
             ->with('success', 'تم إغلاق الجلسة');
@@ -127,6 +141,7 @@ class PosController extends Controller
             ->with('branch')
             ->latest()
             ->paginate(20);
+
         return view('seller.pos.history', compact('sessions'));
     }
 }

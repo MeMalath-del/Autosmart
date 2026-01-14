@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('user_agent')->nullable();
             $table->string('referrer')->nullable();
             $table->timestamps();
-            
+
             $table->index(['product_id', 'created_at']);
         });
 
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->integer('results_count')->default(0);
             $table->boolean('has_click')->default(false);
             $table->timestamps();
-            
+
             $table->index('query');
         });
 
@@ -47,7 +47,7 @@ return new class extends Migration
             $table->integer('orders')->default(0);
             $table->decimal('revenue', 12, 2)->default(0);
             $table->timestamps();
-            
+
             $table->unique(['store_id', 'date']);
         });
 
@@ -63,7 +63,7 @@ return new class extends Migration
             $table->string('ip_address')->nullable();
             $table->string('user_agent')->nullable();
             $table->timestamps();
-            
+
             $table->index(['model_type', 'model_id']);
         });
 
@@ -122,11 +122,11 @@ return new class extends Migration
         Schema::dropIfExists('role_permissions');
         Schema::dropIfExists('permissions');
         Schema::dropIfExists('roles');
-        
+
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn(['two_factor_enabled', 'two_factor_secret', 'two_factor_recovery_codes']);
         });
-        
+
         Schema::dropIfExists('two_factor_tokens');
         Schema::dropIfExists('activity_logs');
         Schema::dropIfExists('store_analytics');

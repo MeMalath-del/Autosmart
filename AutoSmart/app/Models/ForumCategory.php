@@ -27,8 +27,8 @@ class ForumCategory extends Model
 
     public function getLocalizedNameAttribute()
     {
-        return app()->getLocale() === 'ar' 
-            ? ($this->name_ar ?? $this->name) 
+        return app()->getLocale() === 'ar'
+            ? ($this->name_ar ?? $this->name)
             : $this->name;
     }
 

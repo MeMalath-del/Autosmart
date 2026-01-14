@@ -10,20 +10,38 @@ class UserCar extends Model
 {
     protected $fillable = [
         'user_id', 'car_brand_id', 'car_model_id', 'year', 'vin',
-        'plate_number', 'color', 'nickname', 'is_primary'
+        'plate_number', 'color', 'nickname', 'is_primary',
     ];
 
     protected $casts = ['is_primary' => 'boolean'];
 
-    public function user(): BelongsTo { return $this->belongsTo(User::class); }
-    public function brand(): BelongsTo { return $this->belongsTo(CarBrand::class, 'car_brand_id'); }
-    public function model(): BelongsTo { return $this->belongsTo(CarModel::class, 'car_model_id'); }
-    public function maintenanceLogs(): HasMany { return $this->hasMany(CarMaintenanceLog::class); }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function brand(): BelongsTo
+    {
+        return $this->belongsTo(CarBrand::class, 'car_brand_id');
+    }
+
+    public function model(): BelongsTo
+    {
+        return $this->belongsTo(CarModel::class, 'car_model_id');
+    }
+
+    public function maintenanceLogs(): HasMany
+    {
+        return $this->hasMany(CarMaintenanceLog::class);
+    }
 
     public function getDisplayNameAttribute(): string
     {
-        if ($this->nickname) return $this->nickname;
-        return ($this->brand?->name ?? '') . ' ' . ($this->model?->name ?? '') . ' ' . ($this->year ?? '');
+        if ($this->nickname) {
+            return $this->nickname;
+        }
+
+        return ($this->brand?->name ?? '').' '.($this->model?->name ?? '').' '.($this->year ?? '');
     }
 
     public function setAsPrimary(): void

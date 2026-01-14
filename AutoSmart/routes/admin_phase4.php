@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 // ===============================
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
-    
+
     // Advanced Reports
     Route::get('/reports/advanced', [App\Http\Controllers\Admin\AdvancedReportsController::class, 'index'])->name('reports.advanced');
     Route::post('/reports/generate', [App\Http\Controllers\Admin\AdvancedReportsController::class, 'generate'])->name('reports.generate');
@@ -19,7 +19,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
         Route::get('/{ticket}', [App\Http\Controllers\Admin\SupportController::class, 'show'])->name('show');
         Route::post('/{ticket}/reply', [App\Http\Controllers\Admin\SupportController::class, 'reply'])->name('reply');
         Route::post('/{ticket}/assign', [App\Http\Controllers\Admin\SupportController::class, 'assign'])->name('assign');
-        
+
         Route::get('/content/faqs', [App\Http\Controllers\Admin\SupportController::class, 'faqs'])->name('faqs');
         Route::post('/content/faqs', [App\Http\Controllers\Admin\SupportController::class, 'storeFaq'])->name('faqs.store');
         Route::get('/content/knowledge-base', [App\Http\Controllers\Admin\SupportController::class, 'knowledgeBase'])->name('kb');
@@ -69,7 +69,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 // ===============================
 
 Route::prefix('seller')->name('seller.')->middleware(['auth', 'seller'])->group(function () {
-    
+
     // Staff Management
     Route::resource('staff', App\Http\Controllers\Seller\StaffController::class);
 

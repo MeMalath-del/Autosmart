@@ -50,7 +50,7 @@ return new class extends Migration
             $table->boolean('notify_outbid')->default(true);
             $table->boolean('notify_ending')->default(true);
             $table->timestamps();
-            
+
             $table->unique(['auction_id', 'user_id']);
         });
     }

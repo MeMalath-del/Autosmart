@@ -46,7 +46,7 @@ class LockerReservation extends Model
             'status' => 'picked_up',
             'picked_up_at' => now(),
         ]);
-        
+
         $this->locker->increment('available_compartments');
     }
 
@@ -57,7 +57,7 @@ class LockerReservation extends Model
 
     public function getStatusBadgeAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'reserved' => '<span class="badge bg-warning">محجوز</span>',
             'stored' => '<span class="badge bg-info">مخزن</span>',
             'picked_up' => '<span class="badge bg-success">تم الاستلام</span>',

@@ -4,17 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Invoice;
 use App\Models\Order;
-use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
-    public function __construct() { $this->middleware('auth'); }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function show(Invoice $invoice)
     {
-        if ($invoice->order->user_id !== auth()->id() && 
-            $invoice->order->store->user_id !== auth()->id() && 
-            !auth()->user()->isAdmin()) {
+        if ($invoice->order->user_id !== auth()->id() &&
+            $invoice->order->store->user_id !== auth()->id() &&
+            ! auth()->user()->isAdmin()) {
             abort(403);
         }
 
@@ -23,9 +25,9 @@ class InvoiceController extends Controller
 
     public function download(Invoice $invoice)
     {
-        if ($invoice->order->user_id !== auth()->id() && 
-            $invoice->order->store->user_id !== auth()->id() && 
-            !auth()->user()->isAdmin()) {
+        if ($invoice->order->user_id !== auth()->id() &&
+            $invoice->order->store->user_id !== auth()->id() &&
+            ! auth()->user()->isAdmin()) {
             abort(403);
         }
 

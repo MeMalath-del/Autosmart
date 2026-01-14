@@ -38,7 +38,7 @@ return new class extends Migration
             $table->string('session_id')->nullable();
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->timestamps();
-            
+
             $table->index(['user_id', 'created_at']);
             $table->index(['session_id', 'created_at']);
         });

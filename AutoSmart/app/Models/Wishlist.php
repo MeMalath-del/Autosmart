@@ -30,6 +30,7 @@ class Wishlist extends Model
 
         if ($wishlist) {
             $wishlist->delete();
+
             return false;
         }
 
@@ -43,7 +44,7 @@ class Wishlist extends Model
 
     public static function isInWishlist(int $productId): bool
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return false;
         }
 

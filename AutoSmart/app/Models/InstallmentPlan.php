@@ -41,26 +41,28 @@ class InstallmentPlan extends Model
     public function scopeForAmount($query, $amount)
     {
         return $query->where('min_amount', '<=', $amount)
-                     ->where('max_amount', '>=', $amount);
+            ->where('max_amount', '>=', $amount);
     }
 
     public function calculateMonthlyPayment($amount)
     {
         $downPayment = $amount * ($this->down_payment_percentage / 100);
         $financedAmount = $amount - $downPayment;
-        
+
         if ($this->interest_rate == 0) {
             return $financedAmount / $this->months;
         }
-        
+
         $monthlyRate = $this->interest_rate / 100 / 12;
-        return ($financedAmount * $monthlyRate * pow(1 + $monthlyRate, $this->months)) / 
+
+        return ($financedAmount * $monthlyRate * pow(1 + $monthlyRate, $this->months)) /
                (pow(1 + $monthlyRate, $this->months) - 1);
     }
 
     public function calculateTotalWithInterest($amount)
     {
         $downPayment = $amount * ($this->down_payment_percentage / 100);
+
         return $downPayment + ($this->calculateMonthlyPayment($amount) * $this->months);
     }
 

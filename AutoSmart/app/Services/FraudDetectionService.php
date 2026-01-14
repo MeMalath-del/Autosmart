@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\User;
-use App\Models\Order;
 use App\Models\FraudAlert;
 use App\Models\FraudRule;
+use App\Models\Order;
+use App\Models\User;
 
 class FraudDetectionService
 {
@@ -13,9 +13,9 @@ class FraudDetectionService
     {
         $riskFactors = [];
         $totalRisk = 0;
-        
+
         $rules = FraudRule::active()->get();
-        
+
         foreach ($rules as $rule) {
             $ruleResult = $this->evaluateRule($rule, $order);
             if ($ruleResult['triggered']) {
@@ -28,15 +28,15 @@ class FraudDetectionService
                 $totalRisk += $rule->risk_weight;
             }
         }
-        
+
         // Additional built-in checks
         $builtInChecks = $this->performBuiltInChecks($order);
         $riskFactors = array_merge($riskFactors, $builtInChecks['factors']);
         $totalRisk += $builtInChecks['risk'];
-        
+
         // Normalize risk score (0-1)
         $riskScore = min(1, $totalRisk);
-        
+
         // Create alert if risk is significant
         if ($riskScore >= 0.3) {
             return FraudAlert::create([
@@ -48,7 +48,7 @@ class FraudDetectionService
                 'status' => 'new',
             ]);
         }
-        
+
         return null;
     }
 
@@ -57,7 +57,7 @@ class FraudDetectionService
         $conditions = $rule->conditions ?? [];
         $triggered = false;
         $details = [];
-        
+
         switch ($rule->rule_type) {
             case 'velocity':
                 $result = $this->checkVelocity($order, $conditions);
@@ -71,7 +71,7 @@ class FraudDetectionService
             default:
                 $result = ['triggered' => false, 'details' => []];
         }
-        
+
         return $result;
     }
 
@@ -79,11 +79,11 @@ class FraudDetectionService
     {
         $timeWindow = $conditions['time_window_minutes'] ?? 60;
         $maxOrders = $conditions['max_orders'] ?? 5;
-        
+
         $recentOrders = Order::where('user_id', $order->user_id)
             ->where('created_at', '>=', now()->subMinutes($timeWindow))
             ->count();
-        
+
         if ($recentOrders > $maxOrders) {
             return [
                 'triggered' => true,
@@ -94,14 +94,14 @@ class FraudDetectionService
                 ],
             ];
         }
-        
+
         return ['triggered' => false, 'details' => []];
     }
 
     protected function checkAmount(Order $order, array $conditions): array
     {
         $maxAmount = $conditions['max_amount'] ?? 10000;
-        
+
         if ($order->total > $maxAmount) {
             return [
                 'triggered' => true,
@@ -112,7 +112,7 @@ class FraudDetectionService
                 ],
             ];
         }
-        
+
         return ['triggered' => false, 'details' => []];
     }
 
@@ -122,20 +122,20 @@ class FraudDetectionService
         $user = $order->user;
         $triggered = false;
         $details = [];
-        
+
         // New account with high-value order
         if ($user->created_at > now()->subDays(7) && $order->total > 1000) {
             $triggered = true;
             $details['new_account_high_value'] = true;
         }
-        
+
         // Multiple shipping addresses
         $addressCount = $user->addresses()->count();
         if ($addressCount > 5) {
             $triggered = true;
             $details['multiple_addresses'] = $addressCount;
         }
-        
+
         return [
             'triggered' => $triggered,
             'details' => $details,
@@ -146,10 +146,10 @@ class FraudDetectionService
     {
         $factors = [];
         $risk = 0;
-        
+
         // Check 1: IP geolocation mismatch
         // (Simplified - in production use IP geolocation service)
-        
+
         // Check 2: Multiple payment methods attempted
         $failedPayments = 0; // Would check payment gateway logs
         if ($failedPayments >= 3) {
@@ -160,13 +160,13 @@ class FraudDetectionService
             ];
             $risk += 0.3;
         }
-        
+
         // Check 3: Email domain check
         $user = $order->user;
         $email = $user->email;
         $disposableDomains = ['tempmail.com', 'throwaway.com', '10minutemail.com'];
         $domain = substr($email, strpos($email, '@') + 1);
-        
+
         if (in_array($domain, $disposableDomains)) {
             $factors[] = [
                 'rule' => 'بريد إلكتروني مؤقت',
@@ -175,7 +175,7 @@ class FraudDetectionService
             ];
             $risk += 0.25;
         }
-        
+
         return [
             'factors' => $factors,
             'risk' => $risk,
@@ -184,21 +184,29 @@ class FraudDetectionService
 
     protected function determineAlertType(array $riskFactors): string
     {
-        if (empty($riskFactors)) return 'pattern_match';
-        
+        if (empty($riskFactors)) {
+            return 'pattern_match';
+        }
+
         $types = array_column($riskFactors, 'type');
-        
-        if (in_array('velocity', $types)) return 'velocity_check';
-        if (in_array('amount', $types)) return 'high_value';
-        if (in_array('payment', $types)) return 'suspicious_payment';
-        
+
+        if (in_array('velocity', $types)) {
+            return 'velocity_check';
+        }
+        if (in_array('amount', $types)) {
+            return 'high_value';
+        }
+        if (in_array('payment', $types)) {
+            return 'suspicious_payment';
+        }
+
         return 'pattern_match';
     }
 
     public function blockUser(User $user, string $reason): void
     {
         $user->update(['is_blocked' => true]);
-        
+
         // Log the action
         FraudAlert::where('user_id', $user->id)
             ->where('status', 'new')

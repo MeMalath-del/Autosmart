@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('session_id')->nullable();
             $table->timestamps();
-            
+
             $table->index(['user_id', 'session_id']);
         });
 
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->integer('quantity')->default(1);
             $table->timestamps();
-            
+
             $table->unique(['cart_id', 'product_id']);
         });
     }

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Http\Controllers\Controller;
-use App\Models\Warehouse;
-use App\Models\WarehouseStock;
 use App\Models\InventoryMovement;
 use App\Models\Product;
+use App\Models\Warehouse;
+use App\Models\WarehouseStock;
 use Illuminate\Http\Request;
 
 class InventoryController extends Controller
@@ -16,7 +16,7 @@ class InventoryController extends Controller
         $store = auth()->user()->store;
         $warehouses = $store->warehouses;
 
-        $query = WarehouseStock::whereHas('warehouse', fn($q) => $q->where('store_id', $store->id))
+        $query = WarehouseStock::whereHas('warehouse', fn ($q) => $q->where('store_id', $store->id))
             ->with(['warehouse', 'product']);
 
         if ($request->filled('warehouse')) {
@@ -27,7 +27,7 @@ class InventoryController extends Controller
         }
 
         $stocks = $query->paginate(20);
-        $lowStockCount = WarehouseStock::whereHas('warehouse', fn($q) => $q->where('store_id', $store->id))
+        $lowStockCount = WarehouseStock::whereHas('warehouse', fn ($q) => $q->where('store_id', $store->id))
             ->whereRaw('quantity <= low_stock_threshold')->count();
 
         return view('seller.inventory.index', compact('stocks', 'warehouses', 'lowStockCount'));
@@ -36,6 +36,7 @@ class InventoryController extends Controller
     public function warehouses()
     {
         $warehouses = auth()->user()->store->warehouses;
+
         return view('seller.inventory.warehouses', compact('warehouses'));
     }
 
@@ -46,7 +47,7 @@ class InventoryController extends Controller
             'address' => 'nullable|string|max:200',
             'city' => 'nullable|string|max:100',
         ]);
-        
+
         $validated['store_id'] = auth()->user()->store->id;
         $warehouse = Warehouse::create($validated);
 
@@ -59,7 +60,9 @@ class InventoryController extends Controller
 
     public function adjust(Request $request, Product $product)
     {
-        if ($product->store_id !== auth()->user()->store->id) abort(403);
+        if ($product->store_id !== auth()->user()->store->id) {
+            abort(403);
+        }
 
         $validated = $request->validate([
             'warehouse_id' => 'required|exists:warehouses,id',
@@ -74,7 +77,7 @@ class InventoryController extends Controller
         );
 
         $oldQty = $stock->quantity;
-        
+
         if ($validated['type'] === 'adjustment') {
             $stock->update(['quantity' => $validated['quantity']]);
         } else {
@@ -101,8 +104,8 @@ class InventoryController extends Controller
     public function movements(Request $request)
     {
         $store = auth()->user()->store;
-        
-        $movements = InventoryMovement::whereHas('product', fn($q) => $q->where('store_id', $store->id))
+
+        $movements = InventoryMovement::whereHas('product', fn ($q) => $q->where('store_id', $store->id))
             ->with(['product', 'warehouse', 'user'])
             ->latest()
             ->paginate(30);

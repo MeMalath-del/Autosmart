@@ -32,7 +32,7 @@ class FraudRule extends Model
 
     public function getRuleTypeNameAttribute()
     {
-        return match($this->rule_type) {
+        return match ($this->rule_type) {
             'velocity' => 'السرعة',
             'amount' => 'المبلغ',
             'behavior' => 'السلوك',
@@ -44,7 +44,7 @@ class FraudRule extends Model
 
     public function getActionBadgeAttribute()
     {
-        return match($this->action) {
+        return match ($this->action) {
             'flag' => '<span class="badge bg-warning">تنبيه</span>',
             'block' => '<span class="badge bg-danger">حظر</span>',
             'review' => '<span class="badge bg-info">مراجعة</span>',

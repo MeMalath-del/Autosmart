@@ -68,7 +68,7 @@ class TutorialVideo extends Model
 
     public function getDifficultyNameAttribute()
     {
-        return match($this->difficulty) {
+        return match ($this->difficulty) {
             'easy' => 'سهل',
             'medium' => 'متوسط',
             'hard' => 'صعب',
@@ -78,9 +78,12 @@ class TutorialVideo extends Model
 
     public function getDurationFormattedAttribute()
     {
-        if (!$this->duration) return null;
+        if (! $this->duration) {
+            return null;
+        }
         $minutes = floor($this->duration / 60);
         $seconds = $this->duration % 60;
+
         return sprintf('%d:%02d', $minutes, $seconds);
     }
 }

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Role extends Model
 {
     protected $fillable = ['name', 'display_name', 'description', 'is_system'];
+
     protected $casts = ['is_system' => 'boolean'];
 
     public function permissions(): BelongsToMany

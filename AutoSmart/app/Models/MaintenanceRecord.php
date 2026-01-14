@@ -54,7 +54,7 @@ class MaintenanceRecord extends Model
 
     public function getRecordTypeNameAttribute()
     {
-        return match($this->record_type) {
+        return match ($this->record_type) {
             'oil_change' => 'تغيير زيت',
             'tire_rotation' => 'تدوير الإطارات',
             'brake_service' => 'صيانة الفرامل',
@@ -74,6 +74,7 @@ class MaintenanceRecord extends Model
         if ($this->next_service_date && $this->next_service_date <= now()) {
             return true;
         }
+
         return false;
     }
 }

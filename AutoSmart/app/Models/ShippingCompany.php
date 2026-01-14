@@ -27,7 +27,10 @@ class ShippingCompany extends Model
 
     public function getTrackingLink(string $trackingNumber): ?string
     {
-        if (!$this->tracking_url) return null;
+        if (! $this->tracking_url) {
+            return null;
+        }
+
         return str_replace('{tracking_number}', $trackingNumber, $this->tracking_url);
     }
 

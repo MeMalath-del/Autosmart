@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Models\UserBehavior;
-use App\Models\User;
 use App\Models\Product;
+use App\Models\User;
+use App\Models\UserBehavior;
 use Illuminate\Support\Collection;
 
 class BehaviorAnalyticsService
@@ -53,7 +53,7 @@ class BehaviorAnalyticsService
         $behaviors = UserBehavior::forUser($user->id)
             ->where('created_at', '>=', now()->subDays(30))
             ->get();
-        
+
         return [
             'total_sessions' => $behaviors->groupBy('session_id')->count(),
             'total_events' => $behaviors->count(),
@@ -68,8 +68,8 @@ class BehaviorAnalyticsService
     protected function getMostViewedCategories(Collection $behaviors): array
     {
         $productViews = $behaviors->where('event_type', 'product_view');
-        
-        return $productViews->groupBy(function($item) {
+
+        return $productViews->groupBy(function ($item) {
             return $item->event_data['category_id'] ?? 'unknown';
         })->map->count()->sortDesc()->take(5)->toArray();
     }
@@ -89,29 +89,33 @@ class BehaviorAnalyticsService
         $views = $behaviors->where('event_type', 'product_view')->count();
         $cartAdds = $behaviors->where('event_type', 'add_to_cart')->count();
         $purchases = $behaviors->where('event_type', 'purchase')->count();
-        
-        if ($views === 0) return 0;
-        
+
+        if ($views === 0) {
+            return 0;
+        }
+
         // Simple conversion funnel score
         $score = 0;
         $score += min(1, $views / 10) * 0.2;  // View activity
         $score += min(1, $cartAdds / 3) * 0.4; // Cart activity
         $score += min(1, $purchases) * 0.4;    // Purchase history
-        
+
         return round($score, 2);
     }
 
     protected function getPreferredBrowsingTime(Collection $behaviors): ?string
     {
-        if ($behaviors->isEmpty()) return null;
-        
-        $hourCounts = $behaviors->groupBy(function($item) {
+        if ($behaviors->isEmpty()) {
+            return null;
+        }
+
+        $hourCounts = $behaviors->groupBy(function ($item) {
             return $item->created_at->format('H');
         })->map->count();
-        
+
         $peakHour = $hourCounts->sortDesc()->keys()->first();
-        
-        return match(true) {
+
+        return match (true) {
             $peakHour >= 6 && $peakHour < 12 => 'صباحاً',
             $peakHour >= 12 && $peakHour < 17 => 'ظهراً',
             $peakHour >= 17 && $peakHour < 21 => 'مساءً',
@@ -122,7 +126,7 @@ class BehaviorAnalyticsService
     protected function getDeviceBreakdown(Collection $behaviors): array
     {
         return $behaviors->groupBy('device_type')
-            ->map(function($items, $device) use ($behaviors) {
+            ->map(function ($items, $device) use ($behaviors) {
                 return round(($items->count() / $behaviors->count()) * 100, 1);
             })->toArray();
     }
@@ -136,7 +140,7 @@ class BehaviorAnalyticsService
             ->orderByDesc('view_count')
             ->limit($limit)
             ->pluck('event_target');
-        
+
         return Product::whereIn('id', $productViews)->get();
     }
 

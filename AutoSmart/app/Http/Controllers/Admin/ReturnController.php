@@ -8,7 +8,10 @@ use Illuminate\Http\Request;
 
 class ReturnController extends Controller
 {
-    public function __construct() { $this->middleware(['auth', 'role:admin']); }
+    public function __construct()
+    {
+        $this->middleware(['auth', 'role:admin']);
+    }
 
     public function index(Request $request)
     {
@@ -31,6 +34,7 @@ class ReturnController extends Controller
     public function show(ReturnRequest $return)
     {
         $return->load(['user', 'order', 'items.orderItem.product']);
+
         return view('admin.returns.show', compact('return'));
     }
 
@@ -50,18 +54,21 @@ class ReturnController extends Controller
     public function reject(Request $request, ReturnRequest $return)
     {
         $return->update(['status' => 'rejected', 'inspection_notes' => $request->reason]);
+
         return back()->with('success', 'تم رفض الطلب');
     }
 
     public function markReceived(ReturnRequest $return)
     {
         $return->markReceived();
+
         return back()->with('success', 'تم تأكيد استلام المرتجعات');
     }
 
     public function complete(ReturnRequest $return)
     {
         $return->complete();
+
         // Process refund based on method
         return back()->with('success', 'تم إتمام الإرجاع والاسترداد');
     }

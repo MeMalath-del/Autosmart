@@ -2,11 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\AiChatSession;
 use App\Models\AiChatMessage;
-use App\Models\Product;
-use App\Models\Category;
+use App\Models\AiChatSession;
 use App\Models\Order;
+use App\Models\Product;
 
 class ChatbotService
 {
@@ -77,14 +76,14 @@ class ChatbotService
     {
         // Save user message
         $session->addMessage('user', $message);
-        
+
         // Detect intent
         $intent = $this->detectIntent($message);
         $entities = $this->extractEntities($message);
-        
+
         // Generate response
         $response = $this->generateResponse($intent, $entities, $session);
-        
+
         // Save assistant message
         return $session->addMessage('assistant', $response['text'], [
             'intent' => $intent,
@@ -98,7 +97,7 @@ class ChatbotService
     {
         $message = mb_strtolower($message);
         $detectedIntents = [];
-        
+
         foreach ($this->intents as $intent => $keywords) {
             foreach ($keywords as $keyword) {
                 if (mb_strpos($message, mb_strtolower($keyword)) !== false) {
@@ -107,34 +106,34 @@ class ChatbotService
                 }
             }
         }
-        
+
         return array_unique($detectedIntents);
     }
 
     protected function extractEntities(string $message): array
     {
         $entities = [];
-        
+
         // Extract product names
         $products = Product::where('name', 'like', "%{$message}%")
             ->orWhere('name_ar', 'like', "%{$message}%")
             ->limit(5)
             ->get();
-        
+
         if ($products->count() > 0) {
             $entities['products'] = $products->pluck('id')->toArray();
         }
-        
+
         // Extract order numbers
         if (preg_match('/\#?(\d{6,})/u', $message, $matches)) {
             $entities['order_number'] = $matches[1];
         }
-        
+
         // Extract car models
         if (preg_match('/(تويوتا|هوندا|نيسان|هيونداي|كيا|فورد|شيفروليه)/u', $message, $matches)) {
             $entities['car_brand'] = $matches[1];
         }
-        
+
         return $entities;
     }
 
@@ -143,9 +142,9 @@ class ChatbotService
         $primaryIntent = $intents[0] ?? 'fallback';
         $responses = $this->responses[$primaryIntent] ?? $this->responses['fallback'];
         $text = $responses[array_rand($responses)];
-        
+
         // Enhance response based on entities
-        if (!empty($entities['products'])) {
+        if (! empty($entities['products'])) {
             $products = Product::whereIn('id', $entities['products'])->limit(3)->get();
             if ($products->count() > 0) {
                 $text .= "\n\nوجدت لك بعض المنتجات:\n";
@@ -154,10 +153,10 @@ class ChatbotService
                 }
             }
         }
-        
+
         // Add suggestions based on context
         $suggestions = $this->getSuggestions($primaryIntent);
-        
+
         return [
             'text' => $text,
             'confidence' => $primaryIntent === 'fallback' ? 0.3 : 0.85,
@@ -167,7 +166,7 @@ class ChatbotService
 
     protected function getSuggestions(string $intent): array
     {
-        return match($intent) {
+        return match ($intent) {
             'greeting' => ['البحث عن قطع غيار', 'متابعة طلب', 'التحدث مع خدمة العملاء'],
             'product_search' => ['فلاتر', 'زيوت', 'فرامل', 'إطارات'],
             'order_status' => ['عرض الطلبات', 'تتبع الشحنة'],

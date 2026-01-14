@@ -14,7 +14,7 @@ return new class extends Migration
             $table->foreignId('follower_id')->constrained('users')->onDelete('cascade');
             $table->morphs('followable');
             $table->timestamps();
-            
+
             $table->unique(['follower_id', 'followable_type', 'followable_id']);
         });
 
@@ -88,7 +88,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->enum('role', ['member', 'moderator', 'admin'])->default('member');
             $table->timestamps();
-            
+
             $table->unique(['group_id', 'user_id']);
         });
 

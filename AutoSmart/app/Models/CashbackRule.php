@@ -51,7 +51,7 @@ class CashbackRule extends Model
             return 0;
         }
 
-        $cashback = $this->type === 'percentage' 
+        $cashback = $this->type === 'percentage'
             ? $orderAmount * ($this->value / 100)
             : $this->value;
 
@@ -64,11 +64,11 @@ class CashbackRule extends Model
 
     public function appliesTo($order)
     {
-        if (!empty($this->applicable_stores)) {
+        if (! empty($this->applicable_stores)) {
             // Check if order items from applicable stores
         }
-        
-        if (!empty($this->applicable_categories)) {
+
+        if (! empty($this->applicable_categories)) {
             // Check if order items from applicable categories
         }
 

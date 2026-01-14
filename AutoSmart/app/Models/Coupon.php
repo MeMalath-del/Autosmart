@@ -46,18 +46,30 @@ class Coupon extends Model
 
     public function isValid(): bool
     {
-        if (!$this->is_active) return false;
-        if ($this->starts_at && $this->starts_at->isFuture()) return false;
-        if ($this->expires_at && $this->expires_at->isPast()) return false;
-        if ($this->usage_limit && $this->used_count >= $this->usage_limit) return false;
+        if (! $this->is_active) {
+            return false;
+        }
+        if ($this->starts_at && $this->starts_at->isFuture()) {
+            return false;
+        }
+        if ($this->expires_at && $this->expires_at->isPast()) {
+            return false;
+        }
+        if ($this->usage_limit && $this->used_count >= $this->usage_limit) {
+            return false;
+        }
+
         return true;
     }
 
     public function canBeUsedBy(User $user): bool
     {
-        if (!$this->isValid()) return false;
-        
+        if (! $this->isValid()) {
+            return false;
+        }
+
         $userUsageCount = $this->usages()->where('user_id', $user->id)->count();
+
         return $userUsageCount < $this->usage_limit_per_user;
     }
 

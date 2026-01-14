@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Http\Controllers\Controller;
-use App\Models\Supplier;
-use App\Models\PurchaseOrder;
 use App\Models\Product;
+use App\Models\PurchaseOrder;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class SupplierController extends Controller
@@ -15,6 +15,7 @@ class SupplierController extends Controller
         $suppliers = Supplier::where('store_id', auth()->user()->store->id)
             ->withCount('purchaseOrders')
             ->paginate(20);
+
         return view('seller.suppliers.index', compact('suppliers'));
     }
 
@@ -31,6 +32,7 @@ class SupplierController extends Controller
         ]);
         $validated['store_id'] = auth()->user()->store->id;
         Supplier::create($validated);
+
         return back()->with('success', 'تم إضافة المورد');
     }
 
@@ -40,6 +42,7 @@ class SupplierController extends Controller
             ->with(['supplier', 'items'])
             ->latest()
             ->paginate(20);
+
         return view('seller.suppliers.orders', compact('orders'));
     }
 
@@ -48,6 +51,7 @@ class SupplierController extends Controller
         $suppliers = Supplier::where('store_id', auth()->user()->store->id)->active()->get();
         $warehouses = auth()->user()->store->warehouses;
         $products = Product::where('store_id', auth()->user()->store->id)->get();
+
         return view('seller.suppliers.create-order', compact('suppliers', 'warehouses', 'products'));
     }
 
@@ -89,22 +93,24 @@ class SupplierController extends Controller
 
     public function receivePurchaseOrder(PurchaseOrder $purchaseOrder)
     {
-        if ($purchaseOrder->store_id !== auth()->user()->store->id) abort(403);
-        
+        if ($purchaseOrder->store_id !== auth()->user()->store->id) {
+            abort(403);
+        }
+
         $purchaseOrder->update(['status' => 'received', 'received_date' => now()]);
-        
+
         // Add stock
         foreach ($purchaseOrder->items as $item) {
             $item->update(['received_quantity' => $item->quantity]);
-            
+
             if ($purchaseOrder->warehouse_id) {
                 $stock = \App\Models\WarehouseStock::firstOrCreate([
                     'warehouse_id' => $purchaseOrder->warehouse_id,
-                    'product_id' => $item->product_id
+                    'product_id' => $item->product_id,
                 ], ['quantity' => 0]);
                 $stock->increment('quantity', $item->quantity);
             }
-            
+
             $item->product->increment('quantity', $item->quantity);
         }
 

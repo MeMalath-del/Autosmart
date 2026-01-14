@@ -11,7 +11,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $store = auth()->user()->store;
-        
+
         $query = $store->orders()->with(['user', 'items.product']);
 
         if ($request->filled('status')) {
@@ -22,7 +22,7 @@ class OrderController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('order_number', 'like', "%{$search}%")
-                    ->orWhereHas('user', fn($q) => $q->where('name', 'like', "%{$search}%"));
+                    ->orWhereHas('user', fn ($q) => $q->where('name', 'like', "%{$search}%"));
             });
         }
 
@@ -77,7 +77,7 @@ class OrderController extends Controller
     {
         $this->authorize($order);
 
-        if (!in_array($order->status, ['confirmed', 'processing'])) {
+        if (! in_array($order->status, ['confirmed', 'processing'])) {
             return back()->with('error', 'لا يمكن شحن هذا الطلب');
         }
 
@@ -103,7 +103,7 @@ class OrderController extends Controller
     {
         $this->authorize($order);
 
-        if (!$order->canBeCancelled()) {
+        if (! $order->canBeCancelled()) {
             return back()->with('error', 'لا يمكن إلغاء هذا الطلب');
         }
 
@@ -117,7 +117,7 @@ class OrderController extends Controller
         $this->authorize($order);
 
         $order->update([
-            'admin_notes' => $request->admin_notes
+            'admin_notes' => $request->admin_notes,
         ]);
 
         return back()->with('success', 'تم حفظ الملاحظات');

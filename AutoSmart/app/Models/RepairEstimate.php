@@ -41,7 +41,7 @@ class RepairEstimate extends Model
         parent::boot();
         static::creating(function ($estimate) {
             if (empty($estimate->estimate_number)) {
-                $estimate->estimate_number = 'EST-' . strtoupper(Str::random(8));
+                $estimate->estimate_number = 'EST-'.strtoupper(Str::random(8));
             }
         });
     }
@@ -65,12 +65,12 @@ class RepairEstimate extends Model
     {
         $partsTotal = 0;
         $laborTotal = 0;
-        
+
         foreach ($this->repair_items ?? [] as $item) {
             $partsTotal += $item['parts_cost'] ?? 0;
             $laborTotal += $item['labor_cost'] ?? 0;
         }
-        
+
         $this->parts_estimate = $partsTotal;
         $this->labor_estimate = $laborTotal;
         $this->total_estimate = $partsTotal + $laborTotal;
@@ -84,7 +84,7 @@ class RepairEstimate extends Model
 
     public function getStatusBadgeAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'draft' => '<span class="badge bg-secondary">مسودة</span>',
             'sent' => '<span class="badge bg-info">تم الإرسال</span>',
             'accepted' => '<span class="badge bg-success">مقبول</span>',

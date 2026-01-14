@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\WarrantyClaim;
-use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\WarrantyClaim;
 use Illuminate\Http\Request;
 
 class WarrantyController extends Controller
@@ -27,14 +26,14 @@ class WarrantyController extends Controller
     public function create(OrderItem $orderItem)
     {
         $order = $orderItem->order;
-        
+
         if ($order->user_id !== auth()->id()) {
             abort(403);
         }
 
         // التحقق من أن المنتج لا يزال تحت الضمان
         $product = $orderItem->product;
-        
+
         return view('warranty.create', compact('orderItem', 'order', 'product'));
     }
 
@@ -47,7 +46,7 @@ class WarrantyController extends Controller
         ]);
 
         $orderItem = OrderItem::with('order', 'product')->findOrFail($validated['order_item_id']);
-        
+
         if ($orderItem->order->user_id !== auth()->id()) {
             abort(403);
         }
@@ -66,7 +65,7 @@ class WarrantyController extends Controller
             'product_id' => $orderItem->product_id,
             'store_id' => $orderItem->order->store_id,
             'issue_description' => $validated['issue_description'],
-            'images' => !empty($images) ? $images : null,
+            'images' => ! empty($images) ? $images : null,
         ]);
 
         return redirect()->route('warranty.index')

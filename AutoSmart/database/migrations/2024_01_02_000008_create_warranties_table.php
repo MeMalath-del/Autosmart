@@ -26,7 +26,7 @@ return new class extends Migration
                 'in_repair',
                 'replaced',
                 'refunded',
-                'closed'
+                'closed',
             ])->default('pending');
             $table->text('store_response')->nullable();
             $table->text('admin_notes')->nullable();

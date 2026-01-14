@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         // خطط التقسيط
-        if (!Schema::hasTable('installment_plans')) {
+        if (! Schema::hasTable('installment_plans')) {
             Schema::create('installment_plans', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');
@@ -25,7 +25,7 @@ return new class extends Migration
         }
 
         // طلبات التقسيط
-        if (!Schema::hasTable('installment_requests')) {
+        if (! Schema::hasTable('installment_requests')) {
             Schema::create('installment_requests', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained()->onDelete('cascade');
@@ -46,7 +46,7 @@ return new class extends Migration
         }
 
         // أقساط التقسيط
-        if (!Schema::hasTable('installment_payments')) {
+        if (! Schema::hasTable('installment_payments')) {
             Schema::create('installment_payments', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('installment_id')->constrained('installment_requests')->onDelete('cascade');
@@ -63,7 +63,7 @@ return new class extends Migration
         }
 
         // تأمين القطع
-        if (!Schema::hasTable('part_insurances')) {
+        if (! Schema::hasTable('part_insurances')) {
             Schema::create('part_insurances', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');
@@ -79,7 +79,7 @@ return new class extends Migration
         }
 
         // بوالص التأمين
-        if (!Schema::hasTable('insurance_policies')) {
+        if (! Schema::hasTable('insurance_policies')) {
             Schema::create('insurance_policies', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained()->onDelete('cascade');
@@ -96,7 +96,7 @@ return new class extends Migration
         }
 
         // مطالبات التأمين
-        if (!Schema::hasTable('insurance_claims')) {
+        if (! Schema::hasTable('insurance_claims')) {
             Schema::create('insurance_claims', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('policy_id')->constrained('insurance_policies')->onDelete('cascade');
@@ -113,7 +113,7 @@ return new class extends Migration
         }
 
         // الضمان الممتد
-        if (!Schema::hasTable('extended_warranties')) {
+        if (! Schema::hasTable('extended_warranties')) {
             Schema::create('extended_warranties', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');
@@ -127,7 +127,7 @@ return new class extends Migration
         }
 
         // ضمانات ممتدة مشتراة
-        if (!Schema::hasTable('purchased_warranties')) {
+        if (! Schema::hasTable('purchased_warranties')) {
             Schema::create('purchased_warranties', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained()->onDelete('cascade');

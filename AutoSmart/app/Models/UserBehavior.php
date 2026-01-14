@@ -64,18 +64,32 @@ class UserBehavior extends Model
     protected static function detectDeviceType()
     {
         $userAgent = request()->userAgent();
-        if (preg_match('/mobile/i', $userAgent)) return 'mobile';
-        if (preg_match('/tablet/i', $userAgent)) return 'tablet';
+        if (preg_match('/mobile/i', $userAgent)) {
+            return 'mobile';
+        }
+        if (preg_match('/tablet/i', $userAgent)) {
+            return 'tablet';
+        }
+
         return 'desktop';
     }
 
     protected static function detectBrowser()
     {
         $userAgent = request()->userAgent();
-        if (preg_match('/Chrome/i', $userAgent)) return 'Chrome';
-        if (preg_match('/Firefox/i', $userAgent)) return 'Firefox';
-        if (preg_match('/Safari/i', $userAgent)) return 'Safari';
-        if (preg_match('/Edge/i', $userAgent)) return 'Edge';
+        if (preg_match('/Chrome/i', $userAgent)) {
+            return 'Chrome';
+        }
+        if (preg_match('/Firefox/i', $userAgent)) {
+            return 'Firefox';
+        }
+        if (preg_match('/Safari/i', $userAgent)) {
+            return 'Safari';
+        }
+        if (preg_match('/Edge/i', $userAgent)) {
+            return 'Edge';
+        }
+
         return 'Other';
     }
 }

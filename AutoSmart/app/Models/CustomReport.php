@@ -45,7 +45,7 @@ class CustomReport extends Model
 
     public function getReportTypeNameAttribute()
     {
-        return match($this->report_type) {
+        return match ($this->report_type) {
             'sales' => 'المبيعات',
             'inventory' => 'المخزون',
             'customers' => 'العملاء',

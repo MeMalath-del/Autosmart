@@ -59,8 +59,9 @@ class AiChatSession extends Model
             'confidence' => $data['confidence'] ?? null,
             'suggestions' => $data['suggestions'] ?? null,
         ]);
-        
+
         $this->increment('messages_count');
+
         return $message;
     }
 

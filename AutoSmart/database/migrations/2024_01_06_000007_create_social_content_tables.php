@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('forum_categories')) {
+        if (! Schema::hasTable('forum_categories')) {
             Schema::create('forum_categories', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');
@@ -23,7 +23,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('forum_topics')) {
+        if (! Schema::hasTable('forum_topics')) {
             Schema::create('forum_topics', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('category_id')->constrained('forum_categories')->onDelete('cascade');
@@ -43,7 +43,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('forum_replies')) {
+        if (! Schema::hasTable('forum_replies')) {
             Schema::create('forum_replies', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('topic_id')->constrained('forum_topics')->onDelete('cascade');
@@ -56,7 +56,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('blog_posts')) {
+        if (! Schema::hasTable('blog_posts')) {
             Schema::create('blog_posts', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('author_id')->constrained('users')->onDelete('cascade');
@@ -77,7 +77,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('blog_comments')) {
+        if (! Schema::hasTable('blog_comments')) {
             Schema::create('blog_comments', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('post_id')->constrained('blog_posts')->onDelete('cascade');
@@ -90,7 +90,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('tutorial_videos')) {
+        if (! Schema::hasTable('tutorial_videos')) {
             Schema::create('tutorial_videos', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained()->onDelete('cascade');
@@ -114,7 +114,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('user_badges')) {
+        if (! Schema::hasTable('user_badges')) {
             Schema::create('user_badges', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');
@@ -130,7 +130,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('user_earned_badges')) {
+        if (! Schema::hasTable('user_earned_badges')) {
             Schema::create('user_earned_badges', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained()->onDelete('cascade');

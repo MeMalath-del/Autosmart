@@ -8,14 +8,17 @@ use Illuminate\Support\Str;
 
 class ReferralController extends Controller
 {
-    public function __construct() { $this->middleware('auth'); }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function index()
     {
         $user = auth()->user();
-        
+
         // Generate referral code if not exists
-        if (!$user->referral_code) {
+        if (! $user->referral_code) {
             $user->update(['referral_code' => strtoupper(Str::random(8))]);
         }
 
@@ -36,10 +39,10 @@ class ReferralController extends Controller
     public function apply(Request $request)
     {
         $request->validate(['code' => 'required|string']);
-        
+
         $referrer = \App\Models\User::where('referral_code', strtoupper($request->code))->first();
-        
-        if (!$referrer) {
+
+        if (! $referrer) {
             return back()->with('error', 'كود الإحالة غير صحيح');
         }
 

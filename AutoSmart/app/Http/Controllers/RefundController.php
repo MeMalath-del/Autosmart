@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\RefundRequest;
 use App\Models\Order;
+use App\Models\RefundRequest;
 use Illuminate\Http\Request;
 
 class RefundController extends Controller
 {
-    public function __construct() { $this->middleware('auth'); }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function index()
     {
@@ -16,15 +19,19 @@ class RefundController extends Controller
             ->with('order')
             ->latest()
             ->paginate(10);
+
         return view('refunds.index', compact('refunds'));
     }
 
     public function create(Order $order)
     {
-        if ($order->user_id !== auth()->id()) abort(403);
-        if (!in_array($order->status, ['delivered', 'shipped'])) {
+        if ($order->user_id !== auth()->id()) {
+            abort(403);
+        }
+        if (! in_array($order->status, ['delivered', 'shipped'])) {
             return back()->with('error', 'لا يمكن طلب استرداد لهذا الطلب');
         }
+
         return view('refunds.create', compact('order'));
     }
 
@@ -40,7 +47,9 @@ class RefundController extends Controller
         ]);
 
         $order = Order::findOrFail($validated['order_id']);
-        if ($order->user_id !== auth()->id()) abort(403);
+        if ($order->user_id !== auth()->id()) {
+            abort(403);
+        }
 
         $validated['user_id'] = auth()->id();
         $validated['amount'] = $order->total;
@@ -53,8 +62,11 @@ class RefundController extends Controller
 
     public function show(RefundRequest $refundRequest)
     {
-        if ($refundRequest->user_id !== auth()->id()) abort(403);
+        if ($refundRequest->user_id !== auth()->id()) {
+            abort(403);
+        }
         $refundRequest->load('order');
+
         return view('refunds.show', compact('refundRequest'));
     }
 }

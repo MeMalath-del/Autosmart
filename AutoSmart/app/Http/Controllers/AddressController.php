@@ -15,6 +15,7 @@ class AddressController extends Controller
     public function index()
     {
         $addresses = Address::where('user_id', auth()->id())->get();
+
         return view('addresses.index', compact('addresses'));
     }
 
@@ -31,7 +32,7 @@ class AddressController extends Controller
         ]);
 
         $validated['user_id'] = auth()->id();
-        
+
         $address = Address::create($validated);
 
         if (Address::where('user_id', auth()->id())->count() === 1) {

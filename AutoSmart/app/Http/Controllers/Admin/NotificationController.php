@@ -9,17 +9,22 @@ use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
-    public function __construct() { $this->middleware(['auth', 'role:admin']); }
+    public function __construct()
+    {
+        $this->middleware(['auth', 'role:admin']);
+    }
 
     public function index()
     {
         $campaigns = NotificationCampaign::latest()->paginate(20);
+
         return view('admin.notifications.index', compact('campaigns'));
     }
 
     public function create()
     {
         $segments = ['all' => 'جميع المستخدمين', 'customers' => 'العملاء', 'sellers' => 'البائعين', 'inactive' => 'غير نشطين'];
+
         return view('admin.notifications.create', compact('segments'));
     }
 
@@ -40,7 +45,7 @@ class NotificationController extends Controller
 
         $campaign = NotificationCampaign::create($validated);
 
-        if (!$validated['scheduled_at']) {
+        if (! $validated['scheduled_at']) {
             return redirect()->route('admin.notifications.show', $campaign);
         }
 
@@ -51,17 +56,22 @@ class NotificationController extends Controller
     public function show(NotificationCampaign $notification)
     {
         $notification->load('logs');
+
         return view('admin.notifications.show', compact('notification'));
     }
 
     public function send(NotificationCampaign $notification)
     {
         $segments = $notification->target_segments ?? ['all'];
-        
+
         $query = User::query();
-        if (!in_array('all', $segments)) {
-            if (in_array('customers', $segments)) $query->where('role', 'customer');
-            if (in_array('sellers', $segments)) $query->where('role', 'seller');
+        if (! in_array('all', $segments)) {
+            if (in_array('customers', $segments)) {
+                $query->where('role', 'customer');
+            }
+            if (in_array('sellers', $segments)) {
+                $query->where('role', 'seller');
+            }
         }
 
         $users = $query->get();

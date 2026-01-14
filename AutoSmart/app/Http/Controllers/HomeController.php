@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CarBrand;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Store;
-use App\Models\CarBrand;
-use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {

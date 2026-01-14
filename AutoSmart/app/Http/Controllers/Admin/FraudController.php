@@ -21,12 +21,12 @@ class FraudController extends Controller
     public function alerts()
     {
         $newAlerts = FraudAlert::new()->with(['user', 'order'])->orderByDesc('created_at')->get();
-        
+
         $alerts = FraudAlert::whereIn('status', ['investigating', 'confirmed', 'false_positive'])
             ->with(['user', 'order'])
             ->orderByDesc('created_at')
             ->paginate(20);
-        
+
         $stats = [
             'new' => FraudAlert::new()->count(),
             'investigating' => FraudAlert::where('status', 'investigating')->count(),
@@ -35,28 +35,28 @@ class FraudController extends Controller
                 ->count(),
             'high_risk' => FraudAlert::highRisk()->new()->count(),
         ];
-        
+
         return view('admin.fraud.alerts', compact('newAlerts', 'alerts', 'stats'));
     }
 
     public function showAlert(FraudAlert $alert)
     {
         $alert->load(['user', 'order.items.product', 'resolver']);
-        
+
         // Get user's order history
         $userOrders = $alert->user ? $alert->user->orders()
             ->with('items')
             ->orderByDesc('created_at')
             ->limit(10)
             ->get() : collect();
-        
+
         // Get user's previous alerts
         $previousAlerts = FraudAlert::where('user_id', $alert->user_id)
             ->where('id', '!=', $alert->id)
             ->orderByDesc('created_at')
             ->limit(5)
             ->get();
-        
+
         return view('admin.fraud.show-alert', compact('alert', 'userOrders', 'previousAlerts'));
     }
 
@@ -66,20 +66,20 @@ class FraudController extends Controller
             'status' => 'required|in:confirmed,false_positive',
             'notes' => 'nullable|string',
         ]);
-        
+
         $alert->resolve(auth()->id(), $request->status, $request->notes);
-        
+
         if ($request->status === 'confirmed' && $request->input('block_user')) {
             $this->fraudService->blockUser($alert->user, 'حظر بسبب تأكيد الاحتيال');
         }
-        
+
         return back()->with('success', 'تم تحديث حالة التنبيه');
     }
 
     public function rules()
     {
         $rules = FraudRule::orderBy('rule_type')->get();
-        
+
         return view('admin.fraud.rules', compact('rules'));
     }
 
@@ -98,24 +98,24 @@ class FraudController extends Controller
             'risk_weight' => 'required|numeric|min:0|max:1',
             'action' => 'required|in:flag,block,review',
         ]);
-        
+
         FraudRule::create($request->all());
-        
+
         return redirect()->route('admin.fraud.rules')
             ->with('success', 'تم إنشاء القاعدة بنجاح');
     }
 
     public function toggleRule(FraudRule $rule)
     {
-        $rule->update(['is_active' => !$rule->is_active]);
-        
+        $rule->update(['is_active' => ! $rule->is_active]);
+
         return back()->with('success', 'تم تحديث حالة القاعدة');
     }
 
     public function deleteRule(FraudRule $rule)
     {
         $rule->delete();
-        
+
         return back()->with('success', 'تم حذف القاعدة');
     }
 }

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Workshop;
-use App\Models\MaintenanceRequest;
-use App\Models\MaintenanceQuote;
 use App\Models\MaintenanceBooking;
+use App\Models\MaintenanceQuote;
+use App\Models\MaintenanceRequest;
 use App\Models\UserCar;
+use App\Models\Workshop;
 use Illuminate\Http\Request;
 
 class WorkshopController extends Controller
@@ -22,7 +22,7 @@ class WorkshopController extends Controller
             $query->whereJsonContains('specialties', $request->specialty);
         }
         if ($request->filled('search')) {
-            $query->where(fn($q) => $q->where('name', 'like', "%{$request->search}%")
+            $query->where(fn ($q) => $q->where('name', 'like', "%{$request->search}%")
                 ->orWhere('name_ar', 'like', "%{$request->search}%"));
         }
 
@@ -34,8 +34,11 @@ class WorkshopController extends Controller
 
     public function show(Workshop $workshop)
     {
-        if (!$workshop->isApproved()) abort(404);
+        if (! $workshop->isApproved()) {
+            abort(404);
+        }
         $workshop->load(['services', 'reviews.user']);
+
         return view('workshops.show', compact('workshop'));
     }
 
@@ -47,6 +50,7 @@ class WorkshopController extends Controller
             ->withCount('quotes')
             ->latest()
             ->paginate(10);
+
         return view('workshops.requests.index', compact('requests'));
     }
 
@@ -54,13 +58,14 @@ class WorkshopController extends Controller
     {
         $this->middleware('auth');
         $cars = UserCar::where('user_id', auth()->id())->with(['brand', 'model'])->get();
+
         return view('workshops.requests.create', compact('cars'));
     }
 
     public function storeRequest(Request $request)
     {
         $this->middleware('auth');
-        
+
         $validated = $request->validate([
             'user_car_id' => 'nullable|exists:user_cars,id',
             'car_info' => 'nullable|string|max:200',
@@ -90,15 +95,20 @@ class WorkshopController extends Controller
 
     public function showRequest(MaintenanceRequest $maintenanceRequest)
     {
-        if ($maintenanceRequest->user_id !== auth()->id()) abort(403);
+        if ($maintenanceRequest->user_id !== auth()->id()) {
+            abort(403);
+        }
         $maintenanceRequest->load(['userCar.brand', 'userCar.model', 'quotes.workshop']);
+
         return view('workshops.requests.show', compact('maintenanceRequest'));
     }
 
     public function acceptQuote(MaintenanceQuote $quote)
     {
-        if ($quote->maintenanceRequest->user_id !== auth()->id()) abort(403);
-        
+        if ($quote->maintenanceRequest->user_id !== auth()->id()) {
+            abort(403);
+        }
+
         $quote->accept();
         $quote->maintenanceRequest->update(['status' => 'booked']);
 
@@ -122,6 +132,7 @@ class WorkshopController extends Controller
             ->with(['workshop', 'service'])
             ->latest()
             ->paginate(10);
+
         return view('workshops.bookings.index', compact('bookings'));
     }
 }

@@ -30,7 +30,7 @@ Route::prefix('forum')->name('forum.')->group(function () {
     Route::get('/search', [\App\Http\Controllers\ForumController::class, 'search'])->name('search');
     Route::get('/category/{category:slug}', [\App\Http\Controllers\ForumController::class, 'category'])->name('category');
     Route::get('/topic/{topic:slug}', [\App\Http\Controllers\ForumController::class, 'topic'])->name('topic');
-    
+
     Route::middleware('auth')->group(function () {
         Route::get('/category/{category:slug}/create', [\App\Http\Controllers\ForumController::class, 'createTopic'])->name('create-topic');
         Route::post('/category/{category:slug}/store', [\App\Http\Controllers\ForumController::class, 'storeTopic'])->name('store-topic');
@@ -58,7 +58,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/withdraw', [\App\Http\Controllers\WalletController::class, 'withdraw'])->name('withdraw');
         Route::get('/transactions', [\App\Http\Controllers\WalletController::class, 'transactions'])->name('transactions');
     });
-    
+
     // Installments
     Route::prefix('installments')->name('installments.')->group(function () {
         Route::get('/', [\App\Http\Controllers\InstallmentController::class, 'index'])->name('index');
@@ -68,7 +68,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/{installment}', [\App\Http\Controllers\InstallmentController::class, 'show'])->name('show');
         Route::post('/payments/{payment}/pay', [\App\Http\Controllers\InstallmentController::class, 'pay'])->name('pay');
     });
-    
+
     // Image Search History
     Route::get('/search/image/history', [\App\Http\Controllers\ImageSearchController::class, 'history'])->name('search.image.history');
 });

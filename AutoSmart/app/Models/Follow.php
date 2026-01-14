@@ -10,6 +10,13 @@ class Follow extends Model
 {
     protected $fillable = ['follower_id', 'followable_type', 'followable_id'];
 
-    public function follower(): BelongsTo { return $this->belongsTo(User::class, 'follower_id'); }
-    public function followable(): MorphTo { return $this->morphTo(); }
+    public function follower(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'follower_id');
+    }
+
+    public function followable(): MorphTo
+    {
+        return $this->morphTo();
+    }
 }

@@ -9,7 +9,18 @@ class ReturnItem extends Model
 {
     protected $fillable = ['return_request_id', 'order_item_id', 'quantity', 'condition', 'notes', 'exchange_product_id'];
 
-    public function returnRequest(): BelongsTo { return $this->belongsTo(ReturnRequest::class); }
-    public function orderItem(): BelongsTo { return $this->belongsTo(OrderItem::class); }
-    public function exchangeProduct(): BelongsTo { return $this->belongsTo(Product::class, 'exchange_product_id'); }
+    public function returnRequest(): BelongsTo
+    {
+        return $this->belongsTo(ReturnRequest::class);
+    }
+
+    public function orderItem(): BelongsTo
+    {
+        return $this->belongsTo(OrderItem::class);
+    }
+
+    public function exchangeProduct(): BelongsTo
+    {
+        return $this->belongsTo(Product::class, 'exchange_product_id');
+    }
 }

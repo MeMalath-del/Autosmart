@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Shop;
 
-use Livewire\Component;
 use App\Models\Cart;
+use Livewire\Component;
 
 class CartIcon extends Component
 {

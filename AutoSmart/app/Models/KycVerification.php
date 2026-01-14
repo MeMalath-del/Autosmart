@@ -63,13 +63,13 @@ class KycVerification extends Model
 
     public function isApproved()
     {
-        return $this->status === 'approved' && 
-               (!$this->expires_at || $this->expires_at->gt(now()));
+        return $this->status === 'approved' &&
+               (! $this->expires_at || $this->expires_at->gt(now()));
     }
 
     public function getStatusBadgeAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'pending' => '<span class="badge bg-warning">قيد الانتظار</span>',
             'under_review' => '<span class="badge bg-info">قيد المراجعة</span>',
             'approved' => '<span class="badge bg-success">موافق عليه</span>',
@@ -80,7 +80,7 @@ class KycVerification extends Model
 
     public function getIdTypeNameAttribute()
     {
-        return match($this->id_type) {
+        return match ($this->id_type) {
             'national_id' => 'الهوية الوطنية',
             'passport' => 'جواز السفر',
             'commercial_register' => 'السجل التجاري',

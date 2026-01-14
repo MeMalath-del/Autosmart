@@ -40,6 +40,7 @@ class PartInsurance extends Model
     public function calculatePremium($productPrice)
     {
         $premium = $productPrice * ($this->price_percentage / 100);
+
         return max($premium, $this->min_price);
     }
 }

@@ -46,10 +46,10 @@ class ForumReply extends Model
     {
         // Remove solution mark from other replies
         $this->topic->replies()->update(['is_solution' => false]);
-        
+
         // Mark this as solution
         $this->update(['is_solution' => true]);
-        
+
         // Mark topic as solved
         $this->topic->update(['is_solved' => true]);
     }

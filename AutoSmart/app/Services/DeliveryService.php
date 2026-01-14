@@ -2,14 +2,14 @@
 
 namespace App\Services;
 
-use App\Models\Order;
-use App\Models\ExpressDeliveryZone;
 use App\Models\ExpressDelivery;
-use App\Models\SmartLocker;
-use App\Models\LockerReservation;
-use App\Models\OrderBundle;
-use App\Models\InternationalShippingZone;
+use App\Models\ExpressDeliveryZone;
 use App\Models\InternationalShipment;
+use App\Models\InternationalShippingZone;
+use App\Models\LockerReservation;
+use App\Models\Order;
+use App\Models\OrderBundle;
+use App\Models\SmartLocker;
 
 class DeliveryService
 {
@@ -18,13 +18,13 @@ class DeliveryService
         $zone = ExpressDeliveryZone::active()
             ->forCity($city)
             ->first();
-        
-        if (!$zone) {
+
+        if (! $zone) {
             return ['available' => false];
         }
-        
+
         $options = [];
-        
+
         // Same day delivery
         if ($zone->canAcceptSameDayOrder()) {
             $options['same_day'] = [
@@ -34,7 +34,7 @@ class DeliveryService
                 'estimated_time' => 'اليوم قبل الساعة 9 مساءً',
             ];
         }
-        
+
         // Express delivery (2-4 hours)
         $options['express'] = [
             'type' => 'express',
@@ -42,7 +42,7 @@ class DeliveryService
             'fee' => $zone->express_fee,
             'estimated_time' => '2-4 ساعات',
         ];
-        
+
         return [
             'available' => true,
             'zone_id' => $zone->id,
@@ -56,13 +56,13 @@ class DeliveryService
         $zone = ExpressDeliveryZone::active()
             ->forCity($address->city)
             ->firstOrFail();
-        
-        $promisedTime = match($type) {
+
+        $promisedTime = match ($type) {
             'same_day' => now()->setTime(21, 0),
             'express' => now()->addHours(4),
             default => now()->addHours(24),
         };
-        
+
         return ExpressDelivery::create([
             'order_id' => $order->id,
             'zone_id' => $zone->id,
@@ -73,17 +73,17 @@ class DeliveryService
         ]);
     }
 
-    public function getNearbyLockers(string $city, float $lat = null, float $lng = null): \Illuminate\Database\Eloquent\Collection
+    public function getNearbyLockers(string $city, ?float $lat = null, ?float $lng = null): \Illuminate\Database\Eloquent\Collection
     {
         $query = SmartLocker::active()
             ->inCity($city)
             ->where('available_compartments', '>', 0);
-        
+
         if ($lat && $lng) {
             // Sort by distance (simplified - in production use proper geo query)
-            $query->orderByRaw("ABS(latitude - ?) + ABS(longitude - ?)", [$lat, $lng]);
+            $query->orderByRaw('ABS(latitude - ?) + ABS(longitude - ?)', [$lat, $lng]);
         }
-        
+
         return $query->limit(10)->get();
     }
 
@@ -106,10 +106,10 @@ class DeliveryService
 
     public function addOrderToBundle(Order $order, OrderBundle $bundle, float $originalShipping): void
     {
-        if (!$bundle->isOpen()) {
+        if (! $bundle->isOpen()) {
             throw new \Exception('التجميع مغلق');
         }
-        
+
         $bundle->addOrder($order, $originalShipping);
     }
 
@@ -123,11 +123,11 @@ class DeliveryService
         $zone = InternationalShippingZone::active()
             ->where('country_code', $countryCode)
             ->first();
-        
-        if (!$zone) {
+
+        if (! $zone) {
             return null;
         }
-        
+
         return [
             'zone_id' => $zone->id,
             'country' => $zone->localized_name,
@@ -153,7 +153,7 @@ class DeliveryService
     {
         $options = [];
         $address = $order->address;
-        
+
         // Standard shipping
         $options['standard'] = [
             'type' => 'standard',
@@ -161,13 +161,13 @@ class DeliveryService
             'fee' => 25,
             'estimated_days' => '3-5 أيام عمل',
         ];
-        
+
         // Express options
         $expressOptions = $this->getExpressDeliveryOptions($address->city ?? '');
         if ($expressOptions['available']) {
             $options = array_merge($options, $expressOptions['options']);
         }
-        
+
         // Locker pickup
         $lockers = $this->getNearbyLockers($address->city ?? '');
         if ($lockers->count() > 0) {
@@ -179,7 +179,7 @@ class DeliveryService
                 'lockers_count' => $lockers->count(),
             ];
         }
-        
+
         return $options;
     }
 }

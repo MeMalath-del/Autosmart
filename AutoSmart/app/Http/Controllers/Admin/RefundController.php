@@ -17,18 +17,21 @@ class RefundController extends Controller
         }
 
         $refunds = $query->latest()->paginate(20);
+
         return view('admin.refunds.index', compact('refunds'));
     }
 
     public function show(RefundRequest $refundRequest)
     {
         $refundRequest->load(['user', 'order.items']);
+
         return view('admin.refunds.show', compact('refundRequest'));
     }
 
     public function approve(RefundRequest $refundRequest)
     {
         $refundRequest->approve();
+
         return back()->with('success', 'تمت الموافقة على طلب الاسترداد');
     }
 
@@ -36,6 +39,7 @@ class RefundController extends Controller
     {
         $request->validate(['reason' => 'required|string|max:500']);
         $refundRequest->reject($request->reason);
+
         return back()->with('success', 'تم رفض طلب الاسترداد');
     }
 
@@ -46,6 +50,7 @@ class RefundController extends Controller
         }
 
         $refundRequest->process();
+
         return back()->with('success', 'تم معالجة الاسترداد');
     }
 }

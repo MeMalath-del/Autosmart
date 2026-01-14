@@ -29,7 +29,7 @@ class PartRequestController extends Controller
     public function show(PartRequest $partRequest)
     {
         $partRequest->load(['user', 'carBrand', 'carModel', 'quotes.store']);
-        
+
         $myQuote = $partRequest->quotes()
             ->where('store_id', auth()->user()->store->id)
             ->first();
@@ -56,6 +56,7 @@ class PartRequestController extends Controller
 
         if ($existingQuote) {
             $existingQuote->update($validated);
+
             return back()->with('success', 'تم تحديث العرض');
         }
 

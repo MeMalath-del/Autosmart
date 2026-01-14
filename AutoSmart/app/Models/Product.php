@@ -3,10 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
@@ -148,9 +148,10 @@ class Product extends Model
 
     public function getDiscountPercentageAttribute(): int
     {
-        if (!$this->sale_price || $this->sale_price >= $this->price) {
+        if (! $this->sale_price || $this->sale_price >= $this->price) {
             return 0;
         }
+
         return round((($this->price - $this->sale_price) / $this->price) * 100);
     }
 
@@ -158,10 +159,11 @@ class Product extends Model
     {
         $primary = $this->images()->where('is_primary', true)->first();
         if ($primary) {
-            return asset('storage/' . $primary->image);
+            return asset('storage/'.$primary->image);
         }
         $first = $this->images()->first();
-        return $first ? asset('storage/' . $first->image) : asset('images/no-image.png');
+
+        return $first ? asset('storage/'.$first->image) : asset('images/no-image.png');
     }
 
     public function isInStock(): bool

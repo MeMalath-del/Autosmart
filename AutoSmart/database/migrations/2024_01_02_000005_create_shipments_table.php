@@ -26,12 +26,12 @@ return new class extends Migration
             $table->string('tracking_number')->nullable();
             $table->enum('status', [
                 'pending',
-                'picked_up', 
+                'picked_up',
                 'in_transit',
                 'out_for_delivery',
                 'delivered',
                 'failed',
-                'returned'
+                'returned',
             ])->default('pending');
             $table->text('notes')->nullable();
             $table->timestamp('shipped_at')->nullable();

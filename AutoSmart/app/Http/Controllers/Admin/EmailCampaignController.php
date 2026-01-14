@@ -12,6 +12,7 @@ class EmailCampaignController extends Controller
     public function index()
     {
         $campaigns = EmailCampaign::latest()->paginate(20);
+
         return view('admin.campaigns.index', compact('campaigns'));
     }
 
@@ -23,6 +24,7 @@ class EmailCampaignController extends Controller
             'sellers' => 'البائعين فقط',
             'inactive' => 'غير النشطين (30 يوم)',
         ];
+
         return view('admin.campaigns.create', compact('segments'));
     }
 
@@ -52,7 +54,7 @@ class EmailCampaignController extends Controller
         }
 
         $users = $this->getRecipients($emailCampaign->segment);
-        
+
         foreach ($users as $user) {
             // In production, use queued jobs
             try {
@@ -92,7 +94,7 @@ class EmailCampaignController extends Controller
 
     protected function getRecipientsQuery(string $segment)
     {
-        return match($segment) {
+        return match ($segment) {
             'customers' => User::where('role', 'customer'),
             'sellers' => User::where('role', 'seller'),
             'inactive' => User::where('last_login_at', '<', now()->subDays(30)),
@@ -103,6 +105,7 @@ class EmailCampaignController extends Controller
     public function destroy(EmailCampaign $emailCampaign)
     {
         $emailCampaign->delete();
+
         return back()->with('success', 'تم حذف الحملة');
     }
 }

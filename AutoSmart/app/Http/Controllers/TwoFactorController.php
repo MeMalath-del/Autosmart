@@ -7,25 +7,28 @@ use Illuminate\Support\Str;
 
 class TwoFactorController extends Controller
 {
-    public function __construct() { $this->middleware('auth'); }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function index()
     {
         return view('settings.two-factor', [
-            'enabled' => auth()->user()->two_factor_enabled
+            'enabled' => auth()->user()->two_factor_enabled,
         ]);
     }
 
     public function enable(Request $request)
     {
         $request->validate(['method' => 'required|in:sms,email']);
-        
+
         $secret = Str::random(32);
-        
+
         auth()->user()->update([
             'two_factor_enabled' => true,
             'two_factor_secret' => $secret,
-            'two_factor_recovery_codes' => collect(range(1, 8))->map(fn() => Str::random(10))->toArray(),
+            'two_factor_recovery_codes' => collect(range(1, 8))->map(fn () => Str::random(10))->toArray(),
         ]);
 
         return back()->with('success', 'تم تفعيل المصادقة الثنائية');
@@ -35,7 +38,7 @@ class TwoFactorController extends Controller
     {
         $request->validate(['password' => 'required']);
 
-        if (!password_verify($request->password, auth()->user()->password)) {
+        if (! password_verify($request->password, auth()->user()->password)) {
             return back()->with('error', 'كلمة المرور غير صحيحة');
         }
 
@@ -51,7 +54,7 @@ class TwoFactorController extends Controller
     public function verify(Request $request)
     {
         $request->validate(['code' => 'required|string']);
-        
+
         // Verify code logic here
         $token = \App\Models\TwoFactorToken::where('user_id', auth()->id())
             ->where('token', $request->code)
@@ -59,7 +62,7 @@ class TwoFactorController extends Controller
             ->where('expires_at', '>', now())
             ->first();
 
-        if (!$token) {
+        if (! $token) {
             return back()->with('error', 'الرمز غير صحيح أو منتهي الصلاحية');
         }
 

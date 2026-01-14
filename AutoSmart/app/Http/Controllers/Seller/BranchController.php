@@ -8,12 +8,16 @@ use Illuminate\Http\Request;
 
 class BranchController extends Controller
 {
-    public function __construct() { $this->middleware(['auth', 'seller']); }
+    public function __construct()
+    {
+        $this->middleware(['auth', 'seller']);
+    }
 
     public function index()
     {
         $store = auth()->user()->store;
         $branches = StoreBranch::where('store_id', $store->id)->get();
+
         return view('seller.branches.index', compact('branches'));
     }
 
@@ -37,7 +41,7 @@ class BranchController extends Controller
         ]);
 
         $validated['store_id'] = auth()->user()->store->id;
-        $validated['code'] = 'BR-' . strtoupper(uniqid());
+        $validated['code'] = 'BR-'.strtoupper(uniqid());
 
         StoreBranch::create($validated);
 
@@ -47,13 +51,18 @@ class BranchController extends Controller
 
     public function edit(StoreBranch $branch)
     {
-        if ($branch->store_id !== auth()->user()->store->id) abort(403);
+        if ($branch->store_id !== auth()->user()->store->id) {
+            abort(403);
+        }
+
         return view('seller.branches.edit', compact('branch'));
     }
 
     public function update(Request $request, StoreBranch $branch)
     {
-        if ($branch->store_id !== auth()->user()->store->id) abort(403);
+        if ($branch->store_id !== auth()->user()->store->id) {
+            abort(403);
+        }
 
         $validated = $request->validate([
             'name' => 'required|string|max:200',
@@ -72,8 +81,11 @@ class BranchController extends Controller
 
     public function inventory(StoreBranch $branch)
     {
-        if ($branch->store_id !== auth()->user()->store->id) abort(403);
+        if ($branch->store_id !== auth()->user()->store->id) {
+            abort(403);
+        }
         $branch->load('products');
+
         return view('seller.branches.inventory', compact('branch'));
     }
 }

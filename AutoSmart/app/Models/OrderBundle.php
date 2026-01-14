@@ -32,7 +32,7 @@ class OrderBundle extends Model
         parent::boot();
         static::creating(function ($bundle) {
             if (empty($bundle->bundle_code)) {
-                $bundle->bundle_code = 'BND-' . strtoupper(Str::random(8));
+                $bundle->bundle_code = 'BND-'.strtoupper(Str::random(8));
             }
         });
     }
@@ -59,24 +59,26 @@ class OrderBundle extends Model
             'original_shipping' => $originalShipping,
             'allocated_shipping' => 0, // Will be calculated when bundle is closed
         ]);
-        
+
         $this->increment('original_shipping_total', $originalShipping);
     }
 
     public function close()
     {
         $orderCount = $this->bundledOrders->count();
-        if ($orderCount == 0) return;
+        if ($orderCount == 0) {
+            return;
+        }
 
         // Calculate bundled shipping cost (e.g., 50% discount for multiple orders)
         $discount = min(0.5, ($orderCount - 1) * 0.15);
         $this->bundled_shipping_cost = $this->original_shipping_total * (1 - $discount);
         $this->savings = $this->original_shipping_total - $this->bundled_shipping_cost;
-        
+
         // Allocate shipping cost proportionally
         $allocatedPerOrder = $this->bundled_shipping_cost / $orderCount;
         $this->bundledOrders()->update(['allocated_shipping' => $allocatedPerOrder]);
-        
+
         $this->status = 'closed';
         $this->save();
     }
@@ -88,7 +90,7 @@ class OrderBundle extends Model
 
     public function getStatusBadgeAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'open' => '<span class="badge bg-success">مفتوح</span>',
             'closed' => '<span class="badge bg-warning">مغلق</span>',
             'shipped' => '<span class="badge bg-info">تم الشحن</span>',

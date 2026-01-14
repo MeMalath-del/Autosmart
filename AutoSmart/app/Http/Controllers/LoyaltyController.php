@@ -38,16 +38,16 @@ class LoyaltyController extends Controller
         $user = auth()->user();
         $success = $this->loyalty->redeemPoints($user, $validated['points']);
 
-        if (!$success) {
+        if (! $success) {
             return back()->with('error', 'رصيدك غير كافٍ');
         }
 
         $value = $this->loyalty->getPointsValue($validated['points']);
-        
+
         // Add discount to session or wallet
         session(['loyalty_discount' => $value]);
 
-        return back()->with('success', 'تم استبدال ' . $validated['points'] . ' نقطة بخصم ' . $value . ' ر.س');
+        return back()->with('success', 'تم استبدال '.$validated['points'].' نقطة بخصم '.$value.' ر.س');
     }
 
     public function earnFromAction(Request $request)

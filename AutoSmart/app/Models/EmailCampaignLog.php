@@ -14,6 +14,13 @@ class EmailCampaignLog extends Model
         'clicked_at' => 'datetime',
     ];
 
-    public function campaign(): BelongsTo { return $this->belongsTo(EmailCampaign::class, 'email_campaign_id'); }
-    public function user(): BelongsTo { return $this->belongsTo(User::class); }
+    public function campaign(): BelongsTo
+    {
+        return $this->belongsTo(EmailCampaign::class, 'email_campaign_id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -2,14 +2,14 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
-use App\Models\Category;
 use App\Models\CarBrand;
 use App\Models\CarModel;
-use App\Models\Store;
+use App\Models\Category;
 use App\Models\Product;
+use App\Models\Store;
+use App\Models\User;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -90,12 +90,12 @@ class DatabaseSeeder extends Seeder
             $models = $brandData['models'];
             unset($brandData['models']);
             $brand = CarBrand::create($brandData + ['is_active' => true]);
-            
+
             foreach ($models as $modelName) {
                 CarModel::create([
                     'brand_id' => $brand->id,
                     'name' => $modelName,
-                    'slug' => $brand->slug . '-' . strtolower(str_replace(' ', '-', $modelName)),
+                    'slug' => $brand->slug.'-'.strtolower(str_replace(' ', '-', $modelName)),
                     'year_from' => 2015,
                     'year_to' => 2024,
                     'is_active' => true,
@@ -176,7 +176,7 @@ class DatabaseSeeder extends Seeder
                 'category_id' => $productData['category'],
                 'name' => $productData['name'],
                 'name_ar' => $productData['name_ar'],
-                'slug' => \Str::slug($productData['name']) . '-' . uniqid(),
+                'slug' => \Str::slug($productData['name']).'-'.uniqid(),
                 'description' => 'قطعة غيار أصلية بجودة عالية وضمان',
                 'price' => $productData['price'],
                 'sale_price' => $productData['sale_price'] ?? null,
@@ -191,7 +191,7 @@ class DatabaseSeeder extends Seeder
 
             // ربط موديلات عشوائية
             $randomModels = array_rand(array_flip($carModelIds), min(5, count($carModelIds)));
-            if (!is_array($randomModels)) {
+            if (! is_array($randomModels)) {
                 $randomModels = [$randomModels];
             }
             $product->carModels()->attach($randomModels);

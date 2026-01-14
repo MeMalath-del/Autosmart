@@ -50,7 +50,7 @@ class WalletTransaction extends Model
 
     public function getTypeLabelAttribute()
     {
-        return match($this->type) {
+        return match ($this->type) {
             'credit' => 'إيداع',
             'debit' => 'سحب',
             'refund' => 'استرداد',
@@ -63,14 +63,14 @@ class WalletTransaction extends Model
 
     public function getTypeBadgeAttribute()
     {
-        return match($this->type) {
+        return match ($this->type) {
             'credit' => '<span class="badge bg-success">إيداع</span>',
             'debit' => '<span class="badge bg-danger">سحب</span>',
             'refund' => '<span class="badge bg-info">استرداد</span>',
             'cashback' => '<span class="badge bg-warning">كاش باك</span>',
             'transfer' => '<span class="badge bg-primary">تحويل</span>',
             'adjustment' => '<span class="badge bg-secondary">تعديل</span>',
-            default => '<span class="badge bg-secondary">' . $this->type . '</span>',
+            default => '<span class="badge bg-secondary">'.$this->type.'</span>',
         };
     }
 }

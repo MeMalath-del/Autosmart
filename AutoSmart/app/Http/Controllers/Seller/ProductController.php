@@ -3,21 +3,20 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Http\Controllers\Controller;
+use App\Models\CarBrand;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
-use App\Models\Category;
-use App\Models\CarBrand;
-use App\Models\CarModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
     public function index(Request $request)
     {
         $store = auth()->user()->store;
-        
+
         $query = $store->products()->with(['category', 'images']);
 
         if ($request->filled('search')) {
@@ -84,12 +83,12 @@ class ProductController extends Controller
         ]);
 
         $validated['store_id'] = auth()->user()->store->id;
-        $validated['slug'] = Str::slug($validated['name']) . '-' . uniqid();
+        $validated['slug'] = Str::slug($validated['name']).'-'.uniqid();
 
         $product = Product::create($validated);
 
         // ربط موديلات السيارات
-        if (!empty($request->car_models)) {
+        if (! empty($request->car_models)) {
             $product->carModels()->attach($request->car_models);
         }
 
@@ -131,7 +130,7 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'description' => 'nullable|string',
             'description_ar' => 'nullable|string',
-            'sku' => 'nullable|string|unique:products,sku,' . $product->id,
+            'sku' => 'nullable|string|unique:products,sku,'.$product->id,
             'part_number' => 'nullable|string|max:100',
             'oem_number' => 'nullable|string|max:100',
             'price' => 'required|numeric|min:0',

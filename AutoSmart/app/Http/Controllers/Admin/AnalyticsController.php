@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Models\User;
 use App\Models\Product;
 use App\Models\SearchLog;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -34,7 +34,7 @@ class AnalyticsController extends Controller
             ->get();
 
         // Top products
-        $topProducts = Product::withCount(['orderItems as sold' => fn($q) => $q->whereHas('order', fn($q2) => $q2->where('created_at', '>=', $startDate))])
+        $topProducts = Product::withCount(['orderItems as sold' => fn ($q) => $q->whereHas('order', fn ($q2) => $q2->where('created_at', '>=', $startDate))])
             ->orderByDesc('sold')
             ->take(10)
             ->get();
@@ -56,7 +56,7 @@ class AnalyticsController extends Controller
             ->get();
 
         return view('admin.analytics.index', compact(
-            'stats', 'revenueByDay', 'topProducts', 'popularSearches', 
+            'stats', 'revenueByDay', 'topProducts', 'popularSearches',
             'ordersByStatus', 'newUsersByDay', 'period'
         ));
     }
@@ -67,11 +67,11 @@ class AnalyticsController extends Controller
         $endDate = $request->get('end', now()->toDateString());
 
         $orders = Order::with('store')
-            ->whereBetween('created_at', [$startDate, $endDate . ' 23:59:59'])
+            ->whereBetween('created_at', [$startDate, $endDate.' 23:59:59'])
             ->where('status', 'delivered')
             ->get();
 
-        $byStore = $orders->groupBy('store_id')->map(fn($items) => [
+        $byStore = $orders->groupBy('store_id')->map(fn ($items) => [
             'count' => $items->count(),
             'revenue' => $items->sum('total'),
         ]);

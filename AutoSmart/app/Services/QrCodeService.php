@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\BarcodeScan;
 use App\Models\Product;
 use App\Models\ProductQrCode;
-use App\Models\BarcodeScan;
 use Illuminate\Support\Str;
 
 class QrCodeService
@@ -12,7 +12,7 @@ class QrCodeService
     public function generateQrCode(Product $product): ProductQrCode
     {
         $code = strtoupper(Str::random(12));
-        
+
         return ProductQrCode::create([
             'product_id' => $product->id,
             'code' => $code,
@@ -24,18 +24,18 @@ class QrCodeService
     {
         // Generate QR code using simple API
         // In production, you'd use a library like simplesoftwareio/simple-qrcode
-        $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" . urlencode(url("/qr/{$code}"));
-        
+        $qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data='.urlencode(url("/qr/{$code}"));
+
         return $qrUrl;
     }
 
     public function scanQrCode(string $code, ?int $userId = null): ?Product
     {
         $qrCode = ProductQrCode::where('code', $code)->first();
-        
+
         if ($qrCode) {
             $qrCode->incrementScanCount();
-            
+
             BarcodeScan::create([
                 'user_id' => $userId,
                 'barcode' => $code,
@@ -44,10 +44,10 @@ class QrCodeService
                 'found' => true,
                 'ip_address' => request()->ip(),
             ]);
-            
+
             return $qrCode->product;
         }
-        
+
         BarcodeScan::create([
             'user_id' => $userId,
             'barcode' => $code,
@@ -55,7 +55,7 @@ class QrCodeService
             'found' => false,
             'ip_address' => request()->ip(),
         ]);
-        
+
         return null;
     }
 
@@ -65,7 +65,7 @@ class QrCodeService
         $product = Product::where('sku', $barcode)
             ->orWhere('barcode', $barcode)
             ->first();
-        
+
         BarcodeScan::create([
             'user_id' => $userId,
             'barcode' => $barcode,
@@ -74,13 +74,14 @@ class QrCodeService
             'found' => $product !== null,
             'ip_address' => request()->ip(),
         ]);
-        
+
         return $product;
     }
 
     public function getProductByQr(string $code): ?Product
     {
         $qrCode = ProductQrCode::where('code', $code)->first();
+
         return $qrCode?->product;
     }
 }

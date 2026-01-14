@@ -33,7 +33,7 @@ class WarrantyClaim extends Model
         parent::boot();
 
         static::creating(function ($claim) {
-            $claim->claim_number = 'WC-' . strtoupper(uniqid());
+            $claim->claim_number = 'WC-'.strtoupper(uniqid());
         });
     }
 

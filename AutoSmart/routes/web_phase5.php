@@ -24,7 +24,7 @@ Route::prefix('preorders')->name('preorders.')->middleware('auth')->group(functi
 // Affiliate
 Route::prefix('affiliate')->name('affiliate.')->group(function () {
     Route::get('/track/{code}', [App\Http\Controllers\AffiliateController::class, 'track'])->name('track');
-    
+
     Route::middleware('auth')->group(function () {
         Route::get('/', [App\Http\Controllers\AffiliateController::class, 'index'])->name('index');
         Route::post('/apply', [App\Http\Controllers\AffiliateController::class, 'apply'])->name('apply');

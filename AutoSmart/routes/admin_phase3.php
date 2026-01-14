@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 // ===============================
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
-    
+
     // حملات البريد
     Route::prefix('campaigns')->name('campaigns.')->group(function () {
         Route::get('/', [App\Http\Controllers\Admin\EmailCampaignController::class, 'index'])->name('index');

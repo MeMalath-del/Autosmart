@@ -25,7 +25,7 @@ return new class extends Migration
                 'shipped',
                 'delivered',
                 'cancelled',
-                'refunded'
+                'refunded',
             ])->default('pending');
             $table->enum('payment_status', ['pending', 'paid', 'failed', 'refunded'])->default('pending');
             $table->enum('payment_method', ['cash_on_delivery', 'bank_transfer', 'credit_card', 'wallet'])->default('cash_on_delivery');

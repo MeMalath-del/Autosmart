@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\User;
-use App\Models\Order;
 use App\Models\LoyaltyPoint;
 use App\Models\LoyaltyTransaction;
+use App\Models\Order;
+use App\Models\User;
 
 class AdvancedLoyaltyService
 {
@@ -30,13 +30,13 @@ class AdvancedLoyaltyService
     public function getUserTier(User $user): array
     {
         $totalPoints = $user->loyaltyPoints?->total_points ?? 0;
-        
+
         foreach ($this->tiers as $name => $tier) {
             if ($totalPoints >= $tier['min'] && $totalPoints <= $tier['max']) {
                 return array_merge(['name' => $name], $tier);
             }
         }
-        
+
         return array_merge(['name' => 'bronze'], $this->tiers['bronze']);
     }
 
@@ -44,26 +44,28 @@ class AdvancedLoyaltyService
     {
         $user = $order->user;
         $tier = $this->getUserTier($user);
-        
+
         $basePoints = floor($order->total);
         $earnedPoints = (int) ($basePoints * $tier['multiplier']);
-        
-        $this->addPoints($user, $earnedPoints, 'order', $order->id, 'نقاط من الطلب #' . $order->order_number);
-        
+
+        $this->addPoints($user, $earnedPoints, 'order', $order->id, 'نقاط من الطلب #'.$order->order_number);
+
         return $earnedPoints;
     }
 
     public function earnPointsFromAction(User $user, string $action, ?int $referenceId = null): int
     {
         $config = $this->earningActions[$action] ?? null;
-        if (!$config) return 0;
-        
+        if (! $config) {
+            return 0;
+        }
+
         $points = $config['points'] ?? 0;
         $tier = $this->getUserTier($user);
         $earnedPoints = (int) ($points * $tier['multiplier']);
-        
+
         $this->addPoints($user, $earnedPoints, $action, $referenceId, $config['description']);
-        
+
         return $earnedPoints;
     }
 
@@ -86,7 +88,7 @@ class AdvancedLoyaltyService
     public function redeemPoints(User $user, int $points, ?Order $order = null): bool
     {
         $loyaltyPoints = $user->loyaltyPoints;
-        if (!$loyaltyPoints || $loyaltyPoints->available_points < $points) {
+        if (! $loyaltyPoints || $loyaltyPoints->available_points < $points) {
             return false;
         }
 
@@ -113,7 +115,7 @@ class AdvancedLoyaltyService
     public function getAvailableRedemptions(User $user): array
     {
         $points = $user->loyaltyPoints?->available_points ?? 0;
-        
+
         return [
             ['points' => 100, 'value' => 10, 'available' => $points >= 100],
             ['points' => 250, 'value' => 25, 'available' => $points >= 250],

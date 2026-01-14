@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('obd_diagnostics')) {
+        if (! Schema::hasTable('obd_diagnostics')) {
             Schema::create('obd_diagnostics', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained()->onDelete('cascade');
@@ -26,7 +26,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('obd_codes_library')) {
+        if (! Schema::hasTable('obd_codes_library')) {
             Schema::create('obd_codes_library', function (Blueprint $table) {
                 $table->id();
                 $table->string('code')->unique();
@@ -42,7 +42,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('maintenance_records')) {
+        if (! Schema::hasTable('maintenance_records')) {
             Schema::create('maintenance_records', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_car_id')->constrained()->onDelete('cascade');
@@ -64,7 +64,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('repair_cost_templates')) {
+        if (! Schema::hasTable('repair_cost_templates')) {
             Schema::create('repair_cost_templates', function (Blueprint $table) {
                 $table->id();
                 $table->string('repair_type');
@@ -80,7 +80,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('repair_estimates')) {
+        if (! Schema::hasTable('repair_estimates')) {
             Schema::create('repair_estimates', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
@@ -100,7 +100,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('workshop_part_reservations')) {
+        if (! Schema::hasTable('workshop_part_reservations')) {
             Schema::create('workshop_part_reservations', function (Blueprint $table) {
                 $table->id();
                 $table->unsignedBigInteger('workshop_id');

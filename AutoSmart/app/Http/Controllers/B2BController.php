@@ -3,29 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Models\BusinessAccount;
-use App\Models\QuoteRequest;
 use App\Models\Product;
+use App\Models\QuoteRequest;
 use Illuminate\Http\Request;
 
 class B2BController extends Controller
 {
-    public function __construct() { $this->middleware('auth'); }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function index()
     {
         $account = BusinessAccount::where('user_id', auth()->id())->first();
-        
-        if (!$account) {
+
+        if (! $account) {
             return view('b2b.register');
         }
-        
+
         if ($account->status === 'pending') {
             return view('b2b.pending', compact('account'));
         }
 
         $quoteRequests = $account->quoteRequests()->latest()->paginate(10);
         $creditInvoices = $account->creditInvoices()->latest()->paginate(10);
-        
+
         return view('b2b.dashboard', compact('account', 'quoteRequests', 'creditInvoices'));
     }
 
@@ -53,13 +56,14 @@ class B2BController extends Controller
     public function requestQuote()
     {
         $account = BusinessAccount::where('user_id', auth()->id())->approved()->firstOrFail();
+
         return view('b2b.request-quote', compact('account'));
     }
 
     public function submitQuote(Request $request)
     {
         $account = BusinessAccount::where('user_id', auth()->id())->approved()->firstOrFail();
-        
+
         $validated = $request->validate([
             'requirements' => 'nullable|string|max:2000',
             'needed_by' => 'nullable|date|after:today',
@@ -86,14 +90,18 @@ class B2BController extends Controller
 
     public function showQuote(QuoteRequest $quoteRequest)
     {
-        if ($quoteRequest->businessAccount->user_id !== auth()->id()) abort(403);
+        if ($quoteRequest->businessAccount->user_id !== auth()->id()) {
+            abort(403);
+        }
         $quoteRequest->load(['items', 'quotes.store']);
+
         return view('b2b.quote-show', compact('quoteRequest'));
     }
 
     public function wholesale()
     {
         $products = Product::has('wholesalePrices')->with(['images', 'wholesalePrices'])->paginate(20);
+
         return view('b2b.wholesale', compact('products'));
     }
 }

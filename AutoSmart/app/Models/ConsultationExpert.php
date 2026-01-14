@@ -10,16 +10,26 @@ class ConsultationExpert extends Model
 {
     protected $fillable = [
         'user_id', 'specialty', 'bio', 'certifications', 'experience_years',
-        'hourly_rate', 'rating', 'total_sessions', 'available_hours', 'is_active'
+        'hourly_rate', 'rating', 'total_sessions', 'available_hours', 'is_active',
     ];
 
     protected $casts = [
         'certifications' => 'array', 'hourly_rate' => 'decimal:2',
-        'rating' => 'decimal:2', 'available_hours' => 'array', 'is_active' => 'boolean'
+        'rating' => 'decimal:2', 'available_hours' => 'array', 'is_active' => 'boolean',
     ];
 
-    public function user(): BelongsTo { return $this->belongsTo(User::class); }
-    public function sessions(): HasMany { return $this->hasMany(ConsultationSession::class, 'expert_id', 'user_id'); }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
-    public function scopeActive($query) { return $query->where('is_active', true); }
+    public function sessions(): HasMany
+    {
+        return $this->hasMany(ConsultationSession::class, 'expert_id', 'user_id');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
 }

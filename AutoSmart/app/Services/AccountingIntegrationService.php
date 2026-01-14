@@ -12,7 +12,7 @@ class AccountingIntegrationService
     public function generateInvoice(Order $order): array
     {
         return [
-            'invoice_number' => 'INV-' . $order->order_number,
+            'invoice_number' => 'INV-'.$order->order_number,
             'date' => $order->created_at->format('Y-m-d'),
             'due_date' => $order->created_at->addDays(30)->format('Y-m-d'),
             'customer' => [
@@ -21,7 +21,7 @@ class AccountingIntegrationService
                 'address' => $order->shippingAddress?->full_address ?? '',
                 'vat_number' => $order->user->vat_number ?? null,
             ],
-            'items' => $order->items->map(fn($item) => [
+            'items' => $order->items->map(fn ($item) => [
                 'sku' => $item->product->sku,
                 'description' => $item->product->name,
                 'quantity' => $item->quantity,
@@ -45,7 +45,7 @@ class AccountingIntegrationService
             ->with(['items.product', 'user'])
             ->get();
 
-        $data = $orders->map(fn($order) => [
+        $data = $orders->map(fn ($order) => [
             'order_number' => $order->order_number,
             'date' => $order->created_at->format('Y-m-d H:i:s'),
             'customer' => $order->user->name,
@@ -76,7 +76,7 @@ class AccountingIntegrationService
 
         return [
             'date' => $date,
-            'transactions' => $transactions->map(fn($t) => [
+            'transactions' => $transactions->map(fn ($t) => [
                 'number' => $t->transaction_number,
                 'branch' => $t->session->branch->name,
                 'type' => $t->type,

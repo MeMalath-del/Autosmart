@@ -34,7 +34,7 @@ class InsuranceClaim extends Model
         parent::boot();
         static::creating(function ($claim) {
             if (empty($claim->claim_number)) {
-                $claim->claim_number = 'CLM-' . strtoupper(Str::random(10));
+                $claim->claim_number = 'CLM-'.strtoupper(Str::random(10));
             }
         });
     }
@@ -65,7 +65,7 @@ class InsuranceClaim extends Model
 
     public function getStatusBadgeAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'pending' => '<span class="badge bg-warning">قيد الانتظار</span>',
             'under_review' => '<span class="badge bg-info">قيد المراجعة</span>',
             'approved' => '<span class="badge bg-success">موافق عليه</span>',

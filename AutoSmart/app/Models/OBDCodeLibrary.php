@@ -29,14 +29,14 @@ class OBDCodeLibrary extends Model
 
     public function getLocalizedDescriptionAttribute()
     {
-        return app()->getLocale() === 'ar' 
+        return app()->getLocale() === 'ar'
             ? ($this->description_ar ?? $this->description)
             : $this->description;
     }
 
     public function getCategoryNameAttribute()
     {
-        return match($this->category) {
+        return match ($this->category) {
             'powertrain' => 'المحرك وناقل الحركة',
             'body' => 'الهيكل',
             'chassis' => 'الشاسيه',
@@ -47,7 +47,7 @@ class OBDCodeLibrary extends Model
 
     public function getSeverityBadgeAttribute()
     {
-        return match($this->severity) {
+        return match ($this->severity) {
             'low' => '<span class="badge bg-success">منخفض</span>',
             'medium' => '<span class="badge bg-warning">متوسط</span>',
             'high' => '<span class="badge bg-orange">عالي</span>',

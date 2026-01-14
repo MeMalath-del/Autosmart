@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         // المحفظة الذكية
-        if (!Schema::hasTable('wallets')) {
+        if (! Schema::hasTable('wallets')) {
             Schema::create('wallets', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained()->onDelete('cascade');
@@ -19,13 +19,13 @@ return new class extends Migration
                 $table->boolean('is_active')->default(true);
                 $table->timestamp('last_transaction_at')->nullable();
                 $table->timestamps();
-                
+
                 $table->unique('user_id');
             });
         }
 
         // معاملات المحفظة
-        if (!Schema::hasTable('wallet_transactions')) {
+        if (! Schema::hasTable('wallet_transactions')) {
             Schema::create('wallet_transactions', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('wallet_id')->constrained()->onDelete('cascade');
@@ -38,13 +38,13 @@ return new class extends Migration
                 $table->morphs('reference');
                 $table->enum('status', ['pending', 'completed', 'failed', 'reversed'])->default('completed');
                 $table->timestamps();
-                
+
                 $table->index(['wallet_id', 'created_at']);
             });
         }
 
         // طلبات شحن المحفظة
-        if (!Schema::hasTable('wallet_topups')) {
+        if (! Schema::hasTable('wallet_topups')) {
             Schema::create('wallet_topups', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('wallet_id')->constrained()->onDelete('cascade');
@@ -58,7 +58,7 @@ return new class extends Migration
         }
 
         // طلبات سحب المحفظة
-        if (!Schema::hasTable('wallet_withdrawals')) {
+        if (! Schema::hasTable('wallet_withdrawals')) {
             Schema::create('wallet_withdrawals', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('wallet_id')->constrained()->onDelete('cascade');
@@ -76,7 +76,7 @@ return new class extends Migration
         }
 
         // التحويلات بين المحافظ
-        if (!Schema::hasTable('wallet_transfers')) {
+        if (! Schema::hasTable('wallet_transfers')) {
             Schema::create('wallet_transfers', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('from_wallet_id')->constrained('wallets')->onDelete('cascade');
@@ -90,7 +90,7 @@ return new class extends Migration
         }
 
         // الكاش باك
-        if (!Schema::hasTable('cashback_rules')) {
+        if (! Schema::hasTable('cashback_rules')) {
             Schema::create('cashback_rules', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');

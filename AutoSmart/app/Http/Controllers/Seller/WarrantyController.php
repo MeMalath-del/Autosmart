@@ -11,7 +11,7 @@ class WarrantyController extends Controller
     public function index(Request $request)
     {
         $store = auth()->user()->store;
-        
+
         $query = WarrantyClaim::where('store_id', $store->id)
             ->with(['user', 'product', 'order']);
 

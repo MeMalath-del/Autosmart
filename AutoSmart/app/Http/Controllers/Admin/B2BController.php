@@ -8,7 +8,10 @@ use Illuminate\Http\Request;
 
 class B2BController extends Controller
 {
-    public function __construct() { $this->middleware(['auth', 'role:admin']); }
+    public function __construct()
+    {
+        $this->middleware(['auth', 'role:admin']);
+    }
 
     public function index(Request $request)
     {
@@ -19,7 +22,7 @@ class B2BController extends Controller
         }
 
         $accounts = $query->latest()->paginate(20);
-        
+
         $stats = [
             'total' => BusinessAccount::count(),
             'pending' => BusinessAccount::where('status', 'pending')->count(),
@@ -32,6 +35,7 @@ class B2BController extends Controller
     public function show(BusinessAccount $account)
     {
         $account->load(['user', 'quoteRequests', 'creditInvoices']);
+
         return view('admin.b2b.show', compact('account'));
     }
 
@@ -39,9 +43,9 @@ class B2BController extends Controller
     {
         $account->update([
             'status' => 'approved',
-            'is_verified' => true
+            'is_verified' => true,
         ]);
-        
+
         // Notify user
         // $account->user->notify(new BusinessAccountApproved($account));
 
@@ -51,6 +55,7 @@ class B2BController extends Controller
     public function reject(Request $request, BusinessAccount $account)
     {
         $account->update(['status' => 'suspended']);
+
         return back()->with('success', 'تم رفض الحساب');
     }
 
@@ -62,6 +67,7 @@ class B2BController extends Controller
         ]);
 
         $account->update($validated);
+
         return back()->with('success', 'تم تحديث حد الائتمان');
     }
 }

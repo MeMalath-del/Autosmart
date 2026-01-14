@@ -12,7 +12,7 @@ class ConversationController extends Controller
     public function index()
     {
         $store = auth()->user()->store;
-        
+
         $conversations = Conversation::where('store_id', $store->id)
             ->with(['user', 'latestMessage', 'product', 'order'])
             ->orderByDesc('last_message_at')
@@ -30,7 +30,7 @@ class ConversationController extends Controller
     public function show(Conversation $conversation)
     {
         $store = auth()->user()->store;
-        
+
         if ($conversation->store_id !== $store->id) {
             abort(403);
         }
@@ -44,7 +44,7 @@ class ConversationController extends Controller
     public function sendMessage(Request $request, Conversation $conversation)
     {
         $store = auth()->user()->store;
-        
+
         if ($conversation->store_id !== $store->id) {
             abort(403);
         }

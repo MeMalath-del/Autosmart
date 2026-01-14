@@ -2,14 +2,17 @@
 
 namespace App\Livewire\Shop;
 
-use Livewire\Component;
 use App\Services\QrCodeService;
+use Livewire\Component;
 
 class BarcodeScanner extends Component
 {
     public $scanning = false;
+
     public $result = null;
+
     public $error = null;
+
     public $lastBarcode = '';
 
     protected $listeners = ['barcodeScanned'];
@@ -31,12 +34,12 @@ class BarcodeScanner extends Component
         if ($barcode === $this->lastBarcode) {
             return;
         }
-        
+
         $this->lastBarcode = $barcode;
-        
+
         $qrService = app(QrCodeService::class);
         $product = $qrService->scanBarcode($barcode, auth()->id());
-        
+
         if ($product) {
             $this->result = [
                 'found' => true,

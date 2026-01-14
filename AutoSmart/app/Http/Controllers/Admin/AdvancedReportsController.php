@@ -3,24 +3,27 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Order;
-use App\Models\Product;
-use App\Models\User;
-use App\Models\Store;
-use App\Models\SupportTicket;
 use App\Models\Auction;
 use App\Models\GiftCard;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\Store;
+use App\Models\SupportTicket;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AdvancedReportsController extends Controller
 {
-    public function __construct() { $this->middleware(['auth', 'role:admin']); }
+    public function __construct()
+    {
+        $this->middleware(['auth', 'role:admin']);
+    }
 
     public function index()
     {
         return view('admin.reports.advanced', [
-            'reportTypes' => $this->getReportTypes()
+            'reportTypes' => $this->getReportTypes(),
         ]);
     }
 
@@ -30,7 +33,7 @@ class AdvancedReportsController extends Controller
         $dateFrom = $request->date_from ?? now()->subMonth()->toDateString();
         $dateTo = $request->date_to ?? now()->toDateString();
 
-        $data = match($type) {
+        $data = match ($type) {
             'sales' => $this->salesReport($dateFrom, $dateTo),
             'products' => $this->productsReport($dateFrom, $dateTo),
             'customers' => $this->customersReport($dateFrom, $dateTo),
@@ -47,7 +50,7 @@ class AdvancedReportsController extends Controller
     protected function salesReport($from, $to): array
     {
         $orders = Order::whereBetween('created_at', [$from, $to]);
-        
+
         return [
             'total_orders' => $orders->count(),
             'total_revenue' => $orders->sum('total'),
@@ -59,7 +62,7 @@ class AdvancedReportsController extends Controller
                 ->groupBy('date')
                 ->orderBy('date')
                 ->get(),
-            'top_products' => Product::withCount(['orderItems as sold' => fn($q) => $q->whereHas('order', fn($q2) => $q2->whereBetween('created_at', [$from, $to]))])
+            'top_products' => Product::withCount(['orderItems as sold' => fn ($q) => $q->whereHas('order', fn ($q2) => $q2->whereBetween('created_at', [$from, $to]))])
                 ->orderByDesc('sold')
                 ->limit(10)
                 ->get(),
@@ -88,8 +91,8 @@ class AdvancedReportsController extends Controller
         return [
             'total_customers' => User::where('role', 'customer')->count(),
             'new_customers' => User::where('role', 'customer')->whereBetween('created_at', [$from, $to])->count(),
-            'active_customers' => User::whereHas('orders', fn($q) => $q->whereBetween('created_at', [$from, $to]))->count(),
-            'top_customers' => User::withSum(['orders' => fn($q) => $q->whereBetween('created_at', [$from, $to])], 'total')
+            'active_customers' => User::whereHas('orders', fn ($q) => $q->whereBetween('created_at', [$from, $to]))->count(),
+            'top_customers' => User::withSum(['orders' => fn ($q) => $q->whereBetween('created_at', [$from, $to])], 'total')
                 ->orderByDesc('orders_sum_total')
                 ->limit(10)
                 ->get(),
@@ -102,7 +105,7 @@ class AdvancedReportsController extends Controller
             'total_stores' => Store::count(),
             'active_stores' => Store::where('is_active', true)->count(),
             'verified_stores' => Store::where('is_verified', true)->count(),
-            'top_stores' => Store::withSum(['orders' => fn($q) => $q->whereBetween('created_at', [$from, $to])], 'total')
+            'top_stores' => Store::withSum(['orders' => fn ($q) => $q->whereBetween('created_at', [$from, $to])], 'total')
                 ->orderByDesc('orders_sum_total')
                 ->limit(10)
                 ->get(),
@@ -112,7 +115,7 @@ class AdvancedReportsController extends Controller
     protected function supportReport($from, $to): array
     {
         $tickets = SupportTicket::whereBetween('created_at', [$from, $to]);
-        
+
         return [
             'total_tickets' => $tickets->count(),
             'resolved_tickets' => $tickets->clone()->where('status', 'resolved')->count(),
@@ -129,7 +132,7 @@ class AdvancedReportsController extends Controller
     protected function auctionsReport($from, $to): array
     {
         $auctions = Auction::whereBetween('created_at', [$from, $to]);
-        
+
         return [
             'total_auctions' => $auctions->count(),
             'sold_auctions' => $auctions->clone()->where('status', 'sold')->count(),

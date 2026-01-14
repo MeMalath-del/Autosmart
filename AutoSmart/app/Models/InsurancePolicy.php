@@ -34,7 +34,7 @@ class InsurancePolicy extends Model
         parent::boot();
         static::creating(function ($policy) {
             if (empty($policy->policy_number)) {
-                $policy->policy_number = 'INS-' . strtoupper(Str::random(10));
+                $policy->policy_number = 'INS-'.strtoupper(Str::random(10));
             }
         });
     }
@@ -71,7 +71,7 @@ class InsurancePolicy extends Model
 
     public function getStatusBadgeAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'active' => '<span class="badge bg-success">نشط</span>',
             'expired' => '<span class="badge bg-secondary">منتهي</span>',
             'claimed' => '<span class="badge bg-warning">تم المطالبة</span>',

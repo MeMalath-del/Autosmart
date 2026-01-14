@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 // ===============================
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
-    
+
     // Dynamic Pricing
     Route::prefix('pricing')->name('pricing.')->group(function () {
         Route::get('/', [App\Http\Controllers\Admin\DynamicPricingController::class, 'index'])->name('index');

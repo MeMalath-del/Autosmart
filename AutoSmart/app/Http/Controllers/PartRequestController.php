@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CarBrand;
 use App\Models\PartRequest;
 use App\Models\PartRequestQuote;
-use App\Models\CarBrand;
-use App\Models\CarModel;
 use Illuminate\Http\Request;
 
 class PartRequestController extends Controller
@@ -29,6 +28,7 @@ class PartRequestController extends Controller
     public function create()
     {
         $carBrands = CarBrand::active()->with('models')->get();
+
         return view('part-requests.create', compact('carBrands'));
     }
 
@@ -65,7 +65,7 @@ class PartRequestController extends Controller
             'urgency' => $validated['urgency'],
             'budget_min' => $validated['budget_min'],
             'budget_max' => $validated['budget_max'],
-            'images' => !empty($images) ? $images : null,
+            'images' => ! empty($images) ? $images : null,
             'expires_at' => now()->addDays(7),
         ]);
 
