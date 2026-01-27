@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://autosmart.sa/sitemap.xml
+
+# Disallow admin and seller areas
+Disallow: /admin/
+Disallow: /seller/
+Disallow: /api/
+
+# Allow specific pages
+Allow: /products/
+Allow: /stores/
+Allow: /category/
