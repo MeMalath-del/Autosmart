@@ -49,7 +49,7 @@ class ExpressDeliveryZone extends Model
 
     public function getDeliveryFee($type)
     {
-        return match($type) {
+        return match ($type) {
             'same_day' => $this->same_day_fee,
             'express' => $this->express_fee,
             default => 0,

@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\DigitalDownload;
 use App\Models\DigitalProduct;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class DigitalProductController extends Controller
 {
-    public function __construct() { $this->middleware('auth'); }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function downloads()
     {
@@ -17,6 +19,7 @@ class DigitalProductController extends Controller
             ->with('digitalProduct.product')
             ->latest()
             ->paginate(20);
+
         return view('digital.downloads', compact('downloads'));
     }
 
@@ -41,7 +44,7 @@ class DigitalProductController extends Controller
         $download->increment('download_count');
         $download->update([
             'first_download_at' => $download->first_download_at ?? now(),
-            'last_download_at' => now()
+            'last_download_at' => now(),
         ]);
 
         // Return file download
@@ -50,7 +53,10 @@ class DigitalProductController extends Controller
 
     public function preview(DigitalProduct $digital)
     {
-        if (!$digital->preview_path) abort(404);
+        if (! $digital->preview_path) {
+            abort(404);
+        }
+
         return response()->file(Storage::path($digital->preview_path));
     }
 }

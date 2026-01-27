@@ -2,14 +2,16 @@
 
 namespace App\Livewire\Shop;
 
-use Livewire\Component;
 use App\Models\Conversation;
 use App\Models\Message;
+use Livewire\Component;
 
 class Messages extends Component
 {
     public Conversation $conversation;
+
     public string $newMessage = '';
+
     public $messages = [];
 
     public function mount(Conversation $conversation)

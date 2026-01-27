@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ShipmentTracking extends Model
 {
     protected $table = 'shipment_tracking';
-    
+
     protected $fillable = [
         'shipment_id',
         'status',

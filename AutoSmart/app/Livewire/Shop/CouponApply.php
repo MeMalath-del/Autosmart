@@ -2,15 +2,19 @@
 
 namespace App\Livewire\Shop;
 
-use Livewire\Component;
 use App\Models\Coupon;
+use Livewire\Component;
 
 class CouponApply extends Component
 {
     public string $code = '';
+
     public ?Coupon $appliedCoupon = null;
+
     public float $discount = 0;
+
     public float $subtotal = 0;
+
     public ?string $error = null;
 
     public function mount(float $subtotal)
@@ -36,28 +40,33 @@ class CouponApply extends Component
 
         if (empty($this->code)) {
             $this->error = 'يرجى إدخال كود الكوبون';
+
             return;
         }
 
         $coupon = Coupon::where('code', strtoupper($this->code))->first();
 
-        if (!$coupon) {
+        if (! $coupon) {
             $this->error = 'كود الكوبون غير صحيح';
+
             return;
         }
 
-        if (!$coupon->isValid()) {
+        if (! $coupon->isValid()) {
             $this->error = 'الكوبون منتهي الصلاحية أو غير نشط';
+
             return;
         }
 
-        if (auth()->check() && !$coupon->canBeUsedBy(auth()->user())) {
+        if (auth()->check() && ! $coupon->canBeUsedBy(auth()->user())) {
             $this->error = 'لقد استخدمت هذا الكوبون من قبل';
+
             return;
         }
 
         if ($coupon->min_order_amount && $this->subtotal < $coupon->min_order_amount) {
-            $this->error = 'الحد الأدنى للطلب ' . number_format($coupon->min_order_amount, 2) . ' ر.س';
+            $this->error = 'الحد الأدنى للطلب '.number_format($coupon->min_order_amount, 2).' ر.س';
+
             return;
         }
 

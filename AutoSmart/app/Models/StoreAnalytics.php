@@ -8,9 +8,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class StoreAnalytics extends Model
 {
     protected $fillable = ['store_id', 'date', 'views', 'unique_visitors', 'product_views', 'add_to_cart', 'orders', 'revenue'];
+
     protected $casts = ['date' => 'date', 'revenue' => 'decimal:2'];
 
-    public function store(): BelongsTo { return $this->belongsTo(Store::class); }
+    public function store(): BelongsTo
+    {
+        return $this->belongsTo(Store::class);
+    }
 
     public static function increment(int $storeId, string $field, float $value = 1): void
     {

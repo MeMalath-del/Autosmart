@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Shop;
 
-use Livewire\Component;
 use App\Models\RecentlyViewed as RecentModel;
+use Livewire\Component;
 
 class RecentlyViewed extends Component
 {
@@ -12,7 +12,7 @@ class RecentlyViewed extends Component
     public function render()
     {
         $products = RecentModel::getRecent($this->limit);
-        
+
         return view('livewire.shop.recently-viewed', [
             'products' => $products,
         ]);

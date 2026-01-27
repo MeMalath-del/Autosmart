@@ -39,7 +39,7 @@ class ComplianceLog extends Model
 
     public function getActionNameAttribute()
     {
-        return match($this->action) {
+        return match ($this->action) {
             'data_export' => 'تصدير البيانات',
             'data_delete' => 'حذف البيانات',
             'consent_given' => 'منح الموافقة',

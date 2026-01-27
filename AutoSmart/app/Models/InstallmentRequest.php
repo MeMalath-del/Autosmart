@@ -57,7 +57,7 @@ class InstallmentRequest extends Model
 
     public function generatePaymentSchedule()
     {
-        if (!$this->start_date) {
+        if (! $this->start_date) {
             return;
         }
 
@@ -74,6 +74,7 @@ class InstallmentRequest extends Model
     public function getRemainingAmountAttribute()
     {
         $paidAmount = $this->payments()->where('status', 'paid')->sum('amount');
+
         return $this->total_with_interest - $paidAmount - $this->down_payment;
     }
 
@@ -84,7 +85,7 @@ class InstallmentRequest extends Model
 
     public function getStatusBadgeAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'pending' => '<span class="badge bg-warning">قيد المراجعة</span>',
             'approved' => '<span class="badge bg-info">تمت الموافقة</span>',
             'rejected' => '<span class="badge bg-danger">مرفوض</span>',

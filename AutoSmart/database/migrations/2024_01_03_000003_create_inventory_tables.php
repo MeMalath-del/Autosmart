@@ -29,7 +29,7 @@ return new class extends Migration
             $table->integer('reserved_quantity')->default(0);
             $table->integer('low_stock_threshold')->default(5);
             $table->timestamps();
-            
+
             $table->unique(['warehouse_id', 'product_id']);
         });
 

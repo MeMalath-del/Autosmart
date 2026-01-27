@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use App\Models\Category;
 use App\Models\CarBrand;
-use App\Models\CarModel;
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -14,7 +13,7 @@ class ProductController extends Controller
     {
         $query = Product::with(['store', 'category', 'images'])
             ->active()
-            ->whereHas('store', fn($q) => $q->approved());
+            ->whereHas('store', fn ($q) => $q->approved());
 
         // البحث
         if ($request->filled('search')) {
@@ -35,12 +34,12 @@ class ProductController extends Controller
 
         // فلترة حسب ماركة السيارة
         if ($request->filled('brand')) {
-            $query->whereHas('carModels.brand', fn($q) => $q->where('id', $request->brand));
+            $query->whereHas('carModels.brand', fn ($q) => $q->where('id', $request->brand));
         }
 
         // فلترة حسب موديل السيارة
         if ($request->filled('model')) {
-            $query->whereHas('carModels', fn($q) => $q->where('id', $request->model));
+            $query->whereHas('carModels', fn ($q) => $q->where('id', $request->model));
         }
 
         // فلترة حسب الحالة
@@ -90,7 +89,7 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        if (!$product->is_active || !$product->store->isApproved()) {
+        if (! $product->is_active || ! $product->store->isApproved()) {
             abort(404);
         }
 
@@ -113,7 +112,7 @@ class ProductController extends Controller
         $products = Product::with(['store', 'category', 'images'])
             ->active()
             ->where('category_id', $category->id)
-            ->whereHas('store', fn($q) => $q->approved())
+            ->whereHas('store', fn ($q) => $q->approved())
             ->latest()
             ->paginate(24);
 

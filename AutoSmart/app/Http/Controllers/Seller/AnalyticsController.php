@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Http\Controllers\Controller;
-use App\Models\StoreAnalytics;
-use App\Models\Product;
 use App\Models\Order;
+use App\Models\Product;
+use App\Models\StoreAnalytics;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -61,7 +61,7 @@ class AnalyticsController extends Controller
             ->get();
 
         return view('seller.analytics.index', compact(
-            'dailyData', 'summary', 'topProducts', 'topSelling', 
+            'dailyData', 'summary', 'topProducts', 'topSelling',
             'ordersByStatus', 'revenueByDay', 'period'
         ));
     }
@@ -69,7 +69,7 @@ class AnalyticsController extends Controller
     public function products(Request $request)
     {
         $store = auth()->user()->store;
-        
+
         $products = Product::where('store_id', $store->id)
             ->withCount('orderItems')
             ->orderByDesc($request->get('sort', 'views'))

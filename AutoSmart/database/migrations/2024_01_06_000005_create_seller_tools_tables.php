@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('product_imports')) {
+        if (! Schema::hasTable('product_imports')) {
             Schema::create('product_imports', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('store_id')->constrained()->onDelete('cascade');
@@ -28,7 +28,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('import_logs')) {
+        if (! Schema::hasTable('import_logs')) {
             Schema::create('import_logs', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('import_id')->constrained('product_imports')->onDelete('cascade');
@@ -41,7 +41,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('external_store_connections')) {
+        if (! Schema::hasTable('external_store_connections')) {
             Schema::create('external_store_connections', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('store_id')->constrained()->onDelete('cascade');
@@ -56,7 +56,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('synced_products')) {
+        if (! Schema::hasTable('synced_products')) {
             Schema::create('synced_products', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('connection_id')->constrained('external_store_connections')->onDelete('cascade');
@@ -71,7 +71,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('seasonal_campaigns')) {
+        if (! Schema::hasTable('seasonal_campaigns')) {
             Schema::create('seasonal_campaigns', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('store_id')->nullable()->constrained()->onDelete('cascade');
@@ -93,7 +93,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('competitor_prices')) {
+        if (! Schema::hasTable('competitor_prices')) {
             Schema::create('competitor_prices', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('product_id')->constrained()->onDelete('cascade');
@@ -107,7 +107,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('competitive_reports')) {
+        if (! Schema::hasTable('competitive_reports')) {
             Schema::create('competitive_reports', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('store_id')->constrained()->onDelete('cascade');

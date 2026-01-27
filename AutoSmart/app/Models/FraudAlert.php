@@ -64,7 +64,7 @@ class FraudAlert extends Model
 
     public function getAlertTypeNameAttribute()
     {
-        return match($this->alert_type) {
+        return match ($this->alert_type) {
             'multiple_accounts' => 'حسابات متعددة',
             'suspicious_payment' => 'دفع مشبوه',
             'velocity_check' => 'معدل طلبات عالي',
@@ -77,15 +77,22 @@ class FraudAlert extends Model
 
     public function getRiskLevelAttribute()
     {
-        if ($this->risk_score >= 0.8) return 'critical';
-        if ($this->risk_score >= 0.6) return 'high';
-        if ($this->risk_score >= 0.4) return 'medium';
+        if ($this->risk_score >= 0.8) {
+            return 'critical';
+        }
+        if ($this->risk_score >= 0.6) {
+            return 'high';
+        }
+        if ($this->risk_score >= 0.4) {
+            return 'medium';
+        }
+
         return 'low';
     }
 
     public function getStatusBadgeAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'new' => '<span class="badge bg-danger">جديد</span>',
             'investigating' => '<span class="badge bg-warning">قيد التحقيق</span>',
             'confirmed' => '<span class="badge bg-dark">مؤكد</span>',

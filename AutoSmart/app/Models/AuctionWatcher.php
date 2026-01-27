@@ -8,8 +8,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class AuctionWatcher extends Model
 {
     protected $fillable = ['auction_id', 'user_id', 'notify_outbid', 'notify_ending'];
+
     protected $casts = ['notify_outbid' => 'boolean', 'notify_ending' => 'boolean'];
 
-    public function auction(): BelongsTo { return $this->belongsTo(Auction::class); }
-    public function user(): BelongsTo { return $this->belongsTo(User::class); }
+    public function auction(): BelongsTo
+    {
+        return $this->belongsTo(Auction::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

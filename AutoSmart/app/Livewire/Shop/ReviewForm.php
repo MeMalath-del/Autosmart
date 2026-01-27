@@ -2,32 +2,41 @@
 
 namespace App\Livewire\Shop;
 
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\Review;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use App\Models\Review;
-use App\Models\Product;
-use App\Models\Order;
 
 class ReviewForm extends Component
 {
     use WithFileUploads;
 
     public Product $product;
+
     public ?Order $order = null;
+
     public int $rating = 5;
+
     public int $quality_rating = 5;
+
     public int $price_rating = 5;
+
     public int $shipping_rating = 5;
+
     public string $comment = '';
+
     public $images = [];
+
     public bool $showForm = false;
+
     public ?Review $existingReview = null;
 
     public function mount(Product $product, ?Order $order = null)
     {
         $this->product = $product;
         $this->order = $order;
-        
+
         if (auth()->check()) {
             $this->existingReview = Review::where('user_id', auth()->id())
                 ->where('product_id', $product->id)
@@ -37,13 +46,14 @@ class ReviewForm extends Component
 
     public function toggleForm()
     {
-        $this->showForm = !$this->showForm;
+        $this->showForm = ! $this->showForm;
     }
 
     public function submitReview()
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             $this->dispatch('notify', ['type' => 'warning', 'message' => 'يجب تسجيل الدخول أولاً']);
+
             return;
         }
 
@@ -77,7 +87,7 @@ class ReviewForm extends Component
                 'price_rating' => $this->price_rating,
                 'shipping_rating' => $this->shipping_rating,
                 'comment' => $this->comment,
-                'images' => !empty($imagesPaths) ? $imagesPaths : null,
+                'images' => ! empty($imagesPaths) ? $imagesPaths : null,
                 'is_verified_purchase' => $isVerified,
                 'is_approved' => true,
             ]

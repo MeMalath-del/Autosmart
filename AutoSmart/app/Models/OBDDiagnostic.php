@@ -39,7 +39,7 @@ class OBDDiagnostic extends Model
         parent::boot();
         static::creating(function ($diagnostic) {
             if (empty($diagnostic->diagnostic_code)) {
-                $diagnostic->diagnostic_code = 'DGN-' . strtoupper(Str::random(10));
+                $diagnostic->diagnostic_code = 'DGN-'.strtoupper(Str::random(10));
             }
         });
     }
@@ -61,14 +61,16 @@ class OBDDiagnostic extends Model
 
     public function getErrorCodesWithInfo()
     {
-        if (empty($this->error_codes)) return [];
-        
+        if (empty($this->error_codes)) {
+            return [];
+        }
+
         return OBDCodeLibrary::whereIn('code', $this->error_codes)->get();
     }
 
     public function getSeverityBadgeAttribute()
     {
-        return match($this->severity) {
+        return match ($this->severity) {
             'low' => '<span class="badge bg-success">منخفض</span>',
             'medium' => '<span class="badge bg-warning">متوسط</span>',
             'high' => '<span class="badge bg-orange">عالي</span>',

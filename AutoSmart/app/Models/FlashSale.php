@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class FlashSale extends Model
 {
@@ -37,8 +37,8 @@ class FlashSale extends Model
 
     public function isActive(): bool
     {
-        return $this->is_active && 
-               $this->starts_at->isPast() && 
+        return $this->is_active &&
+               $this->starts_at->isPast() &&
                $this->ends_at->isFuture();
     }
 
@@ -58,6 +58,7 @@ class FlashSale extends Model
     public function getRemainingTimeAttribute(): array
     {
         $diff = now()->diff($this->ends_at);
+
         return [
             'days' => $diff->d,
             'hours' => $diff->h,

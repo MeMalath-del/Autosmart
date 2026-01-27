@@ -13,7 +13,7 @@ Route::middleware(['auth', 'seller'])->prefix('seller')->name('seller.')->group(
         Route::get('/{import}', [\App\Http\Controllers\Seller\ImportController::class, 'show'])->name('show');
         Route::get('/template/download', [\App\Http\Controllers\Seller\ImportController::class, 'downloadTemplate'])->name('template');
     });
-    
+
     // QR Code Generation
     Route::post('/products/{product}/generate-qr', [\App\Http\Controllers\QrController::class, 'generate'])->name('products.generate-qr');
 });

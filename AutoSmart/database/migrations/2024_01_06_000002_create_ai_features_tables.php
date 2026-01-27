@@ -49,7 +49,7 @@ return new class extends Migration
             $table->string('browser')->nullable();
             $table->integer('time_spent')->nullable(); // seconds
             $table->timestamps();
-            
+
             $table->index(['user_id', 'event_type']);
             $table->index('session_id');
         });

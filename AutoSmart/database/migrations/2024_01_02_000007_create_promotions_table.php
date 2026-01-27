@@ -41,7 +41,7 @@ return new class extends Migration
             $table->integer('quantity_limit')->nullable();
             $table->integer('sold_count')->default(0);
             $table->timestamps();
-            
+
             $table->unique(['flash_sale_id', 'product_id']);
         });
 
@@ -52,7 +52,7 @@ return new class extends Migration
             $table->date('deal_date');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
-            
+
             $table->unique(['product_id', 'deal_date']);
         });
     }

@@ -2,9 +2,9 @@
 
 namespace App\Notifications;
 
-use Illuminate\Notifications\Notification;
-use Illuminate\Notifications\Messages\MailMessage;
 use App\Models\Workshop;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
 class WorkshopApproved extends Notification
 {
@@ -19,8 +19,8 @@ class WorkshopApproved extends Notification
     {
         return (new MailMessage)
             ->subject('تم اعتماد ورشتك في AutoSmart')
-            ->greeting('مرحباً ' . $notifiable->name)
-            ->line('تمت الموافقة على ورشتك "' . $this->workshop->name . '" بنجاح!')
+            ->greeting('مرحباً '.$notifiable->name)
+            ->line('تمت الموافقة على ورشتك "'.$this->workshop->name.'" بنجاح!')
             ->line('يمكنك الآن استقبال طلبات الصيانة والحجوزات.')
             ->action('انتقل للوحة التحكم', route('workshop.dashboard'))
             ->line('شكراً لانضمامك إلى AutoSmart!');
@@ -30,7 +30,7 @@ class WorkshopApproved extends Notification
     {
         return [
             'title' => 'تم اعتماد ورشتك',
-            'message' => 'تمت الموافقة على ورشة "' . $this->workshop->name . '" بنجاح',
+            'message' => 'تمت الموافقة على ورشة "'.$this->workshop->name.'" بنجاح',
             'workshop_id' => $this->workshop->id,
             'type' => 'workshop_approved',
         ];

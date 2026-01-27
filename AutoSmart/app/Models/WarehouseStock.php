@@ -9,8 +9,15 @@ class WarehouseStock extends Model
 {
     protected $fillable = ['warehouse_id', 'product_id', 'quantity', 'reserved_quantity', 'low_stock_threshold'];
 
-    public function warehouse(): BelongsTo { return $this->belongsTo(Warehouse::class); }
-    public function product(): BelongsTo { return $this->belongsTo(Product::class); }
+    public function warehouse(): BelongsTo
+    {
+        return $this->belongsTo(Warehouse::class);
+    }
+
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class);
+    }
 
     public function getAvailableQuantityAttribute(): int
     {

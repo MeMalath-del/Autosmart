@@ -15,7 +15,7 @@ class CartController extends Controller
             ->with('items.product.images')
             ->first();
 
-        if (!$cart) {
+        if (! $cart) {
             return response()->json([
                 'items' => [],
                 'total' => 0,
@@ -39,7 +39,7 @@ class CartController extends Controller
 
         $product = Product::findOrFail($request->product_id);
 
-        if (!$product->isInStock()) {
+        if (! $product->isInStock()) {
             return response()->json(['message' => 'المنتج غير متوفر'], 400);
         }
 
@@ -63,7 +63,7 @@ class CartController extends Controller
 
         $cart = Cart::where('user_id', $request->user()->id)->first();
 
-        if (!$cart) {
+        if (! $cart) {
             return response()->json(['message' => 'السلة فارغة'], 404);
         }
 

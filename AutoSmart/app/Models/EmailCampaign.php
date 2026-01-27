@@ -9,12 +9,15 @@ class EmailCampaign extends Model
 {
     protected $fillable = [
         'name', 'subject', 'body', 'status', 'segment', 'recipients_count',
-        'sent_count', 'opened_count', 'clicked_count', 'scheduled_at', 'sent_at'
+        'sent_count', 'opened_count', 'clicked_count', 'scheduled_at', 'sent_at',
     ];
 
     protected $casts = ['scheduled_at' => 'datetime', 'sent_at' => 'datetime'];
 
-    public function logs(): HasMany { return $this->hasMany(EmailCampaignLog::class); }
+    public function logs(): HasMany
+    {
+        return $this->hasMany(EmailCampaignLog::class);
+    }
 
     public function getOpenRateAttribute(): float
     {

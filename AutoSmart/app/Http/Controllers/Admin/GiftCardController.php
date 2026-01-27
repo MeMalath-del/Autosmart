@@ -9,7 +9,10 @@ use Illuminate\Http\Request;
 
 class GiftCardController extends Controller
 {
-    public function __construct() { $this->middleware(['auth', 'role:admin']); }
+    public function __construct()
+    {
+        $this->middleware(['auth', 'role:admin']);
+    }
 
     public function index(Request $request)
     {
@@ -20,7 +23,7 @@ class GiftCardController extends Controller
         }
 
         $giftCards = $query->latest()->paginate(20);
-        
+
         $stats = [
             'total_issued' => GiftCard::sum('initial_balance'),
             'total_redeemed' => GiftCard::sum('initial_balance') - GiftCard::sum('current_balance'),
@@ -34,6 +37,7 @@ class GiftCardController extends Controller
     public function show(GiftCard $giftCard)
     {
         $giftCard->load(['purchaser', 'recipient', 'transactions']);
+
         return view('admin.gift-cards.show', compact('giftCard'));
     }
 
@@ -66,12 +70,14 @@ class GiftCardController extends Controller
     public function deactivate(GiftCard $giftCard)
     {
         $giftCard->update(['status' => 'cancelled']);
+
         return back()->with('success', 'تم إلغاء البطاقة');
     }
 
     public function templates()
     {
         $templates = GiftCardTemplate::all();
+
         return view('admin.gift-cards.templates', compact('templates'));
     }
 }

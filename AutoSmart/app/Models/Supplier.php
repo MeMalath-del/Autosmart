@@ -10,13 +10,23 @@ class Supplier extends Model
 {
     protected $fillable = [
         'store_id', 'name', 'contact_person', 'email', 'phone',
-        'address', 'tax_number', 'notes', 'is_active'
+        'address', 'tax_number', 'notes', 'is_active',
     ];
 
     protected $casts = ['is_active' => 'boolean'];
 
-    public function store(): BelongsTo { return $this->belongsTo(Store::class); }
-    public function purchaseOrders(): HasMany { return $this->hasMany(PurchaseOrder::class); }
+    public function store(): BelongsTo
+    {
+        return $this->belongsTo(Store::class);
+    }
 
-    public function scopeActive($query) { return $query->where('is_active', true); }
+    public function purchaseOrders(): HasMany
+    {
+        return $this->hasMany(PurchaseOrder::class);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
 }

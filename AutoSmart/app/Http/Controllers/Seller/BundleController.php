@@ -8,18 +8,23 @@ use Illuminate\Http\Request;
 
 class BundleController extends Controller
 {
-    public function __construct() { $this->middleware(['auth', 'seller']); }
+    public function __construct()
+    {
+        $this->middleware(['auth', 'seller']);
+    }
 
     public function index()
     {
         $store = auth()->user()->store;
         $bundles = ProductBundle::where('store_id', $store->id)->with('products')->latest()->get();
+
         return view('seller.bundles.index', compact('bundles'));
     }
 
     public function create()
     {
         $products = auth()->user()->store->products()->active()->get();
+
         return view('seller.bundles.create', compact('products'));
     }
 
@@ -68,16 +73,22 @@ class BundleController extends Controller
 
     public function edit(ProductBundle $bundle)
     {
-        if ($bundle->store_id !== auth()->user()->store->id) abort(403);
+        if ($bundle->store_id !== auth()->user()->store->id) {
+            abort(403);
+        }
         $products = auth()->user()->store->products()->active()->get();
         $bundle->load('items');
+
         return view('seller.bundles.edit', compact('bundle', 'products'));
     }
 
     public function destroy(ProductBundle $bundle)
     {
-        if ($bundle->store_id !== auth()->user()->store->id) abort(403);
+        if ($bundle->store_id !== auth()->user()->store->id) {
+            abort(403);
+        }
         $bundle->delete();
+
         return back()->with('success', 'تم حذف الباقة');
     }
 }

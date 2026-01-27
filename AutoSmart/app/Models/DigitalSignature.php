@@ -45,7 +45,7 @@ class DigitalSignature extends Model
             $this->signable_id,
             $this->signed_at->timestamp,
         ]));
-        
+
         return $this->signature_hash === $expectedHash;
     }
 
@@ -61,16 +61,16 @@ class DigitalSignature extends Model
             'signature_data' => $signatureData,
             'signed_at' => now(),
         ]);
-        
+
         $signature->signature_hash = hash('sha256', implode('|', [
             $signature->user_id,
             $signature->signable_type,
             $signature->signable_id,
             $signature->signed_at->timestamp,
         ]));
-        
+
         $signature->save();
-        
+
         return $signature;
     }
 }

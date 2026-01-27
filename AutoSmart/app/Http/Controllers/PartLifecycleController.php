@@ -8,7 +8,10 @@ use Illuminate\Http\Request;
 
 class PartLifecycleController extends Controller
 {
-    public function __construct() { $this->middleware('auth'); }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function index()
     {
@@ -27,6 +30,7 @@ class PartLifecycleController extends Controller
     public function create()
     {
         $cars = UserCar::where('user_id', auth()->id())->with('carModel.brand')->get();
+
         return view('parts.create', compact('cars'));
     }
 
@@ -43,7 +47,7 @@ class PartLifecycleController extends Controller
         ]);
 
         $validated['user_id'] = auth()->id();
-        
+
         // Calculate expected replacement
         if ($validated['expected_lifespan_months']) {
             $validated['expected_replacement_date'] = now()->parse($validated['installation_date'])->addMonths($validated['expected_lifespan_months']);
@@ -60,7 +64,9 @@ class PartLifecycleController extends Controller
 
     public function update(Request $request, PartLifecycle $part)
     {
-        if ($part->user_id !== auth()->id()) abort(403);
+        if ($part->user_id !== auth()->id()) {
+            abort(403);
+        }
 
         $validated = $request->validate([
             'actual_replacement_date' => 'nullable|date',

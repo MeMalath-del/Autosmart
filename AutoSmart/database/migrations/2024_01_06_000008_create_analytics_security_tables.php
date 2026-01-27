@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('dashboard_widgets')) {
+        if (! Schema::hasTable('dashboard_widgets')) {
             Schema::create('dashboard_widgets', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained()->onDelete('cascade');
@@ -24,7 +24,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('custom_reports')) {
+        if (! Schema::hasTable('custom_reports')) {
             Schema::create('custom_reports', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained()->onDelete('cascade');
@@ -43,7 +43,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('report_exports')) {
+        if (! Schema::hasTable('report_exports')) {
             Schema::create('report_exports', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('report_id')->nullable()->constrained('custom_reports')->onDelete('set null');
@@ -57,7 +57,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('profitability_records')) {
+        if (! Schema::hasTable('profitability_records')) {
             Schema::create('profitability_records', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('product_id')->constrained()->onDelete('cascade');
@@ -75,7 +75,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('kyc_verifications')) {
+        if (! Schema::hasTable('kyc_verifications')) {
             Schema::create('kyc_verifications', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained()->onDelete('cascade');
@@ -96,7 +96,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('fraud_alerts')) {
+        if (! Schema::hasTable('fraud_alerts')) {
             Schema::create('fraud_alerts', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
@@ -112,7 +112,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('fraud_rules')) {
+        if (! Schema::hasTable('fraud_rules')) {
             Schema::create('fraud_rules', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');
@@ -126,7 +126,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('digital_signatures')) {
+        if (! Schema::hasTable('digital_signatures')) {
             Schema::create('digital_signatures', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained()->onDelete('cascade');
@@ -141,7 +141,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('compliance_logs')) {
+        if (! Schema::hasTable('compliance_logs')) {
             Schema::create('compliance_logs', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');

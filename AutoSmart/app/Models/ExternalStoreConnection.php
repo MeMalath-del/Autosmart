@@ -45,7 +45,10 @@ class ExternalStoreConnection extends Model
 
     public function getCredentialsAttribute($value)
     {
-        if (!$value) return null;
+        if (! $value) {
+            return null;
+        }
+
         return json_decode(Crypt::decrypt($value), true);
     }
 
@@ -62,7 +65,7 @@ class ExternalStoreConnection extends Model
 
     public function getPlatformNameAttribute()
     {
-        return match($this->platform) {
+        return match ($this->platform) {
             'amazon' => 'أمازون',
             'ebay' => 'إيباي',
             'noon' => 'نون',
@@ -74,7 +77,7 @@ class ExternalStoreConnection extends Model
 
     public function getStatusBadgeAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'pending' => '<span class="badge bg-warning">قيد الانتظار</span>',
             'connected' => '<span class="badge bg-success">متصل</span>',
             'error' => '<span class="badge bg-danger">خطأ</span>',

@@ -48,7 +48,7 @@ class AuthenticityCheck extends Model
 
     public function getResultBadgeAttribute()
     {
-        return match($this->result) {
+        return match ($this->result) {
             'authentic' => '<span class="badge bg-success">أصلي</span>',
             'suspicious' => '<span class="badge bg-warning">مشبوه</span>',
             'fake' => '<span class="badge bg-danger">مزيف</span>',

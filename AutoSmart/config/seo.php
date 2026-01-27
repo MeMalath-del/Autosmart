@@ -9,18 +9,18 @@ return [
     'author' => 'AutoSmart',
     'locale' => 'ar_SA',
     'twitter_handle' => '@autosmart_sa',
-    
+
     'og' => [
         'type' => 'website',
         'image' => '/images/og-image.jpg',
     ],
-    
+
     'schema' => [
         'organization' => [
             '@type' => 'Organization',
             'name' => 'AutoSmart',
             'url' => env('APP_URL'),
-            'logo' => env('APP_URL') . '/images/logo.png',
+            'logo' => env('APP_URL').'/images/logo.png',
             'contactPoint' => [
                 '@type' => 'ContactPoint',
                 'telephone' => '+966500000000',

@@ -34,7 +34,7 @@ class WalletTopup extends Model
             'status' => 'completed',
             'payment_reference' => $reference,
         ]);
-        
+
         $this->wallet->credit($this->amount, 'شحن المحفظة', $this->id, self::class);
     }
 
@@ -45,7 +45,7 @@ class WalletTopup extends Model
 
     public function getStatusBadgeAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'pending' => '<span class="badge bg-warning">قيد الانتظار</span>',
             'completed' => '<span class="badge bg-success">مكتمل</span>',
             'failed' => '<span class="badge bg-danger">فشل</span>',

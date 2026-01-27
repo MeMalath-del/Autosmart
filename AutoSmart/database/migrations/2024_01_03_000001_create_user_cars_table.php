@@ -54,7 +54,7 @@ return new class extends Migration
             $table->integer('quantity')->default(1);
             $table->text('notes')->nullable();
             $table->timestamps();
-            
+
             $table->unique(['product_list_id', 'product_id']);
         });
     }

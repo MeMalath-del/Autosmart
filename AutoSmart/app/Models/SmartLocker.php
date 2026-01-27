@@ -53,12 +53,12 @@ class SmartLocker extends Model
 
     public function reserveCompartment($order, $size = 'medium')
     {
-        if (!$this->hasAvailableCompartment($size)) {
+        if (! $this->hasAvailableCompartment($size)) {
             throw new \Exception('No compartments available');
         }
 
         $this->decrement('available_compartments');
-        
+
         return $this->reservations()->create([
             'order_id' => $order->id,
             'compartment_number' => $this->generateCompartmentNumber(),

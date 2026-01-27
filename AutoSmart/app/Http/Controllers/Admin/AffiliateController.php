@@ -9,7 +9,10 @@ use Illuminate\Http\Request;
 
 class AffiliateController extends Controller
 {
-    public function __construct() { $this->middleware(['auth', 'role:admin']); }
+    public function __construct()
+    {
+        $this->middleware(['auth', 'role:admin']);
+    }
 
     public function index(Request $request)
     {
@@ -18,7 +21,7 @@ class AffiliateController extends Controller
             $query->where('status', $request->status);
         }
         $affiliates = $query->latest()->paginate(20);
-        
+
         $stats = [
             'total' => Affiliate::count(),
             'pending' => Affiliate::where('status', 'pending')->count(),
@@ -32,12 +35,14 @@ class AffiliateController extends Controller
     public function show(Affiliate $affiliate)
     {
         $affiliate->load(['user', 'links', 'sales.order', 'payouts']);
+
         return view('admin.affiliates.show', compact('affiliate'));
     }
 
     public function approve(Affiliate $affiliate)
     {
         $affiliate->update(['status' => 'approved']);
+
         return back()->with('success', 'تم اعتماد الشريك');
     }
 
@@ -45,12 +50,14 @@ class AffiliateController extends Controller
     {
         $validated = $request->validate(['commission_rate' => 'required|numeric|min:0|max:50']);
         $affiliate->update($validated);
+
         return back()->with('success', 'تم تحديث نسبة العمولة');
     }
 
     public function payouts()
     {
         $payouts = AffiliatePayout::with('affiliate.user')->latest()->paginate(20);
+
         return view('admin.affiliates.payouts', compact('payouts'));
     }
 
@@ -59,6 +66,7 @@ class AffiliateController extends Controller
         $payout->update(['status' => 'completed', 'processed_at' => now()]);
         $payout->affiliate->decrement('pending_earnings', $payout->amount);
         $payout->affiliate->increment('paid_earnings', $payout->amount);
+
         return back()->with('success', 'تم معالجة الدفعة');
     }
 }

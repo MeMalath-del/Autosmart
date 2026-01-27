@@ -38,7 +38,10 @@ class DailyDeal extends Model
 
     public function getDiscountPercentageAttribute(): int
     {
-        if (!$this->product || $this->product->price <= 0) return 0;
+        if (! $this->product || $this->product->price <= 0) {
+            return 0;
+        }
+
         return round((($this->product->price - $this->deal_price) / $this->product->price) * 100);
     }
 }

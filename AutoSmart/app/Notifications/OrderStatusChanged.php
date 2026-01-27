@@ -4,14 +4,15 @@ namespace App\Notifications;
 
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
 class OrderStatusChanged extends Notification
 {
     use Queueable;
 
     public Order $order;
+
     public string $oldStatus;
 
     public function __construct(Order $order, string $oldStatus)
@@ -23,7 +24,7 @@ class OrderStatusChanged extends Notification
     public function via($notifiable): array
     {
         $channels = ['database'];
-        
+
         $settings = $notifiable->notificationSettings;
         if ($settings && $settings->email_orders) {
             $channels[] = 'mail';
@@ -35,10 +36,10 @@ class OrderStatusChanged extends Notification
     public function toMail($notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('تحديث حالة طلبك #' . $this->order->order_number)
-            ->greeting('مرحباً ' . $notifiable->name)
-            ->line('تم تحديث حالة طلبك إلى: ' . $this->order->status_label)
-            ->action('عرض الطلب', url('/orders/' . $this->order->id))
+            ->subject('تحديث حالة طلبك #'.$this->order->order_number)
+            ->greeting('مرحباً '.$notifiable->name)
+            ->line('تم تحديث حالة طلبك إلى: '.$this->order->status_label)
+            ->action('عرض الطلب', url('/orders/'.$this->order->id))
             ->line('شكراً لتسوقك معنا!');
     }
 
@@ -49,7 +50,7 @@ class OrderStatusChanged extends Notification
             'order_number' => $this->order->order_number,
             'status' => $this->order->status,
             'status_label' => $this->order->status_label,
-            'message' => 'تم تحديث حالة طلبك #' . $this->order->order_number . ' إلى ' . $this->order->status_label,
+            'message' => 'تم تحديث حالة طلبك #'.$this->order->order_number.' إلى '.$this->order->status_label,
         ];
     }
 }

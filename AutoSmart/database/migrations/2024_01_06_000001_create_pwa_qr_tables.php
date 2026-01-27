@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         // أكواد QR للمنتجات
-        if (!Schema::hasTable('product_qr_codes')) {
+        if (! Schema::hasTable('product_qr_codes')) {
             Schema::create('product_qr_codes', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('product_id')->constrained()->onDelete('cascade');
@@ -22,7 +22,7 @@ return new class extends Migration
         }
 
         // سجل مسح الباركود
-        if (!Schema::hasTable('barcode_scans')) {
+        if (! Schema::hasTable('barcode_scans')) {
             Schema::create('barcode_scans', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
@@ -36,7 +36,7 @@ return new class extends Migration
         }
 
         // إشعارات Push للـ PWA
-        if (!Schema::hasTable('push_subscriptions')) {
+        if (! Schema::hasTable('push_subscriptions')) {
             Schema::create('push_subscriptions', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained()->onDelete('cascade');
@@ -51,7 +51,7 @@ return new class extends Migration
         }
 
         // إعدادات الإشعارات
-        if (!Schema::hasTable('push_notification_settings')) {
+        if (! Schema::hasTable('push_notification_settings')) {
             Schema::create('push_notification_settings', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained()->onDelete('cascade');
@@ -61,7 +61,7 @@ return new class extends Migration
                 $table->boolean('stock_alerts')->default(true);
                 $table->boolean('messages')->default(true);
                 $table->timestamps();
-                
+
                 $table->unique('user_id');
             });
         }

@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Seller;
 use App\Http\Controllers\Controller;
 use App\Models\Store;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class StoreController extends Controller
 {
@@ -39,7 +39,7 @@ class StoreController extends Controller
         ]);
 
         $validated['user_id'] = auth()->id();
-        $validated['slug'] = Str::slug($validated['name']) . '-' . uniqid();
+        $validated['slug'] = Str::slug($validated['name']).'-'.uniqid();
 
         if ($request->hasFile('logo')) {
             $validated['logo'] = $request->file('logo')->store('stores/logos', 'public');
@@ -59,7 +59,7 @@ class StoreController extends Controller
     {
         $store = auth()->user()->store;
 
-        if (!$store) {
+        if (! $store) {
             return redirect()->route('seller.store.create');
         }
 
@@ -74,7 +74,7 @@ class StoreController extends Controller
     {
         $store = auth()->user()->store;
 
-        if (!$store) {
+        if (! $store) {
             return redirect()->route('seller.store.create');
         }
 

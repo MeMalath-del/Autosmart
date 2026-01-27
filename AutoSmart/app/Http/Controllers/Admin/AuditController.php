@@ -8,7 +8,10 @@ use Illuminate\Http\Request;
 
 class AuditController extends Controller
 {
-    public function __construct() { $this->middleware(['auth', 'role:admin']); }
+    public function __construct()
+    {
+        $this->middleware(['auth', 'role:admin']);
+    }
 
     public function index(Request $request)
     {
@@ -21,7 +24,7 @@ class AuditController extends Controller
             $query->where('user_id', $request->user_id);
         }
         if ($request->filled('model')) {
-            $query->where('auditable_type', 'like', '%' . $request->model . '%');
+            $query->where('auditable_type', 'like', '%'.$request->model.'%');
         }
 
         $logs = $query->latest()->paginate(50);
@@ -33,6 +36,7 @@ class AuditController extends Controller
     public function show(AuditLog $log)
     {
         $log->load('user');
+
         return view('admin.audit.show', compact('log'));
     }
 }

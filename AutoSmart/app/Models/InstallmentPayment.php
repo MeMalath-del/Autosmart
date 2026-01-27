@@ -68,15 +68,17 @@ class InstallmentPayment extends Model
         if ($this->isOverdue()) {
             $daysLate = $this->due_date->diffInDays(now());
             $lateFee = min($daysLate * 10, $this->amount * 0.1);
+
             return $this->amount + $lateFee;
         }
+
         return $this->amount;
     }
 
     public function getStatusBadgeAttribute()
     {
-        return match($this->status) {
-            'pending' => $this->isOverdue() 
+        return match ($this->status) {
+            'pending' => $this->isOverdue()
                 ? '<span class="badge bg-danger">متأخر</span>'
                 : '<span class="badge bg-warning">قيد الانتظار</span>',
             'paid' => '<span class="badge bg-success">مدفوع</span>',

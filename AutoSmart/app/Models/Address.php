@@ -38,16 +38,21 @@ class Address extends Model
         self::where('user_id', $this->user_id)
             ->where('id', '!=', $this->id)
             ->update(['is_default' => false]);
-        
+
         $this->update(['is_default' => true]);
     }
 
     public function getFullAddressAttribute(): string
     {
         $parts = [$this->address];
-        if ($this->district) $parts[] = $this->district;
+        if ($this->district) {
+            $parts[] = $this->district;
+        }
         $parts[] = $this->city;
-        if ($this->postal_code) $parts[] = $this->postal_code;
+        if ($this->postal_code) {
+            $parts[] = $this->postal_code;
+        }
+
         return implode('، ', $parts);
     }
 

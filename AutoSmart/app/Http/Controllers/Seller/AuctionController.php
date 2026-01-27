@@ -8,7 +8,10 @@ use Illuminate\Http\Request;
 
 class AuctionController extends Controller
 {
-    public function __construct() { $this->middleware(['auth', 'seller']); }
+    public function __construct()
+    {
+        $this->middleware(['auth', 'seller']);
+    }
 
     public function index()
     {
@@ -17,13 +20,14 @@ class AuctionController extends Controller
             ->with('product')
             ->latest()
             ->paginate(20);
-        
+
         return view('seller.auctions.index', compact('auctions'));
     }
 
     public function create()
     {
         $products = auth()->user()->store->products()->active()->get();
+
         return view('seller.auctions.create', compact('products'));
     }
 
@@ -52,25 +56,34 @@ class AuctionController extends Controller
 
     public function show(Auction $auction)
     {
-        if ($auction->store_id !== auth()->user()->store->id) abort(403);
+        if ($auction->store_id !== auth()->user()->store->id) {
+            abort(403);
+        }
         $auction->load(['product', 'bids.user']);
+
         return view('seller.auctions.show', compact('auction'));
     }
 
     public function activate(Auction $auction)
     {
-        if ($auction->store_id !== auth()->user()->store->id) abort(403);
+        if ($auction->store_id !== auth()->user()->store->id) {
+            abort(403);
+        }
         $auction->update(['status' => 'active']);
+
         return back()->with('success', 'تم تفعيل المزاد');
     }
 
     public function cancel(Auction $auction)
     {
-        if ($auction->store_id !== auth()->user()->store->id) abort(403);
+        if ($auction->store_id !== auth()->user()->store->id) {
+            abort(403);
+        }
         if ($auction->bids_count > 0) {
             return back()->with('error', 'لا يمكن إلغاء مزاد به مزايدات');
         }
         $auction->update(['status' => 'cancelled']);
+
         return back()->with('success', 'تم إلغاء المزاد');
     }
 }

@@ -12,6 +12,7 @@ class FlashSaleController extends Controller
     public function index()
     {
         $flashSales = FlashSale::withCount('products')->latest()->paginate(20);
+
         return view('admin.flash-sales.index', compact('flashSales'));
     }
 
@@ -40,7 +41,7 @@ class FlashSaleController extends Controller
     {
         $flashSale->load('flashSaleProducts.product');
         $products = Product::active()->whereNotIn('id', $flashSale->products->pluck('id'))->get();
-        
+
         return view('admin.flash-sales.edit', compact('flashSale', 'products'));
     }
 
@@ -81,12 +82,14 @@ class FlashSaleController extends Controller
     public function removeProduct(FlashSale $flashSale, int $productId)
     {
         $flashSale->flashSaleProducts()->where('product_id', $productId)->delete();
+
         return back()->with('success', 'تمت إزالة المنتج');
     }
 
     public function destroy(FlashSale $flashSale)
     {
         $flashSale->delete();
+
         return back()->with('success', 'تم حذف التخفيض الخاطف');
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use App\Models\AuthenticityCheck;
+use App\Models\Product;
 use App\Services\AuthenticityService;
 use Illuminate\Http\Request;
 
@@ -22,7 +22,7 @@ class AuthenticityController extends Controller
             ->orderByDesc('created_at')
             ->limit(5)
             ->get();
-        
+
         return view('authenticity.check', compact('product', 'checks'));
     }
 
@@ -32,13 +32,13 @@ class AuthenticityController extends Controller
             'serial_number' => 'nullable|string',
             'check_type' => 'required|in:automatic,serial,image',
         ]);
-        
+
         $check = $this->authenticityService->checkAuthenticity(
             $product,
             auth()->id(),
             $request->all()
         );
-        
+
         if ($request->wantsJson()) {
             return response()->json([
                 'result' => $check->result,
@@ -46,7 +46,7 @@ class AuthenticityController extends Controller
                 'analysis' => $check->analysis_details,
             ]);
         }
-        
+
         return back()->with('check_result', $check);
     }
 
@@ -57,21 +57,21 @@ class AuthenticityController extends Controller
             'evidence' => 'nullable|array',
             'evidence.*' => 'image|max:2048',
         ]);
-        
+
         $evidence = [];
         if ($request->hasFile('evidence')) {
             foreach ($request->file('evidence') as $file) {
                 $evidence[] = $file->store('reports/evidence', 'public');
             }
         }
-        
+
         $this->authenticityService->reportFake(
             $product,
             auth()->id(),
             $request->reason,
             $evidence
         );
-        
+
         return back()->with('success', 'تم إرسال البلاغ بنجاح، شكراً لمساعدتك في الحفاظ على جودة المنتجات');
     }
 }

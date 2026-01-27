@@ -51,13 +51,16 @@ class ExpressDelivery extends Model
 
     public function isOnTime()
     {
-        if (!$this->actual_delivery_time) return null;
+        if (! $this->actual_delivery_time) {
+            return null;
+        }
+
         return $this->actual_delivery_time <= $this->promised_delivery_time;
     }
 
     public function getStatusBadgeAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'pending' => '<span class="badge bg-warning">قيد الانتظار</span>',
             'assigned' => '<span class="badge bg-info">تم التعيين</span>',
             'picked_up' => '<span class="badge bg-primary">تم الاستلام</span>',

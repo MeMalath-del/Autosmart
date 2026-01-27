@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Order;
-use App\Models\OrderItem;
 use App\Models\Cart;
 use App\Models\Coupon;
+use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -50,14 +50,14 @@ class OrderController extends Controller
             ->with('items.product.store')
             ->first();
 
-        if (!$cart || $cart->items->isEmpty()) {
+        if (! $cart || $cart->items->isEmpty()) {
             return response()->json(['message' => 'السلة فارغة'], 400);
         }
 
         // التحقق من الكوبون
         $couponDiscount = 0;
         $coupon = null;
-        if (!empty($validated['coupon_code'])) {
+        if (! empty($validated['coupon_code'])) {
             $coupon = Coupon::where('code', strtoupper($validated['coupon_code']))->first();
             if ($coupon && $coupon->canBeUsedBy($request->user())) {
                 $couponDiscount = $coupon->calculateDiscount($cart->total);
@@ -71,7 +71,7 @@ class OrderController extends Controller
             $orders = [];
 
             foreach ($itemsByStore as $storeId => $storeItems) {
-                $subtotal = $storeItems->sum(fn($item) => $item->product->current_price * $item->quantity);
+                $subtotal = $storeItems->sum(fn ($item) => $item->product->current_price * $item->quantity);
                 $shipping = 25;
                 $tax = $subtotal * 0.15;
                 $discount = $couponDiscount > 0 ? ($couponDiscount / $itemsByStore->count()) : 0;
@@ -131,6 +131,7 @@ class OrderController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json(['message' => 'حدث خطأ أثناء إنشاء الطلب'], 500);
         }
     }
@@ -141,7 +142,7 @@ class OrderController extends Controller
             return response()->json(['message' => 'غير مصرح'], 403);
         }
 
-        if (!$order->canBeCancelled()) {
+        if (! $order->canBeCancelled()) {
             return response()->json(['message' => 'لا يمكن إلغاء هذا الطلب'], 400);
         }
 

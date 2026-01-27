@@ -51,8 +51,8 @@ class InternationalShippingZone extends Model
 
     public function getLocalizedNameAttribute()
     {
-        return app()->getLocale() === 'ar' 
-            ? ($this->country_name_ar ?? $this->country_name) 
+        return app()->getLocale() === 'ar'
+            ? ($this->country_name_ar ?? $this->country_name)
             : $this->country_name;
     }
 }

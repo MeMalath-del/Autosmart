@@ -31,7 +31,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->boolean('is_helpful');
             $table->timestamps();
-            
+
             $table->unique(['review_id', 'user_id']);
         });
 
@@ -51,7 +51,7 @@ return new class extends Migration
         Schema::dropIfExists('review_reports');
         Schema::dropIfExists('review_votes');
         Schema::dropIfExists('review_responses');
-        
+
         Schema::table('reviews', function (Blueprint $table) {
             $table->dropColumn(['quality_rating', 'price_rating', 'shipping_rating', 'images', 'helpful_count', 'unhelpful_count']);
         });

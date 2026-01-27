@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\VideoReview;
 use App\Models\Product;
+use App\Models\VideoReview;
 use Illuminate\Http\Request;
 
 class VideoReviewController extends Controller
@@ -14,7 +14,7 @@ class VideoReviewController extends Controller
             ->with(['product.images', 'user'])
             ->latest()
             ->paginate(12);
-        
+
         return view('video-reviews.index', compact('reviews'));
     }
 
@@ -22,13 +22,13 @@ class VideoReviewController extends Controller
     {
         $videoReview->incrementViews();
         $videoReview->load(['product', 'user']);
-        
+
         $related = VideoReview::approved()
             ->where('id', '!=', $videoReview->id)
             ->where('product_id', $videoReview->product_id)
             ->limit(4)
             ->get();
-        
+
         return view('video-reviews.show', compact('videoReview', 'related'));
     }
 
@@ -36,14 +36,14 @@ class VideoReviewController extends Controller
     {
         // Check if user has purchased this product
         $hasPurchased = auth()->user()->orders()
-            ->whereHas('items', fn($q) => $q->where('product_id', $product->id))
+            ->whereHas('items', fn ($q) => $q->where('product_id', $product->id))
             ->where('status', 'delivered')
             ->exists();
-        
-        if (!$hasPurchased) {
+
+        if (! $hasPurchased) {
             return back()->with('error', 'يجب شراء المنتج أولاً');
         }
-        
+
         return view('video-reviews.create', compact('product'));
     }
 

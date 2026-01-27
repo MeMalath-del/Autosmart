@@ -10,24 +10,39 @@ class PurchaseOrder extends Model
 {
     protected $fillable = [
         'store_id', 'supplier_id', 'warehouse_id', 'order_number', 'status',
-        'subtotal', 'tax', 'total', 'expected_date', 'received_date', 'notes'
+        'subtotal', 'tax', 'total', 'expected_date', 'received_date', 'notes',
     ];
 
     protected $casts = [
         'subtotal' => 'decimal:2', 'tax' => 'decimal:2', 'total' => 'decimal:2',
-        'expected_date' => 'date', 'received_date' => 'date'
+        'expected_date' => 'date', 'received_date' => 'date',
     ];
 
     protected static function boot()
     {
         parent::boot();
-        static::creating(fn($po) => $po->order_number = $po->order_number ?? 'PO-' . strtoupper(uniqid()));
+        static::creating(fn ($po) => $po->order_number = $po->order_number ?? 'PO-'.strtoupper(uniqid()));
     }
 
-    public function store(): BelongsTo { return $this->belongsTo(Store::class); }
-    public function supplier(): BelongsTo { return $this->belongsTo(Supplier::class); }
-    public function warehouse(): BelongsTo { return $this->belongsTo(Warehouse::class); }
-    public function items(): HasMany { return $this->hasMany(PurchaseOrderItem::class); }
+    public function store(): BelongsTo
+    {
+        return $this->belongsTo(Store::class);
+    }
+
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Supplier::class);
+    }
+
+    public function warehouse(): BelongsTo
+    {
+        return $this->belongsTo(Warehouse::class);
+    }
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(PurchaseOrderItem::class);
+    }
 
     public function calculateTotals(): void
     {
@@ -39,7 +54,7 @@ class PurchaseOrder extends Model
 
     public function getStatusLabelAttribute(): string
     {
-        return match($this->status) {
+        return match ($this->status) {
             'draft' => 'مسودة', 'sent' => 'مرسل', 'confirmed' => 'مؤكد',
             'received' => 'مستلم', 'cancelled' => 'ملغي', default => $this->status
         };

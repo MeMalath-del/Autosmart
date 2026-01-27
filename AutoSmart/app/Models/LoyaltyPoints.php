@@ -10,36 +10,46 @@ class LoyaltyPoints extends Model
 {
     protected $fillable = ['user_id', 'points', 'lifetime_points', 'tier'];
 
-    public function user(): BelongsTo { return $this->belongsTo(User::class); }
-    public function transactions(): HasMany { return $this->hasMany(LoyaltyTransaction::class, 'user_id', 'user_id'); }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(LoyaltyTransaction::class, 'user_id', 'user_id');
+    }
 
     public function addPoints(int $points, string $description, ?string $refType = null, ?int $refId = null): void
     {
         $this->increment('points', $points);
         $this->increment('lifetime_points', $points);
-        
+
         LoyaltyTransaction::create([
             'user_id' => $this->user_id, 'type' => 'earned', 'points' => $points,
             'description' => $description, 'reference_type' => $refType, 'reference_id' => $refId,
-            'expires_at' => now()->addDays(365)
+            'expires_at' => now()->addDays(365),
         ]);
-        
+
         $this->updateTier();
     }
 
     public function redeemPoints(int $points, string $description): bool
     {
-        if ($this->points < $points) return false;
+        if ($this->points < $points) {
+            return false;
+        }
         $this->decrement('points', $points);
         LoyaltyTransaction::create([
-            'user_id' => $this->user_id, 'type' => 'redeemed', 'points' => -$points, 'description' => $description
+            'user_id' => $this->user_id, 'type' => 'redeemed', 'points' => -$points, 'description' => $description,
         ]);
+
         return true;
     }
 
     public function updateTier(): void
     {
-        $tier = match(true) {
+        $tier = match (true) {
             $this->lifetime_points >= 10000 => 'platinum',
             $this->lifetime_points >= 5000 => 'gold',
             $this->lifetime_points >= 1000 => 'silver',
@@ -50,7 +60,7 @@ class LoyaltyPoints extends Model
 
     public function getTierLabelAttribute(): string
     {
-        return match($this->tier) {
+        return match ($this->tier) {
             'bronze' => 'برونزي', 'silver' => 'فضي', 'gold' => 'ذهبي', 'platinum' => 'بلاتيني', default => $this->tier
         };
     }

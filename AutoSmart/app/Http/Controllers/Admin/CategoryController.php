@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -23,6 +23,7 @@ class CategoryController extends Controller
     public function create()
     {
         $parents = Category::whereNull('parent_id')->get();
+
         return view('admin.categories.create', compact('parents'));
     }
 
@@ -37,7 +38,7 @@ class CategoryController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:1024',
         ]);
 
-        $validated['slug'] = Str::slug($validated['name']) . '-' . uniqid();
+        $validated['slug'] = Str::slug($validated['name']).'-'.uniqid();
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('categories', 'public');

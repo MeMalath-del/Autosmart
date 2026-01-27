@@ -34,7 +34,7 @@ class ImportLog extends Model
 
     public function getStatusBadgeAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'success' => '<span class="badge bg-success">نجاح</span>',
             'error' => '<span class="badge bg-danger">خطأ</span>',
             'skipped' => '<span class="badge bg-warning">تم تخطيه</span>',

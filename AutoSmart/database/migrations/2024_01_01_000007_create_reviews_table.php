@@ -18,7 +18,7 @@ return new class extends Migration
             $table->boolean('is_verified_purchase')->default(false);
             $table->boolean('is_approved')->default(false);
             $table->timestamps();
-            
+
             $table->unique(['user_id', 'product_id']);
         });
 
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->text('comment')->nullable();
             $table->boolean('is_approved')->default(false);
             $table->timestamps();
-            
+
             $table->unique(['user_id', 'store_id']);
         });
     }

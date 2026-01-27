@@ -8,7 +8,10 @@ use Illuminate\Http\Request;
 
 class SubscriptionController extends Controller
 {
-    public function __construct() { $this->middleware('auth'); }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function index()
     {
@@ -17,7 +20,7 @@ class SubscriptionController extends Controller
             ->with('plan')
             ->latest()
             ->get();
-        
+
         return view('subscriptions.index', compact('plans', 'userSubscriptions'));
     }
 
@@ -37,7 +40,7 @@ class SubscriptionController extends Controller
             return back()->with('error', 'لديك اشتراك نشط في هذه الخطة');
         }
 
-        $endsAt = match($plan->billing_cycle) {
+        $endsAt = match ($plan->billing_cycle) {
             'monthly' => now()->addMonth(),
             'quarterly' => now()->addMonths(3),
             'yearly' => now()->addYear(),
@@ -60,30 +63,42 @@ class SubscriptionController extends Controller
 
     public function show(UserSubscription $subscription)
     {
-        if ($subscription->user_id !== auth()->id()) abort(403);
+        if ($subscription->user_id !== auth()->id()) {
+            abort(403);
+        }
         $subscription->load(['plan', 'deliveries']);
+
         return view('subscriptions.show', compact('subscription'));
     }
 
     public function cancel(Request $request, UserSubscription $subscription)
     {
-        if ($subscription->user_id !== auth()->id()) abort(403);
-        
+        if ($subscription->user_id !== auth()->id()) {
+            abort(403);
+        }
+
         $subscription->cancel($request->reason);
+
         return back()->with('success', 'تم إلغاء الاشتراك');
     }
 
     public function pause(UserSubscription $subscription)
     {
-        if ($subscription->user_id !== auth()->id()) abort(403);
+        if ($subscription->user_id !== auth()->id()) {
+            abort(403);
+        }
         $subscription->pause();
+
         return back()->with('success', 'تم إيقاف الاشتراك مؤقتاً');
     }
 
     public function resume(UserSubscription $subscription)
     {
-        if ($subscription->user_id !== auth()->id()) abort(403);
+        if ($subscription->user_id !== auth()->id()) {
+            abort(403);
+        }
         $subscription->resume();
+
         return back()->with('success', 'تم استئناف الاشتراك');
     }
 }

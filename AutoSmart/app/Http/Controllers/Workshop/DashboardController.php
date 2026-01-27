@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Workshop;
 
 use App\Http\Controllers\Controller;
-use App\Models\Workshop;
-use App\Models\MaintenanceRequest;
-use App\Models\MaintenanceQuote;
 use App\Models\MaintenanceBooking;
+use App\Models\MaintenanceQuote;
+use App\Models\MaintenanceRequest;
+use App\Models\Workshop;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -14,7 +14,9 @@ class DashboardController extends Controller
     public function index()
     {
         $workshop = auth()->user()->workshop;
-        if (!$workshop) return redirect()->route('workshop.create');
+        if (! $workshop) {
+            return redirect()->route('workshop.create');
+        }
 
         $stats = [
             'pending_quotes' => MaintenanceQuote::where('workshop_id', $workshop->id)->where('status', 'pending')->count(),
@@ -44,6 +46,7 @@ class DashboardController extends Controller
         if (auth()->user()->workshop) {
             return redirect()->route('workshop.dashboard');
         }
+
         return view('workshop.create');
     }
 
@@ -68,15 +71,20 @@ class DashboardController extends Controller
     public function pending()
     {
         $workshop = auth()->user()->workshop;
-        if (!$workshop) return redirect()->route('workshop.create');
-        if ($workshop->isApproved()) return redirect()->route('workshop.dashboard');
+        if (! $workshop) {
+            return redirect()->route('workshop.create');
+        }
+        if ($workshop->isApproved()) {
+            return redirect()->route('workshop.dashboard');
+        }
+
         return view('workshop.pending', compact('workshop'));
     }
 
     public function requests()
     {
         $workshop = auth()->user()->workshop;
-        
+
         $requests = MaintenanceRequest::open()
             ->where('city', $workshop->city)
             ->with(['user', 'userCar.brand', 'userCar.model'])
@@ -116,7 +124,7 @@ class DashboardController extends Controller
     public function bookings(Request $request)
     {
         $workshop = auth()->user()->workshop;
-        
+
         $query = MaintenanceBooking::where('workshop_id', $workshop->id)->with('user');
 
         if ($request->filled('status')) {
@@ -130,7 +138,9 @@ class DashboardController extends Controller
 
     public function updateBooking(Request $request, MaintenanceBooking $booking)
     {
-        if ($booking->workshop_id !== auth()->user()->workshop->id) abort(403);
+        if ($booking->workshop_id !== auth()->user()->workshop->id) {
+            abort(403);
+        }
 
         $booking->update($request->validate([
             'status' => 'required|in:confirmed,in_progress,completed,cancelled',

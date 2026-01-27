@@ -2,24 +2,31 @@
 
 namespace App\Livewire\Shop;
 
-use Livewire\Component;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\DB;
+use Livewire\Component;
 
 class Checkout extends Component
 {
     public $cart;
+
     public $items = [];
-    
+
     // بيانات الشحن
     public string $shipping_name = '';
+
     public string $shipping_phone = '';
+
     public string $shipping_address = '';
+
     public string $shipping_city = '';
+
     public string $shipping_postal_code = '';
+
     public string $payment_method = 'cash_on_delivery';
+
     public string $notes = '';
 
     protected $rules = [
@@ -41,7 +48,7 @@ class Checkout extends Component
 
     public function mount()
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return redirect()->route('login');
         }
 
@@ -70,6 +77,7 @@ class Checkout extends Component
 
         if ($cart->items->isEmpty()) {
             $this->dispatch('notify', ['type' => 'error', 'message' => 'السلة فارغة']);
+
             return redirect()->route('cart');
         }
 
@@ -78,8 +86,9 @@ class Checkout extends Component
             if ($item->quantity > $item->product->quantity) {
                 $this->dispatch('notify', [
                     'type' => 'error',
-                    'message' => "الكمية المطلوبة من {$item->product->name} غير متوفرة"
+                    'message' => "الكمية المطلوبة من {$item->product->name} غير متوفرة",
                 ]);
+
                 return;
             }
         }
@@ -92,7 +101,7 @@ class Checkout extends Component
 
             $orders = [];
             foreach ($itemsByStore as $storeId => $storeItems) {
-                $subtotal = $storeItems->sum(fn($item) => $item->product->current_price * $item->quantity);
+                $subtotal = $storeItems->sum(fn ($item) => $item->product->current_price * $item->quantity);
                 $shipping = 25; // تكلفة شحن ثابتة
                 $tax = $subtotal * 0.15; // ضريبة 15%
                 $total = $subtotal + $shipping + $tax;
@@ -138,6 +147,7 @@ class Checkout extends Component
             DB::commit();
 
             session()->flash('success', 'تم إرسال طلبك بنجاح!');
+
             return redirect()->route('orders.index');
 
         } catch (\Exception $e) {

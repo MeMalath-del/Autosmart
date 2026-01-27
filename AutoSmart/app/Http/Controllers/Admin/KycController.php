@@ -19,12 +19,12 @@ class KycController extends Controller
             ->with('user')
             ->orderBy('created_at')
             ->get();
-        
+
         $verifications = KycVerification::whereIn('status', ['under_review', 'approved', 'rejected'])
             ->with(['user', 'reviewer'])
             ->orderByDesc('updated_at')
             ->paginate(20);
-        
+
         $stats = [
             'pending' => KycVerification::where('status', 'pending')->count(),
             'under_review' => KycVerification::where('status', 'under_review')->count(),
@@ -35,14 +35,14 @@ class KycController extends Controller
                 ->where('reviewed_at', '>=', now()->startOfMonth())
                 ->count(),
         ];
-        
+
         return view('admin.kyc.index', compact('pending', 'verifications', 'stats'));
     }
 
     public function show(KycVerification $verification)
     {
         $verification->load(['user', 'reviewer']);
-        
+
         return view('admin.kyc.show', compact('verification'));
     }
 
@@ -51,22 +51,22 @@ class KycController extends Controller
         if ($verification->status !== 'pending') {
             return back()->with('error', 'هذا الطلب قيد المراجعة بالفعل');
         }
-        
+
         $verification->update(['status' => 'under_review']);
-        
+
         return redirect()->route('admin.kyc.show', $verification);
     }
 
     public function approve(KycVerification $verification)
     {
         $verification->approve(auth()->id());
-        
+
         // Update user verification status
         $verification->user->update(['is_verified' => true]);
-        
+
         // Notify user
         // $verification->user->notify(new KycApprovedNotification());
-        
+
         return redirect()->route('admin.kyc.index')
             ->with('success', 'تمت الموافقة على التحقق');
     }
@@ -76,12 +76,12 @@ class KycController extends Controller
         $request->validate([
             'rejection_reason' => 'required|string|min:10',
         ]);
-        
+
         $verification->reject(auth()->id(), $request->rejection_reason);
-        
+
         // Notify user
         // $verification->user->notify(new KycRejectedNotification($request->rejection_reason));
-        
+
         return redirect()->route('admin.kyc.index')
             ->with('success', 'تم رفض طلب التحقق');
     }

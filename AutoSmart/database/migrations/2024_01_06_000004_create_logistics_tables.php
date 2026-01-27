@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('express_delivery_zones')) {
+        if (! Schema::hasTable('express_delivery_zones')) {
             Schema::create('express_delivery_zones', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');
@@ -22,7 +22,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('express_deliveries')) {
+        if (! Schema::hasTable('express_deliveries')) {
             Schema::create('express_deliveries', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('order_id')->constrained()->onDelete('cascade');
@@ -37,7 +37,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('smart_lockers')) {
+        if (! Schema::hasTable('smart_lockers')) {
             Schema::create('smart_lockers', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');
@@ -55,7 +55,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('locker_reservations')) {
+        if (! Schema::hasTable('locker_reservations')) {
             Schema::create('locker_reservations', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('order_id')->constrained()->onDelete('cascade');
@@ -70,7 +70,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('order_bundles')) {
+        if (! Schema::hasTable('order_bundles')) {
             Schema::create('order_bundles', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained()->onDelete('cascade');
@@ -84,7 +84,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('bundled_orders')) {
+        if (! Schema::hasTable('bundled_orders')) {
             Schema::create('bundled_orders', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('bundle_id')->constrained('order_bundles')->onDelete('cascade');
@@ -95,7 +95,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('international_shipping_zones')) {
+        if (! Schema::hasTable('international_shipping_zones')) {
             Schema::create('international_shipping_zones', function (Blueprint $table) {
                 $table->id();
                 $table->string('country_code', 2);
@@ -112,7 +112,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('international_shipments')) {
+        if (! Schema::hasTable('international_shipments')) {
             Schema::create('international_shipments', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('order_id')->constrained()->onDelete('cascade');

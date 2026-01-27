@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Store;
-use App\Models\Product;
 use Illuminate\Http\Request;
 
 class StoreController extends Controller
@@ -50,12 +49,12 @@ class StoreController extends Controller
 
     public function show(Store $store)
     {
-        if (!$store->isApproved()) {
+        if (! $store->isApproved()) {
             abort(404);
         }
 
         $store->load(['user', 'reviews.user']);
-        
+
         $products = $store->products()
             ->with(['category', 'images'])
             ->active()

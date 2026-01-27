@@ -50,9 +50,9 @@ class Wallet extends Model
     {
         $balanceBefore = $this->balance;
         $this->increment('balance', $amount);
-        
+
         return $this->transactions()->create([
-            'transaction_id' => 'TXN-' . strtoupper(Str::random(12)),
+            'transaction_id' => 'TXN-'.strtoupper(Str::random(12)),
             'type' => 'credit',
             'amount' => $amount,
             'balance_before' => $balanceBefore,
@@ -68,12 +68,12 @@ class Wallet extends Model
         if ($this->balance < $amount) {
             throw new \Exception('Insufficient balance');
         }
-        
+
         $balanceBefore = $this->balance;
         $this->decrement('balance', $amount);
-        
+
         return $this->transactions()->create([
-            'transaction_id' => 'TXN-' . strtoupper(Str::random(12)),
+            'transaction_id' => 'TXN-'.strtoupper(Str::random(12)),
             'type' => 'debit',
             'amount' => $amount,
             'balance_before' => $balanceBefore,
@@ -93,9 +93,9 @@ class Wallet extends Model
     {
         $balanceBefore = $this->balance;
         $this->increment('balance', $amount);
-        
+
         return $this->transactions()->create([
-            'transaction_id' => 'TXN-' . strtoupper(Str::random(12)),
+            'transaction_id' => 'TXN-'.strtoupper(Str::random(12)),
             'type' => 'cashback',
             'amount' => $amount,
             'balance_before' => $balanceBefore,

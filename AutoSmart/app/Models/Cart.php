@@ -41,6 +41,7 @@ class Cart extends Model
 
         if ($item) {
             $item->increment('quantity', $quantity);
+
             return $item->fresh();
         }
 
@@ -76,7 +77,7 @@ class Cart extends Model
     {
         if (auth()->check()) {
             $cart = self::firstOrCreate(['user_id' => auth()->id()]);
-            
+
             // دمج سلة الضيف مع سلة المستخدم
             $sessionCart = self::where('session_id', session()->getId())->first();
             if ($sessionCart && $sessionCart->id !== $cart->id) {
@@ -85,7 +86,7 @@ class Cart extends Model
                 }
                 $sessionCart->delete();
             }
-            
+
             return $cart;
         }
 

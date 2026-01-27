@@ -12,6 +12,7 @@ class BannerController extends Controller
     public function index()
     {
         $banners = Banner::orderBy('sort_order')->paginate(20);
+
         return view('admin.banners.index', compact('banners'));
     }
 
@@ -80,7 +81,7 @@ class BannerController extends Controller
         if ($banner->image) {
             Storage::disk('public')->delete($banner->image);
         }
-        
+
         $banner->delete();
 
         return back()->with('success', 'تم حذف البانر');

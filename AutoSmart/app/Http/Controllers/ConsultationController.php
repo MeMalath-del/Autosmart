@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ConsultationSession;
 use App\Models\ConsultationExpert;
+use App\Models\ConsultationSession;
 use Illuminate\Http\Request;
 
 class ConsultationController extends Controller
 {
-    public function __construct() { $this->middleware('auth'); }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function index()
     {
@@ -17,13 +20,14 @@ class ConsultationController extends Controller
             ->with('expert')
             ->latest()
             ->get();
-        
+
         return view('consultations.index', compact('experts', 'mySessions'));
     }
 
     public function book(ConsultationExpert $expert)
     {
         $expert->load('user');
+
         return view('consultations.book', compact('expert'));
     }
 
@@ -56,22 +60,27 @@ class ConsultationController extends Controller
 
     public function show(ConsultationSession $session)
     {
-        if ($session->user_id !== auth()->id() && $session->expert_id !== auth()->id()) abort(403);
+        if ($session->user_id !== auth()->id() && $session->expert_id !== auth()->id()) {
+            abort(403);
+        }
         $session->load(['user', 'expert']);
+
         return view('consultations.show', compact('session'));
     }
 
     public function rate(Request $request, ConsultationSession $session)
     {
-        if ($session->user_id !== auth()->id()) abort(403);
-        
+        if ($session->user_id !== auth()->id()) {
+            abort(403);
+        }
+
         $validated = $request->validate([
             'rating' => 'required|integer|min:1|max:5',
             'review' => 'nullable|string|max:500',
         ]);
 
         $session->update($validated);
-        
+
         // Update expert rating
         $expert = ConsultationExpert::where('user_id', $session->expert_id)->first();
         if ($expert) {

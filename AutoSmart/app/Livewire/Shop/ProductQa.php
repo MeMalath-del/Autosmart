@@ -2,15 +2,18 @@
 
 namespace App\Livewire\Shop;
 
-use Livewire\Component;
 use App\Models\Product;
 use App\Models\ProductQuestion;
+use Livewire\Component;
 
 class ProductQa extends Component
 {
     public Product $product;
+
     public string $newQuestion = '';
+
     public string $newAnswer = '';
+
     public ?int $answeringQuestionId = null;
 
     public function mount(Product $product)
@@ -20,7 +23,7 @@ class ProductQa extends Component
 
     public function askQuestion()
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return redirect()->route('login');
         }
 
@@ -28,7 +31,7 @@ class ProductQa extends Component
 
         $this->product->questions()->create([
             'user_id' => auth()->id(),
-            'question' => $this->newQuestion
+            'question' => $this->newQuestion,
         ]);
 
         $this->newQuestion = '';
@@ -37,7 +40,7 @@ class ProductQa extends Component
 
     public function submitAnswer(ProductQuestion $question)
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return redirect()->route('login');
         }
 
@@ -48,7 +51,7 @@ class ProductQa extends Component
         $question->answers()->create([
             'user_id' => auth()->id(),
             'answer' => $this->newAnswer,
-            'is_seller_answer' => $isSeller
+            'is_seller_answer' => $isSeller,
         ]);
 
         if ($isSeller) {
@@ -72,7 +75,7 @@ class ProductQa extends Component
             ->get();
 
         return view('livewire.shop.product-qa', [
-            'questions' => $questions
+            'questions' => $questions,
         ]);
     }
 }

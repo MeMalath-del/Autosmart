@@ -2,23 +2,32 @@
 
 namespace App\Livewire\Shop;
 
-use Livewire\Component;
 use App\Models\Address;
+use Livewire\Component;
 
 class AddressManager extends Component
 {
     public $addresses = [];
+
     public ?int $selectedAddressId = null;
+
     public bool $showForm = false;
-    
+
     // Form fields
     public string $label = 'المنزل';
+
     public string $name = '';
+
     public string $phone = '';
+
     public string $address = '';
+
     public string $city = '';
+
     public string $district = '';
+
     public string $postal_code = '';
+
     public ?int $editingId = null;
 
     protected $rules = [
@@ -104,7 +113,7 @@ class AddressManager extends Component
     {
         Address::where('id', $id)->where('user_id', auth()->id())->delete();
         $this->loadAddresses();
-        
+
         if ($this->selectedAddressId === $id) {
             $this->selectedAddressId = $this->addresses->first()?->id;
         }

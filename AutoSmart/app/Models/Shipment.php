@@ -68,7 +68,10 @@ class Shipment extends Model
 
     public function getTrackingUrlAttribute(): ?string
     {
-        if (!$this->shippingCompany || !$this->tracking_number) return null;
+        if (! $this->shippingCompany || ! $this->tracking_number) {
+            return null;
+        }
+
         return $this->shippingCompany->getTrackingLink($this->tracking_number);
     }
 

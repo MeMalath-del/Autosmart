@@ -40,7 +40,7 @@ class ReportExport extends Model
 
     public function getStatusBadgeAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'pending' => '<span class="badge bg-warning">قيد الانتظار</span>',
             'processing' => '<span class="badge bg-info">جاري المعالجة</span>',
             'completed' => '<span class="badge bg-success">مكتمل</span>',

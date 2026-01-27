@@ -35,6 +35,7 @@ class ImageSearch extends Model
         if (empty($this->matched_products)) {
             return collect([]);
         }
+
         return Product::whereIn('id', $this->matched_products)->get();
     }
 }

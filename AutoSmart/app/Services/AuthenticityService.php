@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\Product;
 use App\Models\AuthenticityCheck;
+use App\Models\Product;
 
 class AuthenticityService
 {
@@ -19,12 +19,12 @@ class AuthenticityService
     {
         $analysisDetails = [];
         $riskScore = 0;
-        
+
         // Check 1: Price comparison
         $avgPrice = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->avg('price');
-        
+
         if ($avgPrice && $product->price < $avgPrice * 0.5) {
             $riskScore += $this->suspiciousPatterns['price_too_low'];
             $analysisDetails['price_check'] = [
@@ -36,9 +36,9 @@ class AuthenticityService
         } else {
             $analysisDetails['price_check'] = ['status' => 'passed'];
         }
-        
+
         // Check 2: Brand information
-        if (!$product->brand_id) {
+        if (! $product->brand_id) {
             $riskScore += $this->suspiciousPatterns['no_brand_info'];
             $analysisDetails['brand_check'] = [
                 'status' => 'warning',
@@ -47,7 +47,7 @@ class AuthenticityService
         } else {
             $analysisDetails['brand_check'] = ['status' => 'passed'];
         }
-        
+
         // Check 3: Seller verification
         $store = $product->store;
         if ($store && $store->created_at > now()->subMonths(3)) {
@@ -59,7 +59,7 @@ class AuthenticityService
         } else {
             $analysisDetails['seller_check'] = ['status' => 'passed'];
         }
-        
+
         // Check 4: Product images
         $imageCount = count($product->images ?? []);
         if ($imageCount < 2) {
@@ -71,20 +71,20 @@ class AuthenticityService
         } else {
             $analysisDetails['images_check'] = ['status' => 'passed'];
         }
-        
+
         // Check 5: Serial number verification (if provided)
-        if (!empty($data['serial_number'])) {
+        if (! empty($data['serial_number'])) {
             $serialCheck = $this->verifySerialNumber($data['serial_number'], $product);
             $analysisDetails['serial_check'] = $serialCheck;
             if ($serialCheck['status'] !== 'passed') {
                 $riskScore += $this->suspiciousPatterns['no_serial'];
             }
         }
-        
+
         // Determine result
         $result = $this->determineResult($riskScore);
         $confidence = 1 - $riskScore;
-        
+
         return AuthenticityCheck::create([
             'product_id' => $product->id,
             'user_id' => $userId,
@@ -100,14 +100,14 @@ class AuthenticityService
     {
         // In production, integrate with manufacturer APIs
         // For now, do basic validation
-        
+
         if (strlen($serial) < 8) {
             return [
                 'status' => 'suspicious',
                 'message' => 'الرقم التسلسلي قصير جداً',
             ];
         }
-        
+
         // Check for common fake patterns
         if (preg_match('/^(0+|1+|test|fake)/i', $serial)) {
             return [
@@ -115,7 +115,7 @@ class AuthenticityService
                 'message' => 'نمط الرقم التسلسلي مشبوه',
             ];
         }
-        
+
         return [
             'status' => 'passed',
             'message' => 'الرقم التسلسلي يبدو صحيحاً',
@@ -124,9 +124,16 @@ class AuthenticityService
 
     protected function determineResult(float $riskScore): string
     {
-        if ($riskScore >= 0.6) return 'fake';
-        if ($riskScore >= 0.4) return 'suspicious';
-        if ($riskScore >= 0.2) return 'unknown';
+        if ($riskScore >= 0.6) {
+            return 'fake';
+        }
+        if ($riskScore >= 0.4) {
+            return 'suspicious';
+        }
+        if ($riskScore >= 0.2) {
+            return 'unknown';
+        }
+
         return 'authentic';
     }
 

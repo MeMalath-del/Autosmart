@@ -2,13 +2,14 @@
 
 namespace App\Livewire\Shop;
 
-use Livewire\Component;
 use App\Models\Cart;
 use App\Models\Product;
+use Livewire\Component;
 
 class AddToCart extends Component
 {
     public Product $product;
+
     public int $quantity = 1;
 
     public function mount(Product $product)
@@ -32,13 +33,15 @@ class AddToCart extends Component
 
     public function addToCart()
     {
-        if (!$this->product->isInStock()) {
+        if (! $this->product->isInStock()) {
             $this->dispatch('notify', ['type' => 'error', 'message' => 'المنتج غير متوفر']);
+
             return;
         }
 
         if ($this->quantity > $this->product->quantity) {
             $this->dispatch('notify', ['type' => 'error', 'message' => 'الكمية المطلوبة غير متوفرة']);
+
             return;
         }
 

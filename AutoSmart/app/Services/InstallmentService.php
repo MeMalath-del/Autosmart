@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
-use App\Models\User;
-use App\Models\Order;
+use App\Models\InstallmentPayment;
 use App\Models\InstallmentPlan;
 use App\Models\InstallmentRequest;
-use App\Models\InstallmentPayment;
+use App\Models\Order;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class InstallmentService
@@ -25,7 +25,7 @@ class InstallmentService
         $financedAmount = $amount - $downPayment;
         $monthlyPayment = $plan->calculateMonthlyPayment($amount);
         $totalWithInterest = $plan->calculateTotalWithInterest($amount);
-        
+
         return [
             'plan_id' => $plan->id,
             'plan_name' => $plan->localized_name,
@@ -43,7 +43,7 @@ class InstallmentService
     public function requestInstallment(User $user, Order $order, InstallmentPlan $plan): InstallmentRequest
     {
         $details = $this->calculatePlanDetails($plan, $order->total);
-        
+
         return InstallmentRequest::create([
             'user_id' => $user->id,
             'order_id' => $order->id,
@@ -59,16 +59,16 @@ class InstallmentService
 
     public function approveRequest(InstallmentRequest $request): void
     {
-        DB::transaction(function() use ($request) {
+        DB::transaction(function () use ($request) {
             $request->update([
                 'status' => 'active',
                 'start_date' => now(),
                 'end_date' => now()->addMonths($request->plan->months),
             ]);
-            
+
             // Generate payment schedule
             $request->generatePaymentSchedule();
-            
+
             // Update order status
             if ($request->order) {
                 $request->order->update([
@@ -87,9 +87,9 @@ class InstallmentService
         ]);
     }
 
-    public function processPayment(InstallmentPayment $payment, string $method, string $transactionId = null): void
+    public function processPayment(InstallmentPayment $payment, string $method, ?string $transactionId = null): void
     {
-        DB::transaction(function() use ($payment, $method, $transactionId) {
+        DB::transaction(function () use ($payment, $method, $transactionId) {
             $payment->pay($method, $transactionId);
         });
     }
@@ -116,42 +116,42 @@ class InstallmentService
         $eligible = true;
         $reasons = [];
         $maxAmount = 50000;
-        
+
         // Check 1: Account age
         if ($user->created_at > now()->subMonths(1)) {
             $maxAmount = min($maxAmount, 5000);
             $reasons[] = 'حساب جديد - حد أقصى 5,000 ريال';
         }
-        
+
         // Check 2: Previous purchases
         $previousPurchases = $user->orders()->where('payment_status', 'paid')->count();
         if ($previousPurchases < 2) {
             $maxAmount = min($maxAmount, 10000);
             $reasons[] = 'عدد مشتريات قليل - حد أقصى 10,000 ريال';
         }
-        
+
         // Check 3: Active installments
         $activeInstallments = InstallmentRequest::where('user_id', $user->id)
             ->where('status', 'active')
             ->count();
-        
+
         if ($activeInstallments >= 2) {
             $eligible = false;
             $reasons[] = 'لديك بالفعل تقسيطات نشطة';
         }
-        
+
         // Check 4: Overdue payments
-        $overdueCount = InstallmentPayment::whereHas('installmentRequest', function($q) use ($user) {
+        $overdueCount = InstallmentPayment::whereHas('installmentRequest', function ($q) use ($user) {
             $q->where('user_id', $user->id);
         })->where('status', 'pending')
-          ->where('due_date', '<', now())
-          ->count();
-        
+            ->where('due_date', '<', now())
+            ->count();
+
         if ($overdueCount > 0) {
             $eligible = false;
             $reasons[] = 'لديك دفعات متأخرة';
         }
-        
+
         return [
             'eligible' => $eligible,
             'max_amount' => $maxAmount,

@@ -42,6 +42,6 @@ class Banner extends Model
 
     public function getImageUrlAttribute(): string
     {
-        return asset('storage/' . $this->image);
+        return asset('storage/'.$this->image);
     }
 }

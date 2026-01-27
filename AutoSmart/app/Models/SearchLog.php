@@ -8,9 +8,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class SearchLog extends Model
 {
     protected $fillable = ['query', 'user_id', 'session_id', 'results_count', 'has_click'];
+
     protected $casts = ['has_click' => 'boolean'];
 
-    public function user(): BelongsTo { return $this->belongsTo(User::class); }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public static function record(string $query, int $resultsCount): void
     {
@@ -18,7 +22,7 @@ class SearchLog extends Model
             'query' => $query,
             'user_id' => auth()->id(),
             'session_id' => session()->getId(),
-            'results_count' => $resultsCount
+            'results_count' => $resultsCount,
         ]);
     }
 

@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('url')->nullable();
             $table->json('tags')->nullable();
             $table->timestamps();
-            
+
             $table->index(['auditable_type', 'auditable_id']);
         });
 
@@ -53,7 +53,7 @@ return new class extends Migration
             $table->foreignId('role_id')->constrained()->onDelete('cascade');
             $table->foreignId('permission_id')->constrained('granular_permissions')->onDelete('cascade');
             $table->timestamps();
-            
+
             $table->unique(['role_id', 'permission_id']);
         });
 
@@ -64,7 +64,7 @@ return new class extends Migration
             $table->foreignId('permission_id')->constrained('granular_permissions')->onDelete('cascade');
             $table->boolean('is_granted')->default(true); // true = grant, false = deny
             $table->timestamps();
-            
+
             $table->unique(['user_id', 'permission_id']);
         });
 

@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\CarBrand;
 use App\Models\CarModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CarBrandController extends Controller
 {
@@ -49,6 +49,7 @@ class CarBrandController extends Controller
     public function edit(CarBrand $carBrand)
     {
         $carBrand->load('models');
+
         return view('admin.car-brands.edit', compact('carBrand'));
     }
 
@@ -102,7 +103,7 @@ class CarBrandController extends Controller
         ]);
 
         $validated['brand_id'] = $carBrand->id;
-        $validated['slug'] = Str::slug($carBrand->name . '-' . $validated['name']);
+        $validated['slug'] = Str::slug($carBrand->name.'-'.$validated['name']);
 
         CarModel::create($validated);
 
@@ -112,6 +113,7 @@ class CarBrandController extends Controller
     public function destroyModel(CarModel $carModel)
     {
         $carModel->delete();
+
         return back()->with('success', 'تم حذف الموديل');
     }
 }

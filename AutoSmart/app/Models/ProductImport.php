@@ -73,13 +73,16 @@ class ProductImport extends Model
 
     public function getProgressAttribute()
     {
-        if ($this->total_rows == 0) return 0;
+        if ($this->total_rows == 0) {
+            return 0;
+        }
+
         return round(($this->processed_rows / $this->total_rows) * 100, 2);
     }
 
     public function getStatusBadgeAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'pending' => '<span class="badge bg-warning">قيد الانتظار</span>',
             'processing' => '<span class="badge bg-info">جاري المعالجة</span>',
             'completed' => '<span class="badge bg-success">مكتمل</span>',

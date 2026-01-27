@@ -18,7 +18,7 @@ return new class extends Migration
             $table->enum('status', ['open', 'closed', 'archived'])->default('open');
             $table->timestamp('last_message_at')->nullable();
             $table->timestamps();
-            
+
             $table->unique(['user_id', 'store_id', 'order_id']);
         });
 

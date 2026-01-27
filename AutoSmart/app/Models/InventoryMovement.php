@@ -9,16 +9,27 @@ class InventoryMovement extends Model
 {
     protected $fillable = [
         'product_id', 'warehouse_id', 'type', 'quantity', 'quantity_before',
-        'quantity_after', 'reference_type', 'reference_id', 'notes', 'user_id'
+        'quantity_after', 'reference_type', 'reference_id', 'notes', 'user_id',
     ];
 
-    public function product(): BelongsTo { return $this->belongsTo(Product::class); }
-    public function warehouse(): BelongsTo { return $this->belongsTo(Warehouse::class); }
-    public function user(): BelongsTo { return $this->belongsTo(User::class); }
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function warehouse(): BelongsTo
+    {
+        return $this->belongsTo(Warehouse::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function getTypeLabelAttribute(): string
     {
-        return match($this->type) {
+        return match ($this->type) {
             'in' => 'إدخال',
             'out' => 'إخراج',
             'adjustment' => 'تعديل',

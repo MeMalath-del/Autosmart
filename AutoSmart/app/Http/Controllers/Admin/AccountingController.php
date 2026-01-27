@@ -25,9 +25,9 @@ class AccountingController extends Controller
     {
         $startDate = $request->start_date ?? now()->startOfMonth()->format('Y-m-d');
         $endDate = $request->end_date ?? now()->format('Y-m-d');
-        
+
         $report = $this->accounting->exportSalesReport($startDate, $endDate);
-        
+
         return view('admin.accounting.sales', compact('report', 'startDate', 'endDate'));
     }
 
@@ -35,7 +35,7 @@ class AccountingController extends Controller
     {
         $date = $request->date ?? now()->format('Y-m-d');
         $report = $this->accounting->getPosReport($date);
-        
+
         return view('admin.accounting.pos', compact('report', 'date'));
     }
 
@@ -43,9 +43,9 @@ class AccountingController extends Controller
     {
         $startDate = $request->start_date ?? now()->startOfMonth()->format('Y-m-d');
         $endDate = $request->end_date ?? now()->format('Y-m-d');
-        
+
         $report = $this->accounting->getVatReport($startDate, $endDate);
-        
+
         return view('admin.accounting.vat', compact('report', 'startDate', 'endDate'));
     }
 
@@ -53,19 +53,19 @@ class AccountingController extends Controller
     {
         $startDate = $request->start_date ?? now()->startOfMonth()->format('Y-m-d');
         $endDate = $request->end_date ?? now()->format('Y-m-d');
-        
+
         $report = $this->accounting->exportSalesReport($startDate, $endDate);
-        
+
         // Generate CSV
         $headers = ['رقم الطلب', 'التاريخ', 'العميل', 'المجموع الفرعي', 'الضريبة', 'الخصم', 'الإجمالي', 'طريقة الدفع', 'الحالة'];
-        $csv = implode(',', $headers) . "\n";
-        
+        $csv = implode(',', $headers)."\n";
+
         foreach ($report['data'] as $row) {
-            $csv .= implode(',', array_values($row->toArray())) . "\n";
+            $csv .= implode(',', array_values($row->toArray()))."\n";
         }
 
         return response($csv)
             ->header('Content-Type', 'text/csv')
-            ->header('Content-Disposition', 'attachment; filename="sales_report_' . $startDate . '_' . $endDate . '.csv"');
+            ->header('Content-Disposition', 'attachment; filename="sales_report_'.$startDate.'_'.$endDate.'.csv"');
     }
 }

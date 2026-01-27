@@ -2,12 +2,13 @@
 
 namespace App\Livewire\Shop;
 
-use Livewire\Component;
 use App\Models\Product;
+use Livewire\Component;
 
 class ArViewer extends Component
 {
     public $product;
+
     public $isSupported = true;
 
     public function mount(Product $product)

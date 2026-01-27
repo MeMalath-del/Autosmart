@@ -9,6 +9,13 @@ class BundleItem extends Model
 {
     protected $fillable = ['bundle_id', 'product_id', 'quantity'];
 
-    public function bundle(): BelongsTo { return $this->belongsTo(ProductBundle::class, 'bundle_id'); }
-    public function product(): BelongsTo { return $this->belongsTo(Product::class); }
+    public function bundle(): BelongsTo
+    {
+        return $this->belongsTo(ProductBundle::class, 'bundle_id');
+    }
+
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

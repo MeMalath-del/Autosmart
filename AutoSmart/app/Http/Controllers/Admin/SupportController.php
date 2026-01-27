@@ -3,14 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\SupportTicket;
-use App\Models\KnowledgeBase;
 use App\Models\Faq;
+use App\Models\KnowledgeBase;
+use App\Models\SupportTicket;
 use Illuminate\Http\Request;
 
 class SupportController extends Controller
 {
-    public function __construct() { $this->middleware(['auth', 'role:admin']); }
+    public function __construct()
+    {
+        $this->middleware(['auth', 'role:admin']);
+    }
 
     public function index(Request $request)
     {
@@ -24,7 +27,7 @@ class SupportController extends Controller
         }
 
         $tickets = $query->latest()->paginate(20);
-        
+
         $stats = [
             'open' => SupportTicket::whereIn('status', ['open', 'in_progress'])->count(),
             'urgent' => SupportTicket::where('priority', 'urgent')->where('status', '!=', 'closed')->count(),
@@ -37,15 +40,16 @@ class SupportController extends Controller
     public function show(SupportTicket $ticket)
     {
         $ticket->load(['user', 'order', 'replies.user']);
+
         return view('admin.support.show', compact('ticket'));
     }
 
     public function reply(Request $request, SupportTicket $ticket)
     {
         $request->validate(['message' => 'required|string|max:5000']);
-        
+
         $ticket->addReply(auth()->user(), $request->message, $request->boolean('is_internal'));
-        
+
         if ($request->filled('status')) {
             $ticket->update(['status' => $request->status]);
         }
@@ -57,14 +61,16 @@ class SupportController extends Controller
     {
         $ticket->update([
             'assigned_to' => $request->assigned_to,
-            'status' => 'in_progress'
+            'status' => 'in_progress',
         ]);
+
         return back()->with('success', 'تم تعيين التذكرة');
     }
 
     public function faqs()
     {
         $faqs = Faq::orderBy('sort_order')->get();
+
         return view('admin.support.faqs', compact('faqs'));
     }
 
@@ -78,12 +84,14 @@ class SupportController extends Controller
         ]);
 
         Faq::create($validated);
+
         return back()->with('success', 'تمت إضافة السؤال');
     }
 
     public function knowledgeBase()
     {
         $articles = KnowledgeBase::orderBy('sort_order')->get();
+
         return view('admin.support.knowledge-base', compact('articles'));
     }
 
@@ -97,6 +105,7 @@ class SupportController extends Controller
         ]);
 
         KnowledgeBase::create($validated);
+
         return back()->with('success', 'تمت إضافة المقال');
     }
 }

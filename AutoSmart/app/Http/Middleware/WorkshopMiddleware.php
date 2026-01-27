@@ -9,17 +9,17 @@ class WorkshopMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return redirect()->route('login');
         }
 
-        if (!in_array(auth()->user()->role, ['workshop', 'admin'])) {
+        if (! in_array(auth()->user()->role, ['workshop', 'admin'])) {
             abort(403, 'غير مصرح لك بالوصول');
         }
 
         $workshop = auth()->user()->workshop;
 
-        if (!$workshop) {
+        if (! $workshop) {
             return redirect()->route('workshop.create');
         }
 

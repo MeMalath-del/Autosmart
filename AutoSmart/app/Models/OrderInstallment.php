@@ -9,7 +9,7 @@ class OrderInstallment extends Model
 {
     protected $fillable = [
         'order_id', 'installment_plan_id', 'total_amount', 'monthly_amount',
-        'total_months', 'paid_months', 'status'
+        'total_months', 'paid_months', 'status',
     ];
 
     protected $casts = [
@@ -17,8 +17,15 @@ class OrderInstallment extends Model
         'monthly_amount' => 'decimal:2',
     ];
 
-    public function order(): BelongsTo { return $this->belongsTo(Order::class); }
-    public function plan(): BelongsTo { return $this->belongsTo(InstallmentPlan::class, 'installment_plan_id'); }
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(Order::class);
+    }
+
+    public function plan(): BelongsTo
+    {
+        return $this->belongsTo(InstallmentPlan::class, 'installment_plan_id');
+    }
 
     public function getRemainingMonthsAttribute(): int
     {

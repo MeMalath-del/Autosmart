@@ -21,6 +21,6 @@ class TwoFactorToken extends Model
 
     public function isValid(): bool
     {
-        return !$this->is_used && $this->expires_at->isFuture();
+        return ! $this->is_used && $this->expires_at->isFuture();
     }
 }

@@ -47,13 +47,16 @@ class PurchasedWarranty extends Model
 
     public function getRemainingDaysAttribute()
     {
-        if (!$this->isActive()) return 0;
+        if (! $this->isActive()) {
+            return 0;
+        }
+
         return now()->diffInDays($this->extended_warranty_end);
     }
 
     public function getStatusBadgeAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'active' => '<span class="badge bg-success">نشط</span>',
             'expired' => '<span class="badge bg-secondary">منتهي</span>',
             'used' => '<span class="badge bg-warning">مستخدم</span>',

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->boolean('can_manage_coupons')->default(false);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
-            
+
             $table->unique(['store_id', 'user_id']);
         });
 

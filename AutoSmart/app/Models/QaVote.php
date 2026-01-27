@@ -9,10 +9,18 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 class QaVote extends Model
 {
     protected $fillable = ['user_id', 'voteable_type', 'voteable_id', 'is_helpful'];
+
     protected $casts = ['is_helpful' => 'boolean'];
 
-    public function user(): BelongsTo { return $this->belongsTo(User::class); }
-    public function voteable(): MorphTo { return $this->morphTo(); }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function voteable(): MorphTo
+    {
+        return $this->morphTo();
+    }
 
     protected static function booted()
     {

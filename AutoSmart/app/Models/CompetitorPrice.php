@@ -38,13 +38,19 @@ class CompetitorPrice extends Model
 
     public function getPriceDifferenceAttribute()
     {
-        if (!$this->product) return null;
+        if (! $this->product) {
+            return null;
+        }
+
         return $this->product->price - $this->price;
     }
 
     public function getPriceDifferencePercentAttribute()
     {
-        if (!$this->product || $this->product->price == 0) return null;
+        if (! $this->product || $this->product->price == 0) {
+            return null;
+        }
+
         return round((($this->product->price - $this->price) / $this->price) * 100, 2);
     }
 

@@ -4,8 +4,8 @@ namespace App\Notifications;
 
 use App\Models\PartRequestQuote;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
 class NewQuoteReceived extends Notification
 {
@@ -27,10 +27,10 @@ class NewQuoteReceived extends Notification
     {
         return (new MailMessage)
             ->subject('عرض سعر جديد لطلبك')
-            ->greeting('مرحباً ' . $notifiable->name)
-            ->line('تلقيت عرض سعر جديد من ' . $this->quote->store->name)
-            ->line('السعر: ' . number_format($this->quote->price, 2) . ' ر.س')
-            ->action('عرض العروض', url('/part-requests/' . $this->quote->part_request_id))
+            ->greeting('مرحباً '.$notifiable->name)
+            ->line('تلقيت عرض سعر جديد من '.$this->quote->store->name)
+            ->line('السعر: '.number_format($this->quote->price, 2).' ر.س')
+            ->action('عرض العروض', url('/part-requests/'.$this->quote->part_request_id))
             ->line('شكراً لاستخدام AutoSmart!');
     }
 
@@ -41,7 +41,7 @@ class NewQuoteReceived extends Notification
             'part_request_id' => $this->quote->part_request_id,
             'store_name' => $this->quote->store->name,
             'price' => $this->quote->price,
-            'message' => 'تلقيت عرض سعر جديد من ' . $this->quote->store->name,
+            'message' => 'تلقيت عرض سعر جديد من '.$this->quote->store->name,
         ];
     }
 }

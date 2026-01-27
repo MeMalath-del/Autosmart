@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TradeInRequest;
 use App\Models\Product;
+use App\Models\TradeInRequest;
 use Illuminate\Http\Request;
 
 class TradeInController extends Controller
 {
-    public function __construct() { $this->middleware('auth'); }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function index()
     {
@@ -16,6 +19,7 @@ class TradeInController extends Controller
             ->with('product')
             ->latest()
             ->paginate(10);
+
         return view('trade-in.index', compact('requests'));
     }
 
@@ -55,8 +59,11 @@ class TradeInController extends Controller
 
     public function show(TradeInRequest $tradeIn)
     {
-        if ($tradeIn->user_id !== auth()->id()) abort(403);
+        if ($tradeIn->user_id !== auth()->id()) {
+            abort(403);
+        }
         $tradeIn->load('product');
+
         return view('trade-in.show', compact('tradeIn'));
     }
 }

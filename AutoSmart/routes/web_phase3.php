@@ -11,7 +11,7 @@ Route::get('/workshops', [App\Http\Controllers\WorkshopController::class, 'index
 Route::get('/workshops/{workshop:slug}', [App\Http\Controllers\WorkshopController::class, 'show'])->name('workshops.show');
 
 Route::middleware('auth')->group(function () {
-    
+
     // ===============================
     // سياراتي (My Garage)
     // ===============================

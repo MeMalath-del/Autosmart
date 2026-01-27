@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Comparison extends Model
 {
@@ -41,6 +41,7 @@ class Comparison extends Model
         }
 
         $this->items()->create(['product_id' => $product->id]);
+
         return true;
     }
 
@@ -58,7 +59,7 @@ class Comparison extends Model
     {
         if (auth()->check()) {
             $comparison = self::firstOrCreate(['user_id' => auth()->id()]);
-            
+
             $sessionComparison = self::where('session_id', session()->getId())->first();
             if ($sessionComparison && $sessionComparison->id !== $comparison->id) {
                 foreach ($sessionComparison->items as $item) {
@@ -66,7 +67,7 @@ class Comparison extends Model
                 }
                 $sessionComparison->delete();
             }
-            
+
             return $comparison;
         }
 

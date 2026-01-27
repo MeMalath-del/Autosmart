@@ -14,7 +14,7 @@ Route::post('/vin-search', [App\Http\Controllers\VinController::class, 'search']
 Route::prefix('auctions')->name('auctions.')->group(function () {
     Route::get('/', [App\Http\Controllers\AuctionController::class, 'index'])->name('index');
     Route::get('/{auction}', [App\Http\Controllers\AuctionController::class, 'show'])->name('show');
-    
+
     Route::middleware('auth')->group(function () {
         Route::post('/{auction}/bid', [App\Http\Controllers\AuctionController::class, 'bid'])->name('bid');
         Route::post('/{auction}/watch', [App\Http\Controllers\AuctionController::class, 'watch'])->name('watch');
@@ -27,7 +27,7 @@ Route::prefix('support')->name('support.')->group(function () {
     Route::get('/faq', [App\Http\Controllers\SupportTicketController::class, 'faq'])->name('faq');
     Route::get('/help', [App\Http\Controllers\SupportTicketController::class, 'knowledgeBase'])->name('help');
     Route::get('/help/{article:slug}', [App\Http\Controllers\SupportTicketController::class, 'article'])->name('article');
-    
+
     Route::middleware('auth')->group(function () {
         Route::get('/', [App\Http\Controllers\SupportTicketController::class, 'index'])->name('index');
         Route::get('/create', [App\Http\Controllers\SupportTicketController::class, 'create'])->name('create');
@@ -41,7 +41,7 @@ Route::prefix('support')->name('support.')->group(function () {
 Route::prefix('gift-cards')->name('gift-cards.')->group(function () {
     Route::get('/', [App\Http\Controllers\GiftCardController::class, 'index'])->name('index');
     Route::post('/check', [App\Http\Controllers\GiftCardController::class, 'check'])->name('check');
-    
+
     Route::middleware('auth')->group(function () {
         Route::post('/purchase', [App\Http\Controllers\GiftCardController::class, 'purchase'])->name('purchase');
         Route::get('/success/{giftCard}', [App\Http\Controllers\GiftCardController::class, 'success'])->name('success');
@@ -65,7 +65,7 @@ Route::prefix('community')->name('community.')->group(function () {
     Route::get('/create', [App\Http\Controllers\CommunityController::class, 'create'])->name('create')->middleware('auth');
     Route::post('/', [App\Http\Controllers\CommunityController::class, 'store'])->name('store')->middleware('auth');
     Route::get('/{group:slug}', [App\Http\Controllers\CommunityController::class, 'show'])->name('show');
-    
+
     Route::middleware('auth')->group(function () {
         Route::post('/{group}/join', [App\Http\Controllers\CommunityController::class, 'join'])->name('join');
         Route::post('/{group}/leave', [App\Http\Controllers\CommunityController::class, 'leave'])->name('leave');

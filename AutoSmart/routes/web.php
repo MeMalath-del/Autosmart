@@ -1,20 +1,20 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\StoreController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Seller\DashboardController as SellerDashboardController;
-use App\Http\Controllers\Seller\ProductController as SellerProductController;
-use App\Http\Controllers\Seller\OrderController as SellerOrderController;
-use App\Http\Controllers\Seller\StoreController as SellerStoreController;
+use App\Http\Controllers\Admin\CarBrandController as AdminCarBrandController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\StoreController as AdminStoreController;
-use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
-use App\Http\Controllers\Admin\CarBrandController as AdminCarBrandController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Seller\DashboardController as SellerDashboardController;
+use App\Http\Controllers\Seller\OrderController as SellerOrderController;
+use App\Http\Controllers\Seller\ProductController as SellerProductController;
+use App\Http\Controllers\Seller\StoreController as SellerStoreController;
+use App\Http\Controllers\StoreController;
+use Illuminate\Support\Facades\Route;
 
 // الصفحات العامة
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -40,8 +40,8 @@ Route::get('/stores', [StoreController::class, 'index'])->name('stores.index');
 Route::get('/stores/{store:slug}', [StoreController::class, 'show'])->name('stores.show');
 
 // السلة والدفع
-Route::get('/cart', fn() => view('cart'))->name('cart');
-Route::get('/checkout', fn() => view('checkout'))->middleware('auth')->name('checkout');
+Route::get('/cart', fn () => view('cart'))->name('cart');
+Route::get('/checkout', fn () => view('checkout'))->middleware('auth')->name('checkout');
 
 // المصادقة
 Route::middleware('guest')->group(function () {
@@ -58,8 +58,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
-    Route::get('/wishlist', fn() => view('wishlist'))->name('wishlist');
-    Route::get('/profile', fn() => view('profile'))->name('profile');
+    Route::get('/wishlist', fn () => view('wishlist'))->name('wishlist');
+    Route::get('/profile', fn () => view('profile'))->name('profile');
 });
 
 // لوحة تحكم البائع
@@ -68,19 +68,19 @@ Route::prefix('seller')->name('seller.')->middleware(['auth', 'role:seller,admin
     Route::get('/store/create', [SellerStoreController::class, 'create'])->name('store.create');
     Route::post('/store', [SellerStoreController::class, 'store'])->name('store.store');
     Route::get('/store/pending', [SellerStoreController::class, 'pending'])->name('store.pending');
-    
+
     // يتطلب متجر معتمد
     Route::middleware('seller')->group(function () {
         Route::get('/dashboard', [SellerDashboardController::class, 'index'])->name('dashboard');
-        
+
         // إدارة المتجر
         Route::get('/store/edit', [SellerStoreController::class, 'edit'])->name('store.edit');
         Route::put('/store', [SellerStoreController::class, 'update'])->name('store.update');
-        
+
         // المنتجات
         Route::resource('products', SellerProductController::class);
         Route::delete('/products/images/{image}', [SellerProductController::class, 'deleteImage'])->name('products.images.delete');
-        
+
         // الطلبات
         Route::get('/orders', [SellerOrderController::class, 'index'])->name('orders.index');
         Route::get('/orders/{order}', [SellerOrderController::class, 'show'])->name('orders.show');
@@ -101,23 +101,23 @@ Route::middleware('auth')->group(function () {
     Route::put('/addresses/{address}', [App\Http\Controllers\AddressController::class, 'update'])->name('addresses.update');
     Route::delete('/addresses/{address}', [App\Http\Controllers\AddressController::class, 'destroy'])->name('addresses.destroy');
     Route::post('/addresses/{address}/default', [App\Http\Controllers\AddressController::class, 'setDefault'])->name('addresses.default');
-    
+
     // المحادثات
     Route::get('/conversations', [App\Http\Controllers\ConversationController::class, 'index'])->name('conversations.index');
     Route::get('/conversations/{conversation}', [App\Http\Controllers\ConversationController::class, 'show'])->name('conversations.show');
     Route::get('/stores/{store}/contact', [App\Http\Controllers\ConversationController::class, 'startWithStore'])->name('conversations.start');
     Route::post('/conversations/{conversation}/messages', [App\Http\Controllers\ConversationController::class, 'sendMessage'])->name('conversations.send');
-    
+
     // المحفظة
     Route::get('/wallet', [App\Http\Controllers\WalletController::class, 'index'])->name('wallet.index');
     Route::post('/wallet/withdraw', [App\Http\Controllers\WalletController::class, 'withdraw'])->name('wallet.withdraw');
-    
+
     // الضمان
     Route::get('/warranty', [App\Http\Controllers\WarrantyController::class, 'index'])->name('warranty.index');
     Route::get('/warranty/create/{orderItem}', [App\Http\Controllers\WarrantyController::class, 'create'])->name('warranty.create');
     Route::post('/warranty', [App\Http\Controllers\WarrantyController::class, 'store'])->name('warranty.store');
     Route::get('/warranty/{warrantyClaim}', [App\Http\Controllers\WarrantyController::class, 'show'])->name('warranty.show');
-    
+
     // طلبات قطع الغيار
     Route::get('/part-requests', [App\Http\Controllers\PartRequestController::class, 'index'])->name('part-requests.index');
     Route::get('/part-requests/create', [App\Http\Controllers\PartRequestController::class, 'create'])->name('part-requests.create');
@@ -139,22 +139,22 @@ Route::prefix('seller')->name('seller.')->middleware(['auth', 'role:seller,admin
     Route::middleware('seller')->group(function () {
         // الكوبونات
         Route::resource('coupons', App\Http\Controllers\Seller\CouponController::class);
-        
+
         // طلبات قطع الغيار
         Route::get('/part-requests', [App\Http\Controllers\Seller\PartRequestController::class, 'index'])->name('part-requests.index');
         Route::get('/part-requests/{partRequest}', [App\Http\Controllers\Seller\PartRequestController::class, 'show'])->name('part-requests.show');
         Route::post('/part-requests/{partRequest}/quote', [App\Http\Controllers\Seller\PartRequestController::class, 'submitQuote'])->name('part-requests.quote');
-        
+
         // المحادثات
         Route::get('/conversations', [App\Http\Controllers\Seller\ConversationController::class, 'index'])->name('conversations.index');
         Route::get('/conversations/{conversation}', [App\Http\Controllers\Seller\ConversationController::class, 'show'])->name('conversations.show');
         Route::post('/conversations/{conversation}/messages', [App\Http\Controllers\Seller\ConversationController::class, 'sendMessage'])->name('conversations.send');
-        
+
         // الضمان
         Route::get('/warranty', [App\Http\Controllers\Seller\WarrantyController::class, 'index'])->name('warranty.index');
         Route::get('/warranty/{warrantyClaim}', [App\Http\Controllers\Seller\WarrantyController::class, 'show'])->name('warranty.show');
         Route::post('/warranty/{warrantyClaim}/respond', [App\Http\Controllers\Seller\WarrantyController::class, 'respond'])->name('warranty.respond');
-        
+
         // التقارير
         Route::get('/reports', [App\Http\Controllers\Seller\ReportsController::class, 'index'])->name('reports.index');
         Route::get('/reports/export', [App\Http\Controllers\Seller\ReportsController::class, 'export'])->name('reports.export');
@@ -164,7 +164,7 @@ Route::prefix('seller')->name('seller.')->middleware(['auth', 'role:seller,admin
 // لوحة تحكم الإدارة
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-    
+
     // إدارة المتاجر
     Route::get('/stores', [AdminStoreController::class, 'index'])->name('stores.index');
     Route::get('/stores/{store}', [AdminStoreController::class, 'show'])->name('stores.show');
@@ -174,10 +174,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::post('/stores/{store}/activate', [AdminStoreController::class, 'activate'])->name('stores.activate');
     Route::post('/stores/{store}/toggle-featured', [AdminStoreController::class, 'toggleFeatured'])->name('stores.toggle-featured');
     Route::post('/stores/{store}/toggle-verified', [AdminStoreController::class, 'toggleVerified'])->name('stores.toggle-verified');
-    
+
     // التصنيفات
     Route::resource('categories', AdminCategoryController::class);
-    
+
     // ماركات السيارات
     Route::resource('car-brands', AdminCarBrandController::class);
     Route::post('/car-brands/{carBrand}/models', [AdminCarBrandController::class, 'storeModel'])->name('car-brands.models.store');
@@ -185,26 +185,26 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 });
 
 // Include Phase 3 routes
-require __DIR__ . '/web_phase3.php';
+require __DIR__.'/web_phase3.php';
 
 // Include Admin Phase 3 routes
-require __DIR__ . '/admin_phase3.php';
+require __DIR__.'/admin_phase3.php';
 
 // Include Phase 4 routes
-require __DIR__ . '/web_phase4.php';
+require __DIR__.'/web_phase4.php';
 
-require __DIR__ . '/admin_phase4.php';
+require __DIR__.'/admin_phase4.php';
 
 // Include Phase 5 routes
-require __DIR__ . '/web_phase5.php';
-require __DIR__ . '/seller_phase5.php';
-require __DIR__ . '/admin_phase5.php';
+require __DIR__.'/web_phase5.php';
+require __DIR__.'/seller_phase5.php';
+require __DIR__.'/admin_phase5.php';
 
-require __DIR__ . '/admin_phase5_extended.php';
-require __DIR__ . '/web_phase5_extended.php';
-require __DIR__ . '/web_phase5_final.php';
+require __DIR__.'/admin_phase5_extended.php';
+require __DIR__.'/web_phase5_extended.php';
+require __DIR__.'/web_phase5_final.php';
 
 // Include Phase 6 routes
-require __DIR__ . '/web_phase6.php';
-require __DIR__ . '/seller_phase6.php';
-require __DIR__ . '/admin_phase6.php';
+require __DIR__.'/web_phase6.php';
+require __DIR__.'/seller_phase6.php';
+require __DIR__.'/admin_phase6.php';

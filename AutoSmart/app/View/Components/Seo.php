@@ -7,9 +7,13 @@ use Illuminate\View\Component;
 class Seo extends Component
 {
     public string $title;
+
     public string $description;
+
     public ?string $image;
+
     public ?string $url;
+
     public string $type;
 
     public function __construct(
@@ -20,8 +24,8 @@ class Seo extends Component
         string $type = 'website'
     ) {
         $siteName = config('seo.site_name');
-        
-        $this->title = $title ? "{$title} - {$siteName}" : "{$siteName} - " . config('seo.tagline');
+
+        $this->title = $title ? "{$title} - {$siteName}" : "{$siteName} - ".config('seo.tagline');
         $this->description = $description ?: config('seo.description');
         $this->image = $image ?: asset(config('seo.og.image'));
         $this->url = $url ?: url()->current();

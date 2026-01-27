@@ -2,15 +2,18 @@
 
 namespace App\Livewire\Shop;
 
-use Livewire\Component;
 use App\Models\Cart as CartModel;
 use App\Models\Product;
+use Livewire\Component;
 
 class Cart extends Component
 {
     public $cart;
+
     public $items = [];
+
     public $total = 0;
+
     public $itemsCount = 0;
 
     protected $listeners = ['cartUpdated' => 'loadCart', 'addToCart' => 'addProduct'];
@@ -32,15 +35,16 @@ class Cart extends Component
     public function addProduct($productId, $quantity = 1)
     {
         $product = Product::find($productId);
-        
-        if (!$product || !$product->isInStock()) {
+
+        if (! $product || ! $product->isInStock()) {
             $this->dispatch('notify', ['type' => 'error', 'message' => 'المنتج غير متوفر']);
+
             return;
         }
 
         $cart = CartModel::getCart();
         $cart->addItem($product, $quantity);
-        
+
         $this->loadCart();
         $this->dispatch('notify', ['type' => 'success', 'message' => 'تمت الإضافة إلى السلة']);
         $this->dispatch('cartUpdated');
